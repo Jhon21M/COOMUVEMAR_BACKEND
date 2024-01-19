@@ -1,8 +1,7 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { EntityProductor } from './entities/productor.entity';
-import { CreateProductorDto } from './dto/create-productor.dto';
-import { UpdateDatoDto } from 'src/dato/dto/update-dato.dto';
+import { EntityUpdateProductor } from './entities/update.productor.entity';
 
 @Injectable()
 export class ProductorService {
@@ -29,7 +28,10 @@ export class ProductorService {
     });
   }
 
-  async update(id: number, productor: UpdateDatoDto): Promise<EntityProductor> {
+  async update(
+    id: number,
+    productor: EntityUpdateProductor,
+  ): Promise<EntityProductor> {
     return await this.prisma.productor.update({
       where: {
         id: typeof id === 'number' ? id : Number.parseInt(id),

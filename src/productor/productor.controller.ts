@@ -11,24 +11,26 @@ import {
   UseFilters,
   HttpStatus,
   SetMetadata,
+  ValidationPipe,
 } from '@nestjs/common';
 import { ProductorService } from './productor.service';
 import { CreateProductorDto } from './dto/create-productor.dto';
 import { UpdateProductorDto } from './dto/update-productor.dto';
 import { JwtGuard } from 'src/auth/guard';
-import { ApiOkResponse, ApiTags, ApiTooManyRequestsResponse, ApiResponse, ApiOperation } from '@nestjs/swagger';
+import {
+  ApiOkResponse,
+  ApiTags,
+  ApiTooManyRequestsResponse,
+  ApiResponse,
+  ApiOperation,
+} from '@nestjs/swagger';
 import { EntityProductor } from './entities/productor.entity';
-import { HttpExceptionFilter } from 'src/http-exception/http-exception.filter';
-import { ValidationPipe2 } from 'src/validation/validation.pipe';
+//import { HttpExceptionFilter } from 'src/http-exception/http-exception.filter';
+//import { ValidationPipe2 } from 'src/validation/validation.pipe';
 import { Roles } from 'src/auth/decorator/roles.decorador';
 
 //@UseGuards(JwtGuard)
 @ApiTags('Productor - API')
-@ApiOperation({ summary: 'Health check' })
-@ApiResponse({
-  status: HttpStatus.OK,
-  description: 'API is up',
-})
 @ApiTooManyRequestsResponse({
   status: HttpStatus.TOO_MANY_REQUESTS,
   description: 'Too many requests in a short time',
@@ -39,19 +41,26 @@ export class ProductorController {
   constructor(private readonly productorService: ProductorService) {}
 
   @Post()
+  @ApiOperation({ summary: 'Create a new Productor' })
   create(
-    @Body(new ValidationPipe2()) createProductorDto: CreateProductorDto,
+    @Body(new ValidationPipe()) createProductorDto: CreateProductorDto,
   ): Promise<EntityProductor> {
     return this.productorService.create(createProductorDto);
   }
 
   @Get()
+  @ApiOperation({ summary: 'Get  all Productor data' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'API is up',
+  })
   // @ApiOkResponse({ type: EntityProductor, isArray: true }) // devolver una respuesta interceptando y transformando los datos, de tipo entities
   async findAll() {
     return await this.productorService.findAll();
   }
 
   @Get(':id')
+  @ApiOperation({ summary: 'Get one Productor data by ID' })
   findOne(
     @Param(
       'id',
@@ -64,6 +73,7 @@ export class ProductorController {
 
   //@Roles('admin')
   @Patch(':id')
+  @ApiOperation({ summary: 'update a Productor data' })
   update(
     @Param(
       'id',
@@ -76,6 +86,7 @@ export class ProductorController {
   }
 
   @Roles('admin')
+  @ApiOperation({ summary: 'Delete a Productor By ID' })
   @Delete(':id')
   remove(@Param('id', ParseIntPipe) id: number) {
     return this.productorService.remove(id);
