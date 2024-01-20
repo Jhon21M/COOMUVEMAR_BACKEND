@@ -1,7 +1,6 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { EntityProductor } from './entities/productor.entity';
-import { EntityUpdateProductor } from './entities/update.productor.entity';
+import { EntityUpdateProductor, EntityProductor } from './entities';
 
 @Injectable()
 export class ProductorService {
@@ -32,6 +31,7 @@ export class ProductorService {
     id: number,
     productor: EntityUpdateProductor,
   ): Promise<EntityProductor> {
+    
     return await this.prisma.productor.update({
       where: {
         id: typeof id === 'number' ? id : Number.parseInt(id),

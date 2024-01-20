@@ -1,7 +1,7 @@
 import { Scope } from '../enums/scope.enum';
 import { Profile } from './profile.interface';
 
-export interface User {
+export interface Productor {
   uuid: string;
   email: string;
   password: string;
