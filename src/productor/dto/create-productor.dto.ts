@@ -10,9 +10,9 @@ import {
 } from 'class-validator';
 
 export class CreateProductorDto {
-  @IsOptional()
+  @IsNotEmpty()
   @IsNumber()
-  @ApiProperty({ required: false })
+  @ApiProperty({ required: true })
   id: number;
 
   @IsString()

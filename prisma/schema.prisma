@@ -1,0 +1,137 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Productor {
+  id                   Int      @id @default(autoincrement())
+  nombre               String
+  apellido             String
+  numeroCedula         String?  @db.VarChar(25)
+  numeroTelefono       String?
+  fechaIngresoPrograma DateTime @default(now())
+  estado               Int
+  Finca                Finca[]
+
+  @@map("productores")
+}
+
+model Finca {
+  id                    Int     @id @default(autoincrement())
+  nombre                String
+  comunidad             String
+  areaCacaoProduccion   String?
+  areaCacaoDesarrollo   String?
+  produccionUltimoSiclo Int
+
+  IDProductor Int?       @unique
+  productor   Productor? @relation(fields: [IDProductor], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@map("fincas")
+}
+
+model Inspector {
+  id             Int      @id @default(autoincrement())
+  nombre         String
+  apellido       String
+  numeroTelefono Int?
+  email          String   @unique
+  createAt       DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  password       String
+  role           Role     @default(USER)
+  Ficha          Ficha[]
+
+  @@map("inspectores")
+}
+
+model Ficha {
+  id           Int      @id @default(autoincrement())
+  fecha        DateTime @default(now())
+  localizacion String
+
+  IDInspector Int         @unique
+  inspector   Inspector   @relation(fields: [IDInspector], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  Documento   Documento[]
+
+  @@map("fichas")
+}
+
+model Documento {
+  id               Int    @id @default(autoincrement())
+  declaracion      String
+  DOCDictamenFinal String
+
+  IDFicha Int   @unique
+  ficha   Ficha @relation(fields: [IDFicha], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  DesicionFinal Desicion[]
+}
+
+model Desicion {
+  id          Int    @id @default(autoincrement())
+  dictamen    String
+  descripcion String
+
+  IDDocumento Int       @unique
+  desicion    Documento @relation(fields: [IDDocumento], references: [id], onDelete: Cascade, onUpdate: Cascade)
+}
+
+model SeccionesFicha {
+  id          Int       @id @default(autoincrement())
+  nombre      String
+  descripcion String
+  Seccion     Seccion[]
+}
+
+model Seccion {
+  id Int @id @default(autoincrement())
+
+  IDSeccionesFicha Int            @unique
+  secciones        SeccionesFicha @relation(fields: [IDSeccionesFicha], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  Dato             Dato[]
+}
+
+model Dato {
+  id          Int     @id @default(autoincrement())
+  titulo      String
+  descripcion String?
+
+  IDSeccionesFicha Int               @unique
+  seccionesFicha   Seccion           @relation(fields: [IDSeccionesFicha], references: [id], onDelete: Cascade)
+  InformacionDato  InformacionDato[]
+}
+
+model InformacionDato {
+  id          Int     @id @default(autoincrement())
+  informacion String
+  descripcion String?
+
+  IDDato Int  @unique
+  dato   Dato @relation(fields: [IDDato], references: [id], onDelete: Cascade, onUpdate: Cascade)
+}
+
+model Usuario {
+  id        Int      @id @default(autoincrement())
+  createAt  DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  email     String   @unique
+  role      Role     @default(USER)
+  hash      String
+  firstName String
+  lastName  String
+
+  @@map("usuarios")
+}
+
+enum Role {
+  USER
+  ADMIN
+}
