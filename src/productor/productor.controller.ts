@@ -36,7 +36,10 @@ import { Roles } from 'src/auth/decorator/roles.decorador';
   description: 'Too many requests in a short time',
 })
 //@UseFilters(new HttpExceptionFilter())
-@Controller('productores')
+@Controller({
+  version: '1',
+  path: 'productores',
+})
 export class ProductorController {
   constructor(private readonly productorService: ProductorService) {}
 
