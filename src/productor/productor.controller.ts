@@ -29,7 +29,7 @@ import { EntityProductor } from './entities/productor.entity';
 //import { ValidationPipe2 } from 'src/validation/validation.pipe';
 import { Roles } from 'src/auth/decorator/roles.decorador';
 
-//@UseGuards(JwtGuard)
+@UseGuards(JwtGuard)
 @ApiTags('Productor - API')
 @ApiTooManyRequestsResponse({
   status: HttpStatus.TOO_MANY_REQUESTS,
@@ -57,7 +57,7 @@ export class ProductorController {
     status: HttpStatus.OK,
     description: 'API is up',
   })
-  // @ApiOkResponse({ type: EntityProductor, isArray: true }) // devolver una respuesta interceptando y transformando los datos, de tipo entities
+  @ApiOkResponse({ type: EntityProductor, isArray: true }) // devolver una respuesta interceptando y transformando los datos, de tipo entities
   async findAll() {
     return await this.productorService.findAll();
   }
