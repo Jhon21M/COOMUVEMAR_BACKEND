@@ -23,6 +23,7 @@ import {
   ApiTooManyRequestsResponse,
   ApiResponse,
   ApiOperation,
+  ApiBearerAuth,
 } from '@nestjs/swagger';
 import { EntityProductor } from './entities/productor.entity';
 //import { HttpExceptionFilter } from 'src/http-exception/http-exception.filter';
@@ -35,6 +36,7 @@ import { Roles } from 'src/auth/decorator/roles.decorador';
   status: HttpStatus.TOO_MANY_REQUESTS,
   description: 'Too many requests in a short time',
 })
+@ApiBearerAuth()
 //@UseFilters(new HttpExceptionFilter())
 @Controller({
   version: '1',
