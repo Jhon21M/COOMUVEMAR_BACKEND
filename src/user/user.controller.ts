@@ -13,10 +13,11 @@ import { GetUser } from '../auth/decorator';
 import { Usuario } from '@prisma/client';
 import { EditUserDto } from './dto';
 import { UserService } from './user.service';
-import { ApiOperation, ApiHeaders } from '@nestjs/swagger';
+import { ApiOperation, ApiHeaders, ApiTags } from '@nestjs/swagger';
 import { string } from 'joi';
 
 @UseGuards(JwtGuard)
+@ApiTags('users - APi')
 @Controller({
   version: '1',
   path: 'user',
