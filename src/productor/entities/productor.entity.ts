@@ -1,12 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Productor } from '@prisma/client';
 import { Transform } from 'class-transformer';
-import { number } from 'joi'
+import { number } from 'joi';
+import { ProductorInterface } from 'src/productor/interfaces';
 
-export class EntityProductor implements Productor {
-  @ApiProperty()
-  id: number;
-
+export class EntityProductor implements ProductorInterface {
   @ApiProperty()
   nombre: string;
 

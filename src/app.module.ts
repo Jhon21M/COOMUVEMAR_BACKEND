@@ -10,6 +10,7 @@ import { AuthService } from './auth/auth.service';
 import { UserModule } from './user/user.module';
 import { UserController } from './user/user.controller';
 import { UserService } from './user/user.service';
+import { FincaModule } from './finca/finca.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { UserService } from './user/user.service';
     PrismaModule,
     ProductorModule,
     UserModule,
+    FincaModule,
   ],
   controllers: [ProductorController, AuthController, UserController],
   providers: [ProductorService, AuthService, UserService],

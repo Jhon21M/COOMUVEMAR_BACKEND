@@ -9,11 +9,11 @@ import {
   MinLength,
 } from 'class-validator';
 
-export class CreateProductorDto {
-  // @IsNotEmpty()
-  // @IsNumber()
-  // @ApiProperty({ required: true })
-  // id: number;
+export class CreateFincaDto {
+  @IsNotEmpty()
+  @IsNumber()
+  @ApiProperty({ required: true })
+  id: number;
 
   @IsString()
   @IsNotEmpty()
