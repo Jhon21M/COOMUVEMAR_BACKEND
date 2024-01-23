@@ -1,26 +1,53 @@
 import { Injectable } from '@nestjs/common';
-import { CreateFincaDto } from './dto/create-finca.dto';
-import { UpdateFincaDto } from './dto/update-finca.dto';
+import { EntityFinca, EntityUpdateFinca } from 'src/finca/entities';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class FincaService {
-  create(createFincaDto: CreateFincaDto) {
-    return 'This action adds a new finca';
+  constructor(private prisma: PrismaService) {}
+  async create(Finca: EntityFinca): Promise<EntityFinca> {
+    try {
+      const newFinca = await this.prisma.finca.create({
+        data: {
+          ...Finca,
+        },
+      });
+
+      return newFinca;
+    } catch (error) {
+      console.error('Error al crear la finca:', error);
+      throw new Error('No se pudo crear la finca');
+    }
   }
 
   findAll() {
-    return `This action returns all finca`;
+    return this.prisma.productor.findMany();
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} finca`;
+    return this.prisma.finca.findUnique({
+      where: {
+        id: typeof id === 'number' ? id : Number.parseInt(id),
+      },
+    });
   }
 
-  update(id: number, updateFincaDto: UpdateFincaDto) {
-    return `This action updates a #${id} finca`;
+  async update(id: number, finca: EntityUpdateFinca): Promise<EntityFinca> {
+    return await this.prisma.finca.update({
+      where: {
+        id: typeof id === 'number' ? id : Number.parseInt(id),
+      },
+      data: {
+        ...finca,
+      },
+    });
   }
 
   remove(id: number) {
-    return `This action removes a #${id} finca`;
+    return this.prisma.finca.delete({
+      where: {
+        id: typeof id === 'number' ? id : Number.parseInt(id),
+      },
+    });
   }
 }

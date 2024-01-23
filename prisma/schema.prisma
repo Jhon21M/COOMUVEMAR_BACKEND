@@ -29,7 +29,7 @@ model Finca {
   comunidad             String
   areaCacaoProduccion   String?
   areaCacaoDesarrollo   String?
-  produccionUltimoSiclo Int
+  produccionUltimoSiclo String?
 
   IDProductor Int?       @unique
   productor   Productor? @relation(fields: [IDProductor], references: [id], onDelete: Cascade, onUpdate: Cascade)

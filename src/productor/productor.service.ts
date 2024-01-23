@@ -31,7 +31,6 @@ export class ProductorService {
     id: number,
     productor: EntityUpdateProductor,
   ): Promise<EntityProductor> {
-    
     return await this.prisma.productor.update({
       where: {
         id: typeof id === 'number' ? id : Number.parseInt(id),

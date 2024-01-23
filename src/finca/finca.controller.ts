@@ -6,13 +6,18 @@ import {
   Patch,
   Param,
   Delete,
+  ParseIntPipe,
+  HttpStatus,
+  UseGuards,
 } from '@nestjs/common';
 import { FincaService } from './finca.service';
 import { CreateFincaDto } from './dto/create-finca.dto';
 import { UpdateFincaDto } from './dto/update-finca.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { JwtGuard } from 'src/auth/guard';
 
 @ApiTags('users - APi')
+@UseGuards(JwtGuard)
 @Controller({
   version: '1',
   path: 'finca',
@@ -21,27 +26,52 @@ export class FincaController {
   constructor(private readonly fincaService: FincaService) {}
 
   @Post()
+  @ApiOperation({ summary: 'Create a new Finca' })
+  @ApiOkResponse({ description: 'Finca created' })
   create(@Body() createFincaDto: CreateFincaDto) {
     return this.fincaService.create(createFincaDto);
   }
 
   @Get()
+  @ApiOperation({ summary: 'Get all Finca of DB' })
   findAll() {
     return this.fincaService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.fincaService.findOne(+id);
+  @ApiOperation({ summary: 'get a finca by ID' })
+  findOne(
+    @Param(
+      'id',
+      new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE }),
+    )
+    id: number,
+  ) {
+    return this.fincaService.findOne(id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateFincaDto: UpdateFincaDto) {
-    return this.fincaService.update(+id, updateFincaDto);
+  @ApiOperation({ summary: 'update a finca by id' })
+  update(
+    @Param(
+      'id',
+      new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE }),
+    )
+    id: number,
+    @Body() updateFincaDto: UpdateFincaDto,
+  ) {
+    return this.fincaService.update(id, updateFincaDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  @ApiOperation({ summary: 'Delete a Finca by ID' })
+  remove(
+    @Param(
+      'id',
+      new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE }),
+    )
+    id: string,
+  ) {
     return this.fincaService.remove(+id);
   }
 }

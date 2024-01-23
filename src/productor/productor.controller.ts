@@ -86,14 +86,20 @@ export class ProductorController {
     )
     id: number,
     @Body() updateProductorDto: UpdateProductorDto,
-  ): Promise<EntityProductor> {
+  ) {
     return this.productorService.update(id, updateProductorDto);
   }
 
   @Roles('admin')
   @ApiOperation({ summary: 'Delete a Productor By ID' })
   @Delete(':id')
-  remove(@Param('id', ParseIntPipe) id: number) {
+  remove(
+    @Param(
+      'id',
+      new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE }),
+    )
+    id: number,
+  ) {
     return this.productorService.remove(id);
   }
 }
