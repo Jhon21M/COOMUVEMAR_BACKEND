@@ -19,6 +19,25 @@ export class ProductorService {
     return this.prisma.productor.findMany();
   }
 
+  findAllFincaOneProductor(id: number) {
+    return this.prisma.productor.findMany({
+      where: {
+        id: id,
+      },
+      include: {
+        Finca: true,
+      },
+    });
+  }
+
+  findAllProductorAndFinca() {
+    return this.prisma.productor.findMany({
+      include: {
+        Finca: true,
+      },
+    });
+  }
+
   findOne(id: number) {
     return this.prisma.productor.findUnique({
       where: {
@@ -31,7 +50,6 @@ export class ProductorService {
     id: number,
     productor: EntityUpdateProductor,
   ): Promise<EntityProductor> {
-    
     return await this.prisma.productor.update({
       where: {
         id: typeof id === 'number' ? id : Number.parseInt(id),

@@ -29,8 +29,9 @@ import { EntityProductor } from './entities/productor.entity';
 //import { HttpExceptionFilter } from 'src/http-exception/http-exception.filter';
 //import { ValidationPipe2 } from 'src/validation/validation.pipe';
 import { Roles } from 'src/auth/decorator/roles.decorador';
+import { get } from 'http';
 
-@UseGuards(JwtGuard)
+//@UseGuards(JwtGuard)
 @ApiTags('Productor - API')
 @ApiTooManyRequestsResponse({
   status: HttpStatus.TOO_MANY_REQUESTS,
@@ -64,6 +65,24 @@ export class ProductorController {
     return await this.productorService.findAll();
   }
 
+  @Get('fincas')
+  @ApiOperation({ summary: 'Get all Productor with their Finca' })
+  async findAllProductorAndFinca() {
+    return await this.productorService.findAllProductorAndFinca();
+  }
+
+  @Get('fincas/:id')
+  @ApiOperation({ summary: 'Get a Productor with his Finca by ID' })
+  async findAllFincaOneProductor(
+    @Param(
+      'id',
+      new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE }),
+    )
+    id: number,
+  ) {
+    return await this.productorService.findAllFincaOneProductor(id);
+  }
+
   @Get(':id')
   @ApiOperation({ summary: 'Get one Productor data by ID' })
   findOne(
@@ -86,14 +105,20 @@ export class ProductorController {
     )
     id: number,
     @Body() updateProductorDto: UpdateProductorDto,
-  ): Promise<EntityProductor> {
+  ) {
     return this.productorService.update(id, updateProductorDto);
   }
 
   @Roles('admin')
   @ApiOperation({ summary: 'Delete a Productor By ID' })
   @Delete(':id')
-  remove(@Param('id', ParseIntPipe) id: number) {
+  remove(
+    @Param(
+      'id',
+      new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE }),
+    )
+    id: number,
+  ) {
     return this.productorService.remove(id);
   }
 }

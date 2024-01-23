@@ -1,11 +1,8 @@
-import { Scope } from '../enums/scope.enum';
-import { Profile } from './profile.interface';
-
-export interface Productor {
-  uuid: string;
-  email: string;
-  password: string;
-  scopes: Scope[];
-  profile?: Profile;
-  isActive: boolean;
+export interface ProductorInterface {
+  nombre: string;
+  apellido: string;
+  numeroCedula: string;
+  numeroTelefono: string;
+  fechaIngresoPrograma: Date | null;
+  estado: number;
 }

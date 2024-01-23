@@ -9,12 +9,8 @@ import {
   MinLength,
 } from 'class-validator';
 
-export class CreateProductorDto {
-  // @IsNotEmpty()
-  // @IsNumber()
-  // @ApiProperty({ required: true })
-  // id: number;
-
+export class CreateFincaDto {
+  @ApiProperty({ required: true })
   @IsString()
   @IsNotEmpty()
   @Length(3, 40)
@@ -25,26 +21,25 @@ export class CreateProductorDto {
   @IsNotEmpty()
   @Length(3, 40)
   @ApiProperty()
-  apellido: string;
+  comunidad: string;
+
+  @IsString()
+  @IsNotEmpty()
+  @ApiProperty({ required: true })
+  areaCacaoProduccion: string;
+
+  @IsString()
+  @IsNotEmpty()
+  @ApiProperty({ required: true })
+  areaCacaoDesarrollo: string;
 
   @IsString()
   @IsOptional()
-  @Length(16)
   @ApiProperty({ required: false })
-  numeroCedula: string;
-
-  @IsOptional()
-  @ApiProperty({ required: false })
-  @MinLength(8)
-  numeroTelefono: string;
-
-  @IsOptional()
-  @IsDate()
-  @ApiProperty({ required: false })
-  fechaIngresoPrograma: Date;
+  produccionUltimoSiclo: string;
 
   @IsNotEmpty()
   @IsNumber()
-  @ApiProperty()
-  estado: number;
+  @ApiProperty({ required: true })
+  IDProductor: number;
 }

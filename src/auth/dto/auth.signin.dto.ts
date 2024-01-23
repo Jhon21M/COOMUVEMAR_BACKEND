@@ -9,6 +9,6 @@ export class AuthSigninDto {
 
   @IsString()
   @IsNotEmpty()
-  @ApiProperty({ required: true, example: 'hkQjS0q((?aSc' })
+  @ApiProperty({ required: true, example: '1234' })
   password: string;
 }
