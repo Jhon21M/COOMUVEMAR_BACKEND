@@ -4,6 +4,6 @@ import { ProductorController } from './productor.controller';
 
 @Module({
   controllers: [ProductorController],
-  providers: [ProductorService]
+  providers: [ProductorService],
 })
 export class ProductorModule {}

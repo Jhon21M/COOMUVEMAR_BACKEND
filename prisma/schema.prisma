@@ -31,7 +31,7 @@ model Finca {
   areaCacaoDesarrollo   String?
   produccionUltimoSiclo String?
 
-  IDProductor Int?       @unique
+  IDProductor Int?
   productor   Productor? @relation(fields: [IDProductor], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   @@map("fincas")

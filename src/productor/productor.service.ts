@@ -19,6 +19,25 @@ export class ProductorService {
     return this.prisma.productor.findMany();
   }
 
+  findAllFincaOneProductor(id: number) {
+    return this.prisma.productor.findMany({
+      where: {
+        id: id,
+      },
+      include: {
+        Finca: true,
+      },
+    });
+  }
+
+  findAllProductorAndFinca() {
+    return this.prisma.productor.findMany({
+      include: {
+        Finca: true,
+      },
+    });
+  }
+
   findOne(id: number) {
     return this.prisma.productor.findUnique({
       where: {

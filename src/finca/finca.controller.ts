@@ -13,11 +13,17 @@ import {
 import { FincaService } from './finca.service';
 import { CreateFincaDto } from './dto/create-finca.dto';
 import { UpdateFincaDto } from './dto/update-finca.dto';
-import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOkResponse,
+  ApiOperation,
+  ApiTags,
+} from '@nestjs/swagger';
 import { JwtGuard } from 'src/auth/guard';
 
-@ApiTags('users - APi')
+@ApiTags('finca - APi')
 @UseGuards(JwtGuard)
+@ApiBearerAuth()
 @Controller({
   version: '1',
   path: 'finca',
