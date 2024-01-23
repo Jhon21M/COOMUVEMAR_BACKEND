@@ -41,7 +41,7 @@ model Inspector {
   id             Int      @id @default(autoincrement())
   nombre         String
   apellido       String
-  numeroTelefono Int?
+  numeroTelefono String
   email          String   @unique
   createAt       DateTime @default(now())
   updatedAt      DateTime @updatedAt

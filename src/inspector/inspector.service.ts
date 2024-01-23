@@ -1,26 +1,51 @@
 import { Injectable } from '@nestjs/common';
-import { CreateInspectorDto } from './dto/create-inspector.dto';
 import { UpdateInspectorDto } from './dto/update-inspector.dto';
+import { EntityInspector } from './entities';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class InspectorService {
-  create(createInspectorDto: CreateInspectorDto) {
-    return 'This action adds a new inspector';
-  }
+  constructor(private prisma: PrismaService){}
+  async create(inspector: EntityInspector): Promise<EntityInspector> {
+    const newInspector = await this.prisma.inspector.create({
+      data: {
+        ...inspector,
+      },
+    });
 
-  findAll() {
-    return `This action returns all inspector`;
+    return newInspector;
+  }
+  async findAll() {
+    return await this.prisma.inspector.findMany();
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} inspector`;
+    return this.prisma.inspector.findUnique({
+      where: {
+        id: typeof id === 'number' ? id : Number.parseInt(id),
+      },
+    });
   }
 
-  update(id: number, updateInspectorDto: UpdateInspectorDto) {
-    return `This action updates a #${id} inspector`;
+  async update(
+    id: number,
+    inspector: EntityInspector,
+  ): Promise<EntityInspector> {
+    return await this.prisma.inspector.update({
+      where: {
+        id: typeof id === 'number' ? id : Number.parseInt(id),
+      },
+      data: {
+        ...inspector,
+      },
+    });
   }
 
   remove(id: number) {
-    return `This action removes a #${id} inspector`;
+    return this.prisma.inspector.delete({
+      where: {
+        id: typeof id === 'number' ? id : Number.parseInt(id),
+      },
+    });
   }
 }

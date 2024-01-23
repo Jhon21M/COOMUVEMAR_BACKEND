@@ -1,7 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Transform } from 'class-transformer';
-import { IS_STRONG_PASSWORD, IsEmail, IsStrongPassword } from 'class-validator';
-import { number } from 'joi';
+import { IsEmail, IsStrongPassword } from 'class-validator';
 import { InspectorInterface } from 'src/inspector/interfaces';
 
 export class EntityInspector implements InspectorInterface {
