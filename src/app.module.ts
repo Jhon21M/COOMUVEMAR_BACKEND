@@ -11,6 +11,7 @@ import { UserModule } from './user/user.module';
 import { UserController } from './user/user.controller';
 import { UserService } from './user/user.service';
 import { FincaModule } from './finca/finca.module';
+import { InspectorModule } from './inspector/inspector.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { FincaModule } from './finca/finca.module';
     ProductorModule,
     UserModule,
     FincaModule,
+    InspectorModule,
   ],
   controllers: [ProductorController, AuthController, UserController],
   providers: [ProductorService, AuthService, UserService],
