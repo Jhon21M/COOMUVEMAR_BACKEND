@@ -8,7 +8,7 @@ import {
   IsEmail,
 } from 'class-validator';
 
-export class CreateProductorDto {
+export class CreateInspectorDto {
   @IsString()
   @IsNotEmpty()
   @Length(3, 30)

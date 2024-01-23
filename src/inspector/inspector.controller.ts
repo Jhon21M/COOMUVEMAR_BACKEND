@@ -11,17 +11,16 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { InspectorService } from './inspector.service';
-import { CreateInspectorDto } from './dto/create-inspector.dto';
-import { UpdateInspectorDto } from './dto/update-inspector.dto';
+import { CreateInspectorDto, UpdateInspectorDto } from './dto';
+
 import {
   ApiBearerAuth,
   ApiOperation,
   ApiTags,
   ApiTooManyRequestsResponse,
 } from '@nestjs/swagger';
-import { number } from 'joi';
 
-@ApiTags('Productor - API')
+@ApiTags('Inspector - API')
 @ApiTooManyRequestsResponse({
   status: HttpStatus.TOO_MANY_REQUESTS,
   description: 'Too many requests in a short time',

@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { UpdateInspectorDto } from './dto/update-inspector.dto';
 import { EntityInspector } from './entities';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { EntityUpdateInspector } from './entities/update.productor.entity';
 
 @Injectable()
 export class InspectorService {
@@ -29,7 +30,7 @@ export class InspectorService {
 
   async update(
     id: number,
-    inspector: EntityInspector,
+    inspector: EntityUpdateInspector,
   ): Promise<EntityInspector> {
     return await this.prisma.inspector.update({
       where: {
