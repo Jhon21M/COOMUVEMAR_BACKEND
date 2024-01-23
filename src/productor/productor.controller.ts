@@ -66,7 +66,7 @@ export class ProductorController {
   }
 
   @Get('fincas')
-  @ApiOperation({ summary: 'Get all Productor with his Finca' })
+  @ApiOperation({ summary: 'Get all Productor with their Finca' })
   async findAllProductorAndFinca() {
     return await this.productorService.findAllProductorAndFinca();
   }

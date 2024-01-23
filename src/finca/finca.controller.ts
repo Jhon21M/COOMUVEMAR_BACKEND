@@ -22,7 +22,7 @@ import {
 import { JwtGuard } from 'src/auth/guard';
 
 @ApiTags('finca - APi')
-@UseGuards(JwtGuard)
+//@UseGuards(JwtGuard)
 @ApiBearerAuth()
 @Controller({
   version: '1',
