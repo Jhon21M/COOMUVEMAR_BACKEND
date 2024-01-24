@@ -103,7 +103,7 @@ model Dato {
   titulo      String
   descripcion String?
 
-  IDSeccionesFicha Int               @unique
+  IDSeccionesFicha Int               
   seccionesFicha   Seccion           @relation(fields: [IDSeccionesFicha], references: [id], onDelete: Cascade)
   InformacionDato  InformacionDato[]
 }

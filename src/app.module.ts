@@ -14,6 +14,7 @@ import { FincaModule } from './finca/finca.module';
 import { InspectorModule } from './inspector/inspector.module';
 import { FichaModule } from './ficha/ficha.module';
 import { SecFichaModule } from './sec-ficha/sec-ficha.module';
+import { DatoModule } from './dato/dato.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { SecFichaModule } from './sec-ficha/sec-ficha.module';
     InspectorModule,
     FichaModule,
     SecFichaModule,
+    DatoModule,
   ],
   controllers: [ProductorController, AuthController, UserController],
   providers: [ProductorService, AuthService, UserService],
