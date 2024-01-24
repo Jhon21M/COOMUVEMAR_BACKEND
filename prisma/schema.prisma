@@ -57,7 +57,7 @@ model Ficha {
   fecha        DateTime @default(now())
   localizacion String
 
-  IDInspector Int         @unique
+  IDInspector Int 
   inspector   Inspector   @relation(fields: [IDInspector], references: [id], onDelete: Cascade, onUpdate: Cascade)
   Documento   Documento[]
 
@@ -71,7 +71,6 @@ model Documento {
 
   IDFicha Int   @unique
   ficha   Ficha @relation(fields: [IDFicha], references: [id], onDelete: Cascade, onUpdate: Cascade)
-
   DesicionFinal Desicion[]
 }
 
