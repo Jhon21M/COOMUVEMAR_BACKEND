@@ -1,26 +1,49 @@
 import { Injectable } from '@nestjs/common';
-import { CreateDatoDto } from './dto/create-dato.dto';
-import { UpdateDatoDto } from './dto/update-dato.dto';
+import { PrismaService } from 'src/prisma/prisma.service';
+import { EntityDato, EntityUpdateDato } from './entities';
 
 @Injectable()
 export class DatoService {
-  create(createDatoDto: CreateDatoDto) {
-    return 'This action adds a new dato';
+  constructor(private prisma: PrismaService) {}
+
+  async create(dato: EntityDato): Promise<EntityDato> {
+    const newDato = await this.prisma.dato.create({
+      data: {
+        ...dato,
+      },
+    });
+
+    return newDato;
   }
 
-  findAll() {
-    return `This action returns all dato`;
+  async findAll() {
+    return await this.prisma.dato.findMany();
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} dato`;
+    return this.prisma.dato.findUnique({
+      where: {
+        id: typeof id === 'number' ? id : Number.parseInt(id),
+      },
+    });
   }
 
-  update(id: number, updateDatoDto: UpdateDatoDto) {
-    return `This action updates a #${id} dato`;
+  async update(id: number, ficha: EntityDato): Promise<EntityUpdateDato> {
+    return await this.prisma.dato.update({
+      where: {
+        id: typeof id === 'number' ? id : Number.parseInt(id),
+      },
+      data: {
+        ...ficha,
+      },
+    });
   }
 
   remove(id: number) {
-    return `This action removes a #${id} dato`;
+    return this.prisma.dato.delete({
+      where: {
+        id: typeof id === 'number' ? id : Number.parseInt(id),
+      },
+    });
   }
 }
