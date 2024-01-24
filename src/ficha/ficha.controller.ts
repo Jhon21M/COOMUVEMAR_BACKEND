@@ -13,7 +13,14 @@ import {
 import { FichaService } from './ficha.service';
 import { CreateFichaDto } from './dto/create-ficha.dto';
 import { UpdateFichaDto } from './dto/update-ficha.dto';
-import { ApiBearerAuth, ApiOkResponse, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOkResponse,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
+import { EntityFicha } from './entities';
 
 @ApiTags('ficha - APi')
 //@UseGuards(JwtGuard)
@@ -28,9 +35,9 @@ export class FichaController {
   @Post()
   @ApiOperation({ summary: 'Create a new Ficha' })
   create(
-    @Body(new ValidationPipe()) createProductorDto: CreateFichaDto,
+    @Body(new ValidationPipe()) createFichaDto: CreateFichaDto,
   ): Promise<EntityFicha> {
-    return this.fichaService.create(createProductorDto);
+    return this.fichaService.create(createFichaDto);
   }
 
   @Get()
