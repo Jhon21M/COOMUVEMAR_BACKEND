@@ -1,4 +1,4 @@
 import { PartialType } from '@nestjs/swagger';
-import { CreateSecFichaDto } from './create-sec-ficha.dto';
+import { CreateSeccionFichaDto } from './create-sec-ficha.dto';
 
-export class UpdateSecFichaDto extends PartialType(CreateSecFichaDto) {}
+export class UpdateSecFichaDto extends PartialType(CreateSeccionFichaDto) {}
