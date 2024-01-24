@@ -57,7 +57,7 @@ model Ficha {
   fecha        DateTime @default(now())
   localizacion String
 
-  IDInspector Int 
+  IDInspector Int
   inspector   Inspector   @relation(fields: [IDInspector], references: [id], onDelete: Cascade, onUpdate: Cascade)
   Documento   Documento[]
 
@@ -69,8 +69,8 @@ model Documento {
   declaracion      String
   DOCDictamenFinal String
 
-  IDFicha Int   @unique
-  ficha   Ficha @relation(fields: [IDFicha], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  IDFicha       Int        @unique
+  ficha         Ficha      @relation(fields: [IDFicha], references: [id], onDelete: Cascade, onUpdate: Cascade)
   DesicionFinal Desicion[]
 }
 
@@ -86,7 +86,7 @@ model Desicion {
 model SeccionesFicha {
   id          Int       @id @default(autoincrement())
   nombre      String
-  descripcion String
+  descripcion String?  
   Seccion     Seccion[]
 }
 
