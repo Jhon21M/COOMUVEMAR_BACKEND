@@ -1,47 +1,49 @@
 import { Injectable } from '@nestjs/common';
-import { CreateSecFichaDto } from './dto/create-sec-ficha.dto';
-import { UpdateSecFichaDto } from './dto/update-sec-ficha.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { EntitySeccionFicha, EntityUpdateSeccionFicha } from './entities';
 
 @Injectable()
 export class SecFichaService {
   constructor(private prisma: PrismaService) {}
 
-  async create(ficha: EntityFicha): Promise<EntityFicha> {
-    const newFicha = await this.prisma.ficha.create({
+  async create(seccionficha: EntitySeccionFicha): Promise<EntitySeccionFicha> {
+    const newSeccionFicha = await this.prisma.seccionesFicha.create({
       data: {
-        ...ficha,
+        ...seccionficha,
       },
     });
 
-    return newFicha;
+    return newSeccionFicha;
   }
 
   async findAll() {
-    return await this.prisma.ficha.findMany();
+    return await this.prisma.seccionesFicha.findMany();
   }
 
   findOne(id: number) {
-    return this.prisma.ficha.findUnique({
+    return this.prisma.seccionesFicha.findUnique({
       where: {
         id: typeof id === 'number' ? id : Number.parseInt(id),
       },
     });
   }
 
-  async update(id: number, ficha: EntityUpdateFicha): Promise<EntityFicha> {
-    return await this.prisma.ficha.update({
+  async update(
+    id: number,
+    seccionficha: EntityUpdateSeccionFicha,
+  ): Promise<EntitySeccionFicha> {
+    return await this.prisma.seccionesFicha.update({
       where: {
         id: typeof id === 'number' ? id : Number.parseInt(id),
       },
       data: {
-        ...ficha,
+        ...seccionficha,
       },
     });
   }
 
   remove(id: number) {
-    return this.prisma.ficha.delete({
+    return this.prisma.seccionesFicha.delete({
       where: {
         id: typeof id === 'number' ? id : Number.parseInt(id),
       },
