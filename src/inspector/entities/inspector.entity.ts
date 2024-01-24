@@ -12,7 +12,7 @@ export class EntityInspector implements InspectorInterface {
   @ApiProperty({ required: false, nullable: true })
   numeroTelefono: string | null;
 
-  @ApiProperty({ required: true, nullable: false, type: IsEmail })
+  @ApiProperty({ required: true, nullable: false })
   email: string;
 
   @ApiProperty({ required: true, nullable: false, type: IsStrongPassword })
