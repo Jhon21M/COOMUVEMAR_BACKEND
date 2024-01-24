@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { SecFichaController } from './sec-ficha.controller';
-import { SecFichaService } from './sec-ficha.service';
+import { SecFichaController } from '../sec-ficha.controller';
+import { SecFichaService } from '../sec-ficha.service';
 
 describe('SecFichaController', () => {
   let controller: SecFichaController;
