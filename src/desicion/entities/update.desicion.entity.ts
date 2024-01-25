@@ -1,3 +1,3 @@
 import { EntityDesicion } from './desicion.entity';
 
-export class EntityUpdateDocumento implements Partial<EntityDesicion> {}
+export class EntityUpdateDesicion implements Partial<EntityDesicion> {}

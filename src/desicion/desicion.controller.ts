@@ -29,7 +29,7 @@ import { EntityDesicion } from './entities';
   version: '1',
   path: 'desicion',
 })
-export class DocumentoController {
+export class DesicionController {
   constructor(private readonly desicionService: DesicionService) {}
   @Post()
   @ApiOperation({ summary: 'Create a new desicion of Ficha' })

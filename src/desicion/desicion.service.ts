@@ -1,26 +1,60 @@
 import { Injectable } from '@nestjs/common';
-import { CreateDesicionDto } from './dto/create-desicion.dto';
-import { UpdateDesicionDto } from './dto/update-desicion.dto';
+import { PrismaService } from 'src/prisma/prisma.service';
+import { EntityDesicion, EntityUpdateDesicion } from './entities';
 
 @Injectable()
 export class DesicionService {
-  create(createDesicionDto: CreateDesicionDto) {
-    return 'This action adds a new desicion';
+  constructor(private prisma: PrismaService) {}
+
+  async create(desicion: EntityDesicion): Promise<EntityDesicion> {
+    try {
+      const newDesicion = await this.prisma.desicion.create({
+        data: {
+          ...desicion,
+        },
+      });
+
+      return newDesicion;
+    } catch (error) {
+      console.error('ah! algo salio mal:', error);
+      throw new Error('ah! algo salio mal!');
+    }
   }
 
-  findAll() {
-    return `This action returns all desicion`;
+  async findAll() {
+    return await this.prisma.desicion.findMany();
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} desicion`;
+    return this.prisma.desicion.findUnique({
+      where: {
+        id: typeof id === 'number' ? id : Number.parseInt(id),
+      },
+    });
   }
 
-  update(id: number, updateDesicionDto: UpdateDesicionDto) {
-    return `This action updates a #${id} desicion`;
+  async update(
+    id: number,
+    desicion: EntityUpdateDesicion,
+  ): Promise<EntityUpdateDesicion> {
+    return await this.prisma.desicion.update({
+      where: {
+        id: typeof id === 'number' ? id : Number.parseInt(id),
+      },
+      data: {
+        ...desicion,
+      },
+    });
   }
 
   remove(id: number) {
-    return `This action removes a #${id} desicion`;
+    return this.prisma.desicion.delete({
+      where: {
+        id: typeof id === 'number' ? id : Number.parseInt(id),
+      },
+      select: {
+        id: true,
+      },
+    });
   }
 }
