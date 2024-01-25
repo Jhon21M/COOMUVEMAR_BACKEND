@@ -5,12 +5,12 @@ export class CreateDesicionDto {
   @IsNotEmpty()
   @ApiProperty()
   @IsString()
-  declaracion: string;
+  desicion: string;
 
   @IsString()
   @IsOptional()
   @ApiProperty({ nullable: true })
-  desicion: string;
+  descripcion: string;
 
   @IsNotEmpty()
   @IsNumber()

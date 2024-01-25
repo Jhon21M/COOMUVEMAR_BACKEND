@@ -57,10 +57,11 @@ model Ficha {
   fecha        DateTime @default(now())
   localizacion String
 
-  IDInspector Int
-  inspector   Inspector   @relation(fields: [IDInspector], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  Documento   Documento[]
-  Desicion    Desicion[]
+  IDInspector     Int
+  inspector       Inspector         @relation(fields: [IDInspector], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  Documento       Documento[]
+  Desicion        Desicion[]
+  InformacionDato InformacionDato[]
 
   @@map("fichas")
 }
@@ -79,8 +80,8 @@ model Desicion {
   desicion    String
   descripcion String
 
-  IDFicha  Int   @unique
-  ficha Ficha @relation(fields: [IDFicha], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  IDFicha Int   @unique
+  ficha   Ficha @relation(fields: [IDFicha], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
 
 model SeccionesFicha {
@@ -106,8 +107,10 @@ model InformacionDato {
   informacion String
   descripcion String?
 
-  IDDato Int
-  dato   Dato @relation(fields: [IDDato], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  IDDato  Int
+  dato    Dato  @relation(fields: [IDDato], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  ficha   Ficha @relation(fields: [IDFicha], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  IDFicha Int
 }
 
 model Usuario {

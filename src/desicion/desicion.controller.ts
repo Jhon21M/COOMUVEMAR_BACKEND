@@ -22,7 +22,7 @@ import {
 } from '@nestjs/swagger';
 import { EntityDesicion } from './entities';
 
-@ApiTags('documento - APi')
+@ApiTags('desicion - APi')
 //@UseGuards(JwtGuard)
 @ApiBearerAuth()
 @Controller({
