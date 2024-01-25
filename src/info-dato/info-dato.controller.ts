@@ -1,8 +1,24 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, ValidationPipe, HttpStatus, ParseIntPipe } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  ValidationPipe,
+  HttpStatus,
+  ParseIntPipe,
+} from '@nestjs/common';
 import { InfoDatoService } from './info-dato.service';
 import { CreateInfoDatoDto } from './dto/create-info-dato.dto';
 import { UpdateInfoDatoDto } from './dto/update-info-dato.dto';
-import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { EntityInfoDato } from './entities';
 
 @ApiTags('informaciondato - APi')
