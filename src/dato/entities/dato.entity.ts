@@ -11,7 +11,7 @@ export class EntityDato implements DatoInterface {
   @ApiProperty({ required: true, nullable: false })
   IDSeccionesFicha: number;
 
-  constructor(partial: Partial<EntityFicha>) {
+  constructor(partial: Partial<EntityDato>) {
     Object.assign(this, partial);
   }
 }

@@ -7,13 +7,19 @@ export class DatoService {
   constructor(private prisma: PrismaService) {}
 
   async create(dato: EntityDato): Promise<EntityDato> {
-    const newDato = await this.prisma.dato.create({
-      data: {
-        ...dato,
-      },
-    });
+    try {
+      const newDato = await this.prisma.dato.create({
+        data: {
+          ...dato,
+        },
+      });
 
-    return newDato;
+      return newDato;
+    } catch (error) {
+      // Manejo de errores, por ejemplo, puedes loguear el error
+      console.error('ah! algo salio mal:', error);
+      throw new Error('aggh!');
+    }
   }
 
   async findAll() {
@@ -28,7 +34,7 @@ export class DatoService {
     });
   }
 
-  async update(id: number, ficha: EntityDato): Promise<EntityUpdateDato> {
+  async update(id: number, ficha: EntityUpdateDato): Promise<EntityUpdateDato> {
     return await this.prisma.dato.update({
       where: {
         id: typeof id === 'number' ? id : Number.parseInt(id),

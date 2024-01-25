@@ -21,5 +21,5 @@ export class CreateDatoDto {
   @IsNotEmpty()
   @IsNumber()
   @ApiProperty()
-  IDSeccionFicha: number;
+  IDSeccionesFicha: number;
 }

@@ -12,11 +12,22 @@ import {
 } from '@nestjs/common';
 import { DatoService } from './dato.service';
 import { CreateDatoDto } from './dto/create-dato.dto';
-import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { EntityDato } from './entities';
 import { UpdateDatoDto } from './dto';
 
-@Controller('dato')
+@ApiTags('dato - APi')
+//@UseGuards(JwtGuard)
+@ApiBearerAuth()
+@Controller({
+  version: '1',
+  path: 'dato',
+})
 export class DatoController {
   constructor(private readonly datoService: DatoService) {}
   @Post()

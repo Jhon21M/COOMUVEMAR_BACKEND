@@ -86,16 +86,9 @@ model Desicion {
 model SeccionesFicha {
   id          Int       @id @default(autoincrement())
   nombre      String
-  descripcion String?  
-  Seccion     Seccion[]
-}
+  descripcion String?
+  Dato        Dato[]
 
-model Seccion {
-  id Int @id @default(autoincrement())
-
-  IDSeccionesFicha Int            @unique
-  secciones        SeccionesFicha @relation(fields: [IDSeccionesFicha], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  Dato             Dato[]
 }
 
 model Dato {
@@ -103,8 +96,9 @@ model Dato {
   titulo      String
   descripcion String?
 
-  IDSeccionesFicha Int               
-  seccionesFicha   Seccion           @relation(fields: [IDSeccionesFicha], references: [id], onDelete: Cascade)
+  seccionesFicha   SeccionesFicha    @relation(fields: [IDSeccionesFicha], references: [id], onDelete: Cascade)
+  IDSeccionesFicha Int
+
   InformacionDato  InformacionDato[]
 }
 
@@ -113,7 +107,7 @@ model InformacionDato {
   informacion String
   descripcion String?
 
-  IDDato Int  @unique
+  IDDato Int
   dato   Dato @relation(fields: [IDDato], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
 
