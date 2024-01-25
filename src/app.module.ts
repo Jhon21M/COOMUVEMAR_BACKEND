@@ -15,6 +15,7 @@ import { InspectorModule } from './inspector/inspector.module';
 import { FichaModule } from './ficha/ficha.module';
 import { SecFichaModule } from './sec-ficha/sec-ficha.module';
 import { DatoModule } from './dato/dato.module';
+import { InfoDatoModule } from './info-dato/info-dato.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { DatoModule } from './dato/dato.module';
     FichaModule,
     SecFichaModule,
     DatoModule,
+    InfoDatoModule,
   ],
   controllers: [ProductorController, AuthController, UserController],
   providers: [ProductorService, AuthService, UserService],
