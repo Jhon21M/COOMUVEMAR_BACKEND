@@ -17,6 +17,7 @@ import { SecFichaModule } from './sec-ficha/sec-ficha.module';
 import { DatoModule } from './dato/dato.module';
 import { InfoDatoModule } from './info-dato/info-dato.module';
 import { DocumentoModule } from './documento/documento.module';
+import { DesicionModule } from './desicion/desicion.module';
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import { DocumentoModule } from './documento/documento.module';
     DatoModule,
     InfoDatoModule,
     DocumentoModule,
+    DesicionModule,
   ],
   controllers: [ProductorController, AuthController, UserController],
   providers: [ProductorService, AuthService, UserService],

@@ -60,6 +60,7 @@ model Ficha {
   IDInspector Int
   inspector   Inspector   @relation(fields: [IDInspector], references: [id], onDelete: Cascade, onUpdate: Cascade)
   Documento   Documento[]
+  Desicion    Desicion[]
 
   @@map("fichas")
 }
@@ -69,9 +70,8 @@ model Documento {
   declaracion      String
   DOCDictamenFinal String
 
-  IDFicha       Int        @unique
-  ficha         Ficha      @relation(fields: [IDFicha], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  DesicionFinal Desicion[]
+  IDFicha Int   @unique
+  ficha   Ficha @relation(fields: [IDFicha], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
 
 model Desicion {
@@ -79,16 +79,15 @@ model Desicion {
   dictamen    String
   descripcion String
 
-  IDDocumento Int       @unique
-  desicion    Documento @relation(fields: [IDDocumento], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  IDFicha  Int   @unique
+  desicion Ficha @relation(fields: [IDFicha], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
 
 model SeccionesFicha {
-  id          Int       @id @default(autoincrement())
+  id          Int     @id @default(autoincrement())
   nombre      String
   descripcion String?
   Dato        Dato[]
-
 }
 
 model Dato {
@@ -96,10 +95,10 @@ model Dato {
   titulo      String
   descripcion String?
 
-  seccionesFicha   SeccionesFicha    @relation(fields: [IDSeccionesFicha], references: [id], onDelete: Cascade)
+  seccionesFicha   SeccionesFicha @relation(fields: [IDSeccionesFicha], references: [id], onDelete: Cascade)
   IDSeccionesFicha Int
 
-  InformacionDato  InformacionDato[]
+  InformacionDato InformacionDato[]
 }
 
 model InformacionDato {
