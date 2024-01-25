@@ -1,1 +1,1 @@
-export class Desicion {}
+export class EntityDesicion {}
