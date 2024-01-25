@@ -76,11 +76,11 @@ model Documento {
 
 model Desicion {
   id          Int    @id @default(autoincrement())
-  dictamen    String
+  desicion    String
   descripcion String
 
   IDFicha  Int   @unique
-  desicion Ficha @relation(fields: [IDFicha], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  ficha Ficha @relation(fields: [IDFicha], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
 
 model SeccionesFicha {
