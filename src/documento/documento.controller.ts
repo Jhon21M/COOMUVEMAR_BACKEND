@@ -29,7 +29,7 @@ import { EntityDocumento } from './entities';
   version: '1',
   path: 'documento',
 })
-export class InfoDatoController {
+export class DocumentoController {
   constructor(private readonly documentoService: DocumentoService) {}
   @Post()
   @ApiOperation({ summary: 'Create a new Documento de Ficha' })
