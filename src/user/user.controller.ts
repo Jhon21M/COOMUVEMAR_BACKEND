@@ -22,6 +22,7 @@ import {
   ApiResponse,
 } from '@nestjs/swagger';
 import { string } from 'joi';
+import { Roles } from 'src/auth/decorator/roles.decorador';
 
 //@UseGuards(JwtGuard)
 @ApiBearerAuth()
@@ -61,6 +62,7 @@ export class UserController {
     return this.userService.findOneUserByID(id);
   }
 
+  @Roles('Admin')
   @Patch(':id')
   @ApiOperation({ summary: 'update a user data' })
   update(
