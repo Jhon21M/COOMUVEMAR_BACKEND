@@ -1,11 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 
-export class CreateInfoDatoDto {
+export class CreateDesicionDto {
   @IsNotEmpty()
   @ApiProperty()
   @IsString()
-  informacion: string;
+  desicion: string;
 
   @IsString()
   @IsOptional()
@@ -14,11 +14,6 @@ export class CreateInfoDatoDto {
 
   @IsNotEmpty()
   @IsNumber()
-  @ApiProperty()
-  IDDato: number;
-
-  @IsNotEmpty()
-  @IsNumber()
-  @ApiProperty()
-  IDFicha;
+  @ApiProperty({ required: true })
+  IDFicha: number;
 }

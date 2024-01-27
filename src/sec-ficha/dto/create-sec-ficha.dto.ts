@@ -4,7 +4,7 @@ import { IsNotEmpty, IsOptional, IsString, Length } from 'class-validator';
 export class CreateSeccionFichaDto {
   @IsString()
   @IsNotEmpty()
-  @Length(5, 40)
+  @Length(5, 50)
   @ApiProperty({ required: true })
   nombre: string;
 

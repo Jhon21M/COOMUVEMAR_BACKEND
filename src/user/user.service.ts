@@ -6,22 +6,27 @@ import { EditUserDto } from './dto';
 export class UserService {
   constructor(private prisma: PrismaService) {}
 
-  async editUserByID(userId: number, dto: EditUserDto) {
-    const user = await this.prisma.usuario.update({
+  async update(id: number, informacion: EditUserDto): Promise<EditUserDto> {
+    return await this.prisma.usuario.update({
       where: {
-        id: userId,
+        id: typeof id === 'number' ? id : Number.parseInt(id),
       },
       data: {
-        ...dto,
+        ...informacion,
       },
     });
-    delete user.hash;
-
-    return user;
   }
 
   findOneUserByID(id: number) {
     return this.prisma.usuario.findUnique({
+      where: {
+        id: typeof id === 'number' ? id : Number.parseInt(id),
+      },
+    });
+  }
+
+  remove(id: number) {
+    return this.prisma.usuario.delete({
       where: {
         id: typeof id === 'number' ? id : Number.parseInt(id),
       },

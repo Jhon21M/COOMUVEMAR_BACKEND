@@ -57,9 +57,11 @@ model Ficha {
   fecha        DateTime @default(now())
   localizacion String
 
-  IDInspector Int
-  inspector   Inspector   @relation(fields: [IDInspector], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  Documento   Documento[]
+  IDInspector     Int
+  inspector       Inspector         @relation(fields: [IDInspector], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  Documento       Documento[]
+  Desicion        Desicion[]
+  InformacionDato InformacionDato[]
 
   @@map("fichas")
 }
@@ -69,26 +71,24 @@ model Documento {
   declaracion      String
   DOCDictamenFinal String
 
-  IDFicha       Int        @unique
-  ficha         Ficha      @relation(fields: [IDFicha], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  DesicionFinal Desicion[]
+  IDFicha Int   @unique
+  ficha   Ficha @relation(fields: [IDFicha], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
 
 model Desicion {
   id          Int    @id @default(autoincrement())
-  dictamen    String
+  desicion    String
   descripcion String
 
-  IDDocumento Int       @unique
-  desicion    Documento @relation(fields: [IDDocumento], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  IDFicha Int   @unique
+  ficha   Ficha @relation(fields: [IDFicha], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
 
 model SeccionesFicha {
-  id          Int       @id @default(autoincrement())
+  id          Int     @id @default(autoincrement())
   nombre      String
   descripcion String?
   Dato        Dato[]
-
 }
 
 model Dato {
@@ -96,10 +96,10 @@ model Dato {
   titulo      String
   descripcion String?
 
-  seccionesFicha   SeccionesFicha    @relation(fields: [IDSeccionesFicha], references: [id], onDelete: Cascade)
+  seccionesFicha   SeccionesFicha @relation(fields: [IDSeccionesFicha], references: [id], onDelete: Cascade)
   IDSeccionesFicha Int
 
-  InformacionDato  InformacionDato[]
+  InformacionDato InformacionDato[]
 }
 
 model InformacionDato {
@@ -107,8 +107,11 @@ model InformacionDato {
   informacion String
   descripcion String?
 
-  IDDato Int
   dato   Dato @relation(fields: [IDDato], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  IDDato Int
+
+  ficha   Ficha @relation(fields: [IDFicha], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  IDFicha Int
 }
 
 model Usuario {

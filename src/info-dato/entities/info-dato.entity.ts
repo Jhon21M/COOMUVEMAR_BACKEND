@@ -11,6 +11,9 @@ export class EntityInfoDato implements InfoDatoInterface {
   @ApiProperty({ required: true, nullable: false })
   IDDato: number;
 
+  @ApiProperty({ required: true, nullable: false })
+  IDFicha: number;
+
   constructor(partial: Partial<EntityInfoDato>) {
     Object.assign(this, partial);
   }
