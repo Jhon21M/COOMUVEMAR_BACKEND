@@ -31,7 +31,8 @@ import { EntityProductor } from './entities/productor.entity';
 import { Roles } from 'src/auth/decorator/roles.decorador';
 import { get } from 'http';
 
-//@UseGuards(JwtGuard)
+@UseGuards(JwtGuard)
+@ApiBearerAuth()
 @ApiTags('Productor - API')
 @ApiTooManyRequestsResponse({
   status: HttpStatus.TOO_MANY_REQUESTS,

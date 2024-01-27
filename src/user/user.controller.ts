@@ -19,11 +19,12 @@ import {
   ApiHeaders,
   ApiTags,
   ApiBearerAuth,
+  ApiResponse,
 } from '@nestjs/swagger';
 import { string } from 'joi';
 
 //@UseGuards(JwtGuard)
-//@ApiBearerAuth()
+@ApiBearerAuth()
 @ApiTags('users - APi')
 @Controller({
   version: '1',
@@ -33,8 +34,19 @@ export class UserController {
   constructor(private userService: UserService) {}
 
   @Get('me')
+  @ApiOperation({ summary: 'Get myself data from DB' })
   getMe(@GetUser() user: Usuario) {
     return user;
+  }
+
+  @Get()
+  @ApiOperation({ summary: 'Get  all User data from DB' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'API is up',
+  })
+  async findAll() {
+    return await this.userService.findAll();
   }
 
   @Get(':id')
