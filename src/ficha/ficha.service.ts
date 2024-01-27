@@ -1,8 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { ConsoleLogger, Injectable } from '@nestjs/common';
 import { CreateFichaDto } from './dto/create-ficha.dto';
 import { UpdateFichaDto } from './dto/update-ficha.dto';
 import { EntityFicha, EntityUpdateFicha } from './entities';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { json } from 'body-parser';
 
 @Injectable()
 export class FichaService {
@@ -28,6 +29,54 @@ export class FichaService {
         id: typeof id === 'number' ? id : Number.parseInt(id),
       },
     });
+  }
+
+  async findOneData(id: number) {
+    try {
+      const fichaConSecciones = await this.prisma.ficha.findUnique({
+        where: {
+          id: typeof id === 'number' ? id : Number.parseInt(id),
+        },
+        include: {
+          InformacionDato: {
+            include: {
+              dato: {
+                include: {
+                  seccionesFicha: true,
+                },
+              },
+            },
+          },
+        },
+      });
+
+      console.log('ficha con seciones: ', fichaConSecciones);
+
+      // Convertir el objeto a JSON con formato y orden personalizado
+      const fichaConSecciones2 = JSON.stringify(
+        fichaConSecciones,
+        (key, value) => {
+          console.log('impriendo key: ', key);
+          console.log('impriendo value: ', value);
+
+          // Ordenar las propiedades según tus preferencias
+          if (key === 'SeccionesFicha') return 1;
+          if (key === 'Dato') return 2;
+          if (key === 'InformacionDato') return 3;
+
+          console.log('volviendo a immprimir key: ', key);
+
+          return value;
+        },
+        2,
+      ); // 2 espacios de indentación para mejorar la legibilidad
+
+      console.log(fichaConSecciones2);
+      return fichaConSecciones2;
+    } catch (error) {
+      console.error('Error en findOneData:', error);
+      throw error;
+    }
   }
 
   async update(id: number, ficha: EntityUpdateFicha): Promise<EntityFicha> {

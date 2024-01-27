@@ -9,6 +9,7 @@ import {
   HttpStatus,
   ParseIntPipe,
   ValidationPipe,
+  UseGuards,
 } from '@nestjs/common';
 import { FichaService } from './ficha.service';
 import { CreateFichaDto } from './dto/create-ficha.dto';
@@ -21,9 +22,10 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { EntityFicha } from './entities';
+import { JwtGuard } from 'src/auth/guard';
 
 @ApiTags('ficha - APi')
-//@UseGuards(JwtGuard)
+@UseGuards(JwtGuard)
 @ApiBearerAuth()
 @Controller({
   version: '1',
@@ -41,7 +43,7 @@ export class FichaController {
   }
 
   @Get()
-  @ApiOperation({ summary: 'Get  all Ficha data' })
+  @ApiOperation({ summary: 'Get  all Ficha created' })
   @ApiResponse({
     status: HttpStatus.OK,
     description: 'API is up',
@@ -51,7 +53,7 @@ export class FichaController {
   }
 
   @Get(':id')
-  @ApiOperation({ summary: 'Get one Ficha data by ID' })
+  @ApiOperation({ summary: 'Get one Ficha by ID..' })
   findOne(
     @Param(
       'id',
@@ -62,8 +64,20 @@ export class FichaController {
     return this.fichaService.findOne(id);
   }
 
+  @Get('structure/:id')
+  @ApiOperation({ summary: 'Get One Ficha Data By ID' })
+  Data(
+    @Param(
+      'id',
+      new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE }),
+    )
+    id: number,
+  ) {
+    return this.fichaService.findOneData(id);
+  }
+
   @Patch(':id')
-  @ApiOperation({ summary: 'update a Ficha data by ID' })
+  @ApiOperation({ summary: 'update a Ficha by ID' })
   update(
     @Param(
       'id',

@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpStatus,
   Param,
@@ -13,10 +14,16 @@ import { GetUser } from '../auth/decorator';
 import { Usuario } from '@prisma/client';
 import { EditUserDto } from './dto';
 import { UserService } from './user.service';
-import { ApiOperation, ApiHeaders, ApiTags } from '@nestjs/swagger';
+import {
+  ApiOperation,
+  ApiHeaders,
+  ApiTags,
+  ApiBearerAuth,
+} from '@nestjs/swagger';
 import { string } from 'joi';
 
-@UseGuards(JwtGuard)
+//@UseGuards(JwtGuard)
+//@ApiBearerAuth()
 @ApiTags('users - APi')
 @Controller({
   version: '1',
@@ -42,12 +49,28 @@ export class UserController {
     return this.userService.findOneUserByID(id);
   }
 
-  @Patch()
-  editUser(
-    @GetUser('id')
-    userId: number,
-    @Body() dto: EditUserDto,
+  @Patch(':id')
+  @ApiOperation({ summary: 'update a user data' })
+  update(
+    @Param(
+      'id',
+      new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE }),
+    )
+    id: number,
+    @Body() updateUserDto: EditUserDto,
   ) {
-    return this.userService.editUserByID(userId, dto);
+    return this.userService.update(id, updateUserDto);
+  }
+
+  @Delete(':id')
+  @ApiOperation({ summary: 'delete a user data' })
+  remove(
+    @Param(
+      'id',
+      new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE }),
+    )
+    id: number,
+  ) {
+    return this.userService.remove(id);
   }
 }

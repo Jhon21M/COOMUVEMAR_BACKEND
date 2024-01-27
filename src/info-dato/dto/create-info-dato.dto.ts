@@ -16,4 +16,9 @@ export class CreateInfoDatoDto {
   @IsNumber()
   @ApiProperty()
   IDDato: number;
+
+  @IsNotEmpty()
+  @IsNumber()
+  @ApiProperty()
+  IDFicha;
 }

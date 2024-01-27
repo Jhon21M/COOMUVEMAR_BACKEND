@@ -107,8 +107,9 @@ model InformacionDato {
   informacion String
   descripcion String?
 
-  IDDato  Int
-  dato    Dato  @relation(fields: [IDDato], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  dato   Dato @relation(fields: [IDDato], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  IDDato Int
+
   ficha   Ficha @relation(fields: [IDFicha], references: [id], onDelete: Cascade, onUpdate: Cascade)
   IDFicha Int
 }
