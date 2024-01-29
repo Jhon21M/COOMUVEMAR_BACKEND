@@ -5,6 +5,8 @@ import { AuthSignupDto, AuthSigninDto } from './dto';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
+import { EntityUser } from './entities';
+import { EntityAuthSignin } from './entities/signin.entity';
 
 @Injectable()
 export class AuthService {
@@ -14,25 +16,20 @@ export class AuthService {
     private config: ConfigService,
   ) {}
 
-  async singup(dto: AuthSignupDto) {
+  async singup(authSignup: EntityUser): Promise<{ access_token: string }> {
     //generate the password hash
-    const hash = await argon.hash(dto.password);
+    const hash = await argon.hash(authSignup.hash);
     try {
       //add the new user to the db
       const user = await this.prisma.usuario.create({
         data: {
-          firstName: dto.firstName,
-          lastName: dto.lastName,
-          email: dto.email,
+          firstName: authSignup.firstName,
+          lastName: authSignup.lastName,
+          email: authSignup.email,
           hash,
         },
-        select: {
-          id: true,
-          email: true,
-          firstName: true,
-          createAt: true,
-        },
       });
+
       return this.signToken(user.id, user.email);
     } catch (error) {
       if (error instanceof PrismaClientKnownRequestError) {
@@ -44,21 +41,24 @@ export class AuthService {
     }
   }
 
-  async signin(dto: AuthSigninDto) {
-    const { email, password } = dto;
+  async signin(
+    userAuthSingnin: EntityAuthSignin,
+  ): Promise<{ access_token: string }> {
+    const { email, password } = userAuthSingnin;
     console.log('imprimiento email: ', email);
     console.log('imprimiento password: ', password);
+
     // find the user by email
     const user = await this.prisma.usuario.findUnique({
       where: {
-        email: dto.email,
+        email: userAuthSingnin.email,
       },
     });
     // if user does not exist throw exception
-    if (!user) throw new ForbiddenException('Incorrect credentials');
+    if (!user) throw new ForbiddenException('Us');
 
     //compare the password
-    const pwMatches = await argon.verify(user.hash, dto.password);
+    const pwMatches = await argon.verify(user.hash, userAuthSingnin.password);
 
     // if password incorrect throw exception
     if (!pwMatches) throw new ForbiddenException('Incorrect credentials');

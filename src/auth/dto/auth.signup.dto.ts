@@ -1,7 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Role } from '@prisma/client';
 import {
   IsEmail,
   IsNotEmpty,
+  IsOptional,
   IsString,
   Length,
   Matches,
@@ -30,5 +32,10 @@ export class AuthSignupDto {
   @IsString()
   @IsNotEmpty()
   @ApiProperty({ required: true })
-  password: string;
+  hash: string;
+
+  @IsString()
+  @IsOptional()
+  @ApiProperty({ required: false })
+  role: Role;
 }
