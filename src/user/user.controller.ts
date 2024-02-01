@@ -8,6 +8,7 @@ import {
   ParseIntPipe,
   Patch,
   UseGuards,
+  ValidationPipe,
 } from '@nestjs/common';
 import { JwtGuard } from '../auth/guard';
 import { GetUser } from '../auth/decorator';
@@ -21,16 +22,14 @@ import {
   ApiBearerAuth,
   ApiResponse,
 } from '@nestjs/swagger';
-import { string } from 'joi';
 import { Roles } from 'src/auth/decorator/roles.decorador';
+import { RolesGuard } from 'src/auth/guard/auth.guard';
+import { Role } from 'src/common/enum/role.enum';
 
-//@UseGuards(JwtGuard)
 @ApiBearerAuth()
+@UseGuards(JwtGuard, RolesGuard)
 @ApiTags('users - APi')
-@Controller({
-  version: '1',
-  path: 'user',
-})
+@Controller('users')
 export class UserController {
   constructor(private userService: UserService) {}
 
@@ -50,7 +49,8 @@ export class UserController {
     return await this.userService.findAll();
   }
 
-  @Get(':id')
+  @Roles(Role.Admin)
+  @Get('oneUser/:id')
   @ApiOperation({ summary: 'Get one user data by ID' })
   findOne(
     @Param(
@@ -62,8 +62,9 @@ export class UserController {
     return this.userService.findOneUserByID(id);
   }
 
-  @Roles('Admin')
+  @Roles(Role.Admin)
   @Patch(':id')
+  @Roles(Role.Admin)
   @ApiOperation({ summary: 'update a user data' })
   update(
     @Param(
@@ -71,11 +72,12 @@ export class UserController {
       new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE }),
     )
     id: number,
-    @Body() updateUserDto: EditUserDto,
+    @Body(new ValidationPipe()) updateUserDto: EditUserDto,
   ) {
     return this.userService.update(id, updateUserDto);
   }
 
+  @Roles(Role.Admin)
   @Delete(':id')
   @ApiOperation({ summary: 'delete a user data' })
   remove(

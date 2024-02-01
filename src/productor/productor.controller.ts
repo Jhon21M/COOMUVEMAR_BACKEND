@@ -110,7 +110,6 @@ export class ProductorController {
     return this.productorService.update(id, updateProductorDto);
   }
 
-  @Roles('admin')
   @ApiOperation({ summary: 'Delete a Productor By ID' })
   @Delete(':id')
   remove(

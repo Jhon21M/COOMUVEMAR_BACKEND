@@ -21,8 +21,8 @@ export class UserService {
     });
   }
 
-  findOneUserByID(id: number) {
-    return this.prisma.usuario.findUnique({
+  async findOneUserByID(id: number) {
+    return await this.prisma.usuario.findUnique({
       where: {
         id: typeof id === 'number' ? id : Number.parseInt(id),
       },

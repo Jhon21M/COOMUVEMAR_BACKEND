@@ -27,6 +27,7 @@ export class AuthService {
           lastName: authSignup.lastName,
           email: authSignup.email,
           hash,
+          role: authSignup.role,
         },
       });
 
@@ -54,8 +55,9 @@ export class AuthService {
         email: userAuthSingnin.email,
       },
     });
+
     // if user does not exist throw exception
-    if (!user) throw new ForbiddenException('Us');
+    if (!user) throw new ForbiddenException('Incorrect credentials');
 
     //compare the password
     const pwMatches = await argon.verify(user.hash, userAuthSingnin.password);
@@ -78,7 +80,7 @@ export class AuthService {
     const secret = this.config.get('JWT_SECRET');
 
     const token = await this.jwt.signAsync(payload, {
-      expiresIn: '15m',
+      expiresIn: '3h',
       secret,
     });
 

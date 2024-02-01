@@ -9,7 +9,7 @@ import {
 
 export class AuthSigninDto {
   @IsNotEmpty()
-  @ApiProperty({ required: true, example: 'jhoe@gmail.com' })
+  @ApiProperty({ required: true, example: 'jhonosmanm@gmail.com' })
   @IsEmail()
   @Length(14)
   @Matches(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, {
@@ -19,6 +19,6 @@ export class AuthSigninDto {
 
   @IsString()
   @IsNotEmpty()
-  @ApiProperty({ required: true, example: '1234' })
+  @ApiProperty({ required: true, example: '123456' })
   password: string;
 }

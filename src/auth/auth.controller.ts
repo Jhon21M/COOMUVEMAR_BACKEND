@@ -1,16 +1,18 @@
 import { Controller, Post, Body, Get, ValidationPipe } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthSignupDto, AuthSigninDto } from './dto';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { json } from 'body-parser';
 
 @ApiTags('Auth - API')
+
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
 
   @Post('signup')
   @ApiOperation({ summary: 'Create a account on DB' })
+  @ApiBody({ type: AuthSignupDto })
   signup(@Body(new ValidationPipe()) dto: AuthSignupDto) {
     return this.authService.singup(dto);
   }

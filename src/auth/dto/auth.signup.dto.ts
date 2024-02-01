@@ -2,6 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Role } from '@prisma/client';
 import {
   IsEmail,
+  IsEnum,
   IsNotEmpty,
   IsOptional,
   IsString,
@@ -37,5 +38,9 @@ export class AuthSignupDto {
   @IsString()
   @IsOptional()
   @ApiProperty({ required: false })
+  @IsEnum(Role, {
+    message:
+      'El valor del role proporcionado no es válido. Debe ser USER o ADMIN.',
+  })
   role: Role;
 }
