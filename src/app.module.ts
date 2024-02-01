@@ -18,6 +18,8 @@ import { DatoModule } from './dato/dato.module';
 import { InfoDatoModule } from './info-dato/info-dato.module';
 import { DocumentoModule } from './documento/documento.module';
 import { DesicionModule } from './desicion/desicion.module';
+import { APP_GUARD } from '@nestjs/core';
+import { RolesGuard } from './auth/guard/auth.guard';
 
 @Module({
   imports: [
@@ -38,6 +40,14 @@ import { DesicionModule } from './desicion/desicion.module';
     DesicionModule,
   ],
   controllers: [ProductorController, AuthController, UserController],
-  providers: [ProductorService, AuthService, UserService],
+  providers: [
+    ProductorService,
+    AuthService,
+    UserService,
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard,
+    },
+  ],
 })
 export class AppModule {}

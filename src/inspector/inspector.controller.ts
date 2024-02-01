@@ -9,6 +9,7 @@ import {
   ParseIntPipe,
   HttpStatus,
   ValidationPipe,
+  UseGuards,
 } from '@nestjs/common';
 import { InspectorService } from './inspector.service';
 import { CreateInspectorDto, UpdateInspectorDto } from './dto';
@@ -19,12 +20,14 @@ import {
   ApiTags,
   ApiTooManyRequestsResponse,
 } from '@nestjs/swagger';
+import { JwtGuard } from 'src/auth/guard';
 
 @ApiTags('Inspector - API')
 @ApiTooManyRequestsResponse({
   status: HttpStatus.TOO_MANY_REQUESTS,
   description: 'Too many requests in a short time',
 })
+@UseGuards(JwtGuard)
 @ApiBearerAuth()
 @Controller({
   version: '1',

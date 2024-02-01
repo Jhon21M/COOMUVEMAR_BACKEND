@@ -1,5 +1,14 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
+import { Role } from '@prisma/client';
+import {
+  IsEmail,
+  IsEnum,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  Length,
+  Matches,
+} from 'class-validator';
 
 export class AuthSignupDto {
   @IsString()
@@ -12,13 +21,26 @@ export class AuthSignupDto {
   @ApiProperty({ required: false })
   lastName: string;
 
-  @IsEmail()
   @IsNotEmpty()
-  @ApiProperty({ required: true })
+  @ApiProperty({ required: true, example: 'jhoe@gmail.com' })
+  @IsEmail({}, { message: 'La dirección de correo electrónico no es válida.' })
+  @Length(14)
+  @Matches(/^[a-zA-Z0-9._%+-]+@[a-z]{5,}\.[a-z]{3,}$/, {
+    message: 'El formato del correo electrónico no es válido.',
+  })
   email: string;
 
   @IsString()
   @IsNotEmpty()
   @ApiProperty({ required: true })
-  password: string;
+  hash: string;
+
+  @IsString()
+  @IsOptional()
+  @ApiProperty({ required: false })
+  @IsEnum(Role, {
+    message:
+      'El valor del role proporcionado no es válido. Debe ser USER o ADMIN.',
+  })
+  role: Role;
 }

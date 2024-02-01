@@ -9,6 +9,7 @@ import {
   ParseIntPipe,
   ValidationPipe,
   HttpStatus,
+  UseGuards,
 } from '@nestjs/common';
 import { SecFichaService } from './sec-ficha.service';
 import { CreateSeccionFichaDto, UpdateSecFichaDto } from 'src/sec-ficha/dto';
@@ -18,9 +19,12 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
+import { JwtGuard } from 'src/auth/guard';
+import { Roles } from 'src/auth/decorator';
+import { Role } from 'src/common/enum/role.enum';
 
 @ApiTags('seccionesFicha - APi')
-//@UseGuards(JwtGuard)
+@UseGuards(JwtGuard)
 @ApiBearerAuth()
 @Controller({
   version: '1',
@@ -29,6 +33,7 @@ import {
 export class seccionesFichaController {
   constructor(private readonly secFichaService: SecFichaService) {}
 
+  @Roles(Role.Admin)
   @Post()
   @ApiOperation({ summary: 'Create a new seccionFicha' })
   create(
@@ -59,6 +64,7 @@ export class seccionesFichaController {
     return this.secFichaService.findOne(id);
   }
 
+  @Roles(Role.Admin)
   @Patch(':id')
   @ApiOperation({ summary: 'update a seccionFicha data by ID' })
   update(
@@ -72,6 +78,7 @@ export class seccionesFichaController {
     return this.secFichaService.update(id, UpdateSecFicha);
   }
 
+  @Roles(Role.Admin)
   @ApiOperation({ summary: 'Delete a seccionFicha By ID' })
   @Delete(':id')
   remove(
