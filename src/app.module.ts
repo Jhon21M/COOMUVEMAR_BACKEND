@@ -18,8 +18,11 @@ import { DatoModule } from './dato/dato.module';
 import { InfoDatoModule } from './info-dato/info-dato.module';
 import { DocumentoModule } from './documento/documento.module';
 import { DesicionModule } from './desicion/desicion.module';
-import { APP_GUARD } from '@nestjs/core';
+import { APP_FILTER, APP_GUARD } from '@nestjs/core';
 import { RolesGuard } from './auth/guard/auth.guard';
+import { DashboardModule } from './dashboard/dashboard.module';
+import { PrismaExceptionFilter } from './common/filters/prisma.filter.exception';
+import { HttpExceptionFilter } from './common/filters/http.filter.exception';
 
 @Module({
   imports: [
@@ -38,6 +41,7 @@ import { RolesGuard } from './auth/guard/auth.guard';
     InfoDatoModule,
     DocumentoModule,
     DesicionModule,
+    DashboardModule,
   ],
   controllers: [ProductorController, AuthController, UserController],
   providers: [
@@ -47,6 +51,14 @@ import { RolesGuard } from './auth/guard/auth.guard';
     {
       provide: APP_GUARD,
       useClass: RolesGuard,
+    },
+    {
+      provide: APP_FILTER,
+      useClass: PrismaExceptionFilter,
+    },
+    {
+      provide: APP_FILTER,
+      useClass: HttpExceptionFilter,
     },
   ],
 })

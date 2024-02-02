@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Transform } from 'class-transformer';
 import {
   IsOptional,
   IsNotEmpty,
@@ -40,7 +41,8 @@ export class CreateProductorDto {
 
   @IsOptional()
   @IsDate()
-  @ApiProperty({ required: false })
+  @Transform(({ value }) => (value instanceof Date ? value : new Date(value)))
+  @ApiProperty()
   fechaIngresoPrograma: Date;
 
   @IsNotEmpty()

@@ -14,7 +14,7 @@ export class CreateFichaDto {
   @IsDate()
   @IsOptional()
   @ApiProperty({ nullable: true })
-  fecha: Date;
+  createdAt: Date;
 
   @IsString()
   @IsNotEmpty()

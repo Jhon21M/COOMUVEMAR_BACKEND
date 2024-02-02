@@ -9,7 +9,7 @@ export class ProductorService {
     const newProductor = await this.prisma.productor.create({
       data: {
         ...productor,
-      },
+      }
     });
 
     return newProductor;
