@@ -23,6 +23,7 @@ import { RolesGuard } from './auth/guard/auth.guard';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { PrismaExceptionFilter } from './common/filters/prisma.filter.exception';
 import { HttpExceptionFilter } from './common/filters/http.filter.exception';
+import { ExternaldataModule } from './externaldata/externaldata.module';
 
 @Module({
   imports: [
@@ -42,6 +43,7 @@ import { HttpExceptionFilter } from './common/filters/http.filter.exception';
     DocumentoModule,
     DesicionModule,
     DashboardModule,
+    ExternaldataModule,
   ],
   controllers: [ProductorController, AuthController, UserController],
   providers: [
@@ -56,10 +58,10 @@ import { HttpExceptionFilter } from './common/filters/http.filter.exception';
       provide: APP_FILTER,
       useClass: PrismaExceptionFilter,
     },
-    {
-      provide: APP_FILTER,
-      useClass: HttpExceptionFilter,
-    },
+    // {
+    //   provide: APP_FILTER,
+    //   useClass: HttpExceptionFilter,
+    // },
   ],
 })
 export class AppModule {}

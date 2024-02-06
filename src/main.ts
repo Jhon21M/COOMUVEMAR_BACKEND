@@ -5,7 +5,6 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { cors: true });
 
-  
   const config = new DocumentBuilder()
     .setTitle('COOMUVEMAR BACKEND')
     .setDescription('Desarrollando API REST de los endpoint')

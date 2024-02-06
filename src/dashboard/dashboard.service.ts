@@ -1,9 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { CreateDashboardDto } from './dto/create-dashboard.dto';
-import { UpdateDashboardDto } from './dto/update-dashboard.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { DashboardData } from './interfaces';
-import { Inspector } from '@prisma/client';
 
 @Injectable()
 export class DashboardService {
@@ -47,6 +44,7 @@ export class DashboardService {
   private async getActiveInspectorsLastMonth(): Promise<number> {
     const lastMonth = new Date();
     lastMonth.setMonth(lastMonth.getMonth() - 1);
+    console.log(lastMonth);
 
     const fichasPorInspector = await this.prismaService.ficha.groupBy({
       by: ['IDInspector'],
@@ -62,17 +60,21 @@ export class DashboardService {
   }
 
   private async getInactiveInspectors(): Promise<number> {
+    const lastMonth = new Date();
+    lastMonth.setMonth(lastMonth.getMonth() - 1); // Restar un mes
+
     const inactiveInspectors = await this.prismaService.inspector.findMany({
       where: {
         Ficha: {
           none: {
             createdAt: {
-              gte: new Date(),
+              gte: lastMonth,
             },
           },
         },
       },
     });
+
     return inactiveInspectors.length;
   }
 
@@ -81,7 +83,7 @@ export class DashboardService {
       where: {
         Desicion: {
           some: {
-            desicion: 'Aprobado',
+            desicion: 'Aplobado',
           },
         },
       },

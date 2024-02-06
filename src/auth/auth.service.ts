@@ -1,7 +1,6 @@
 import { Injectable, ForbiddenException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import * as argon from 'argon2';
-import { AuthSignupDto, AuthSigninDto } from './dto';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
@@ -31,7 +30,7 @@ export class AuthService {
         },
       });
 
-      return this.signToken(user.id, user.email);
+      return this.signToken(user.role, user.id, user.email);
     } catch (error) {
       if (error instanceof PrismaClientKnownRequestError) {
         if (error.code === 'P2002') {
@@ -66,27 +65,46 @@ export class AuthService {
     if (!pwMatches) throw new ForbiddenException('Incorrect credentials');
 
     //send back the user
-    return this.signToken(user.id, user.email);
+    return this.signToken(user.role, user.id, user.email);
   }
 
   async signToken(
+    role: string,
     userId: number,
     email: string,
   ): Promise<{ access_token: string }> {
-    const payload = {
-      sub: userId,
-      email,
-    };
-    const secret = this.config.get('JWT_SECRET');
+    if (role === 'ADMIN'){
+      const payload = {
+        sub: userId,
+        email,
+      };
+      const secret = this.config.get('JWT_SECRET');
+  
+      const token = await this.jwt.signAsync(payload, {
+        expiresIn: '3h',
+        secret,
+      });
+  
+      return {
+        access_token: token,
+      };
+    } else {
+      const payload = {
+        sub: userId,
+        email,
+      };
+      const secret = this.config.get('JWT_SECRET');
+  
+      const token = await this.jwt.signAsync(payload, {
+        expiresIn: '3d',
+        secret,
+      });
+  
+      return {
+        access_token: token,
+      };
+    }
 
-    const token = await this.jwt.signAsync(payload, {
-      expiresIn: '3h',
-      secret,
-    });
-
-    return {
-      access_token: token,
-    };
   }
 
   signout() {}

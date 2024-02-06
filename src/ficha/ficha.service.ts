@@ -1,9 +1,6 @@
-import { ConsoleLogger, Injectable } from '@nestjs/common';
-import { CreateFichaDto } from './dto/create-ficha.dto';
-import { UpdateFichaDto } from './dto/update-ficha.dto';
+import { Injectable } from '@nestjs/common';
 import { EntityFicha, EntityUpdateFicha } from './entities';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { json } from 'body-parser';
 
 @Injectable()
 export class FichaService {

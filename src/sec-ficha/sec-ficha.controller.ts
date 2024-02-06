@@ -22,9 +22,10 @@ import {
 import { JwtGuard } from 'src/auth/guard';
 import { Roles } from 'src/auth/decorator';
 import { Role } from 'src/common/enum/role.enum';
+import { RolesGuard } from 'src/auth/guard/auth.guard';
 
 @ApiTags('seccionesFicha - APi')
-@UseGuards(JwtGuard)
+@UseGuards(JwtGuard, RolesGuard)
 @ApiBearerAuth()
 @Controller({
   version: '1',
@@ -33,8 +34,8 @@ import { Role } from 'src/common/enum/role.enum';
 export class seccionesFichaController {
   constructor(private readonly secFichaService: SecFichaService) {}
 
-  @Roles(Role.Admin)
   @Post()
+  @Roles(Role.Admin)
   @ApiOperation({ summary: 'Create a new seccionFicha' })
   create(
     @Body(new ValidationPipe()) createseccionFichaDto: CreateSeccionFichaDto,
@@ -43,6 +44,7 @@ export class seccionesFichaController {
   }
 
   @Get()
+  @Roles(Role.User, Role.Admin)
   @ApiOperation({ summary: 'Get  all seccionFicha data' })
   @ApiResponse({
     status: HttpStatus.OK,
@@ -53,6 +55,7 @@ export class seccionesFichaController {
   }
 
   @Get(':id')
+  @Roles(Role.User, Role.Admin)
   @ApiOperation({ summary: 'Get one seccionFicha data by ID' })
   findOne(
     @Param(
@@ -64,8 +67,8 @@ export class seccionesFichaController {
     return this.secFichaService.findOne(id);
   }
 
-  @Roles(Role.Admin)
   @Patch(':id')
+  @Roles(Role.Admin)
   @ApiOperation({ summary: 'update a seccionFicha data by ID' })
   update(
     @Param(
@@ -78,9 +81,9 @@ export class seccionesFichaController {
     return this.secFichaService.update(id, UpdateSecFicha);
   }
 
+  @Delete(':id')
   @Roles(Role.Admin)
   @ApiOperation({ summary: 'Delete a seccionFicha By ID' })
-  @Delete(':id')
   remove(
     @Param(
       'id',

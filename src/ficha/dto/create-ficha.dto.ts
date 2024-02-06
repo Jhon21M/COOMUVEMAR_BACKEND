@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Transform } from 'class-transformer';
 import {
   IsOptional,
   IsNotEmpty,
@@ -12,6 +13,7 @@ import {
 
 export class CreateFichaDto {
   @IsDate()
+  @Transform(({ value }) => (value instanceof Date ? value : new Date(value)))
   @IsOptional()
   @ApiProperty({ nullable: true })
   createdAt: Date;
