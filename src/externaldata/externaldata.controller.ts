@@ -38,7 +38,7 @@ import { RolesGuard } from 'src/auth/guard/auth.guard';
 export class ExternaldataController {
   constructor(private readonly externaldataService: ExternaldataService) {}
 
-  @Post('externalDATA')
+  @Post('')
   @Roles(Role.User, Role.Admin)
   @ApiOperation({ summary: 'post DATA from app Movil' })
   create(
