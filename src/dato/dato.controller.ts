@@ -9,6 +9,7 @@ import {
   ValidationPipe,
   HttpStatus,
   ParseIntPipe,
+  UseGuards,
 } from '@nestjs/common';
 import { DatoService } from './dato.service';
 import { CreateDatoDto } from './dto/create-dato.dto';
@@ -20,9 +21,14 @@ import {
 } from '@nestjs/swagger';
 import { EntityDato } from './entities';
 import { UpdateDatoDto } from './dto';
+import { JwtGuard } from 'src/auth/guard';
+import { RolesGuard } from 'src/auth/guard/auth.guard';
+import { Roles } from 'src/auth/decorator';
+import { Role } from 'src/common/enum/role.enum';
+
 
 @ApiTags('dato - APi')
-//@UseGuards(JwtGuard)
+@UseGuards(JwtGuard, RolesGuard)
 @ApiBearerAuth()
 @Controller({
   version: '1',
@@ -30,7 +36,9 @@ import { UpdateDatoDto } from './dto';
 })
 export class DatoController {
   constructor(private readonly datoService: DatoService) {}
+
   @Post()
+  @Roles(Role.Admin)
   @ApiOperation({ summary: 'Create a new dato' })
   create(
     @Body(new ValidationPipe()) createDatoDto: CreateDatoDto,
@@ -39,6 +47,7 @@ export class DatoController {
   }
 
   @Get()
+  @Roles(Role.User, Role.Admin)
   @ApiOperation({ summary: 'Get  all Dato data' })
   @ApiResponse({
     status: HttpStatus.OK,
@@ -49,6 +58,7 @@ export class DatoController {
   }
 
   @Get(':id')
+  @Roles(Role.User, Role.Admin)
   @ApiOperation({ summary: 'Get one Dato data by ID' })
   findOne(
     @Param(
@@ -61,6 +71,7 @@ export class DatoController {
   }
 
   @Patch(':id')
+  @Roles(Role.Admin)
   @ApiOperation({ summary: 'update a Dato data by ID' })
   update(
     @Param(
@@ -73,8 +84,9 @@ export class DatoController {
     return this.datoService.update(id, updateDatoDto);
   }
 
-  @ApiOperation({ summary: 'Delete a Dato from DB By ID' })
   @Delete(':id')
+  @Roles(Role.Admin)
+  @ApiOperation({ summary: 'Delete a Dato from DB By ID' })
   remove(
     @Param(
       'id',

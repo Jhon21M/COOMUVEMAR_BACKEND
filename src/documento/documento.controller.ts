@@ -9,6 +9,7 @@ import {
   ValidationPipe,
   HttpStatus,
   ParseIntPipe,
+  UseGuards,
 } from '@nestjs/common';
 import { DocumentoService } from './documento.service';
 import { CreateDocumentoDto } from './dto/create-documento.dto';
@@ -21,9 +22,12 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { EntityDocumento } from './entities';
+import { JwtGuard } from 'src/auth/guard';
+import { Roles } from 'src/auth/decorator';
+import { Role } from 'src/common/enum/role.enum';
 
 @ApiTags('documento - APi')
-//@UseGuards(JwtGuard)
+@UseGuards(JwtGuard)
 @ApiBearerAuth()
 @Controller({
   version: '1',
@@ -31,7 +35,9 @@ import { EntityDocumento } from './entities';
 })
 export class DocumentoController {
   constructor(private readonly documentoService: DocumentoService) {}
+
   @Post()
+  @Roles(Role.User, Role.Admin)
   @ApiOperation({ summary: 'Create a new Documento de Ficha' })
   create(
     @Body(new ValidationPipe()) createDocumentoDto: CreateDocumentoDto,
@@ -40,6 +46,7 @@ export class DocumentoController {
   }
 
   @Get()
+  @Roles(Role.User, Role.Admin)
   @ApiOperation({ summary: 'Get  all Documento data from DB' })
   @ApiResponse({
     status: HttpStatus.OK,
@@ -51,6 +58,7 @@ export class DocumentoController {
   }
 
   @Get(':id')
+  @Roles(Role.User, Role.Admin)
   @ApiOperation({ summary: 'Get one Documento data by ID' })
   findOne(
     @Param(
@@ -63,6 +71,7 @@ export class DocumentoController {
   }
 
   @Patch(':id')
+  @Roles(Role.Admin)
   @ApiOperation({ summary: 'update a Documento data by ID' })
   update(
     @Param(
@@ -75,8 +84,9 @@ export class DocumentoController {
     return this.documentoService.update(id, updateDocumentoDto);
   }
 
-  @ApiOperation({ summary: 'Delete a Documento from DB By ID' })
   @Delete(':id')
+  @Roles(Role.Admin)
+  @ApiOperation({ summary: 'Delete a Documento from DB By ID' })
   remove(
     @Param(
       'id',

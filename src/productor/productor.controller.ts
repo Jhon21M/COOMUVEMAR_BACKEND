@@ -30,8 +30,10 @@ import { EntityProductor } from './entities/productor.entity';
 //import { ValidationPipe2 } from 'src/validation/validation.pipe';
 import { Roles } from 'src/auth/decorator/roles.decorador';
 import { get } from 'http';
+import { RolesGuard } from 'src/auth/guard/auth.guard';
+import { Role } from 'src/common/enum/role.enum';
 
-@UseGuards(JwtGuard)
+@UseGuards(JwtGuard, RolesGuard)
 @ApiBearerAuth()
 @ApiTags('Productor - API')
 @ApiTooManyRequestsResponse({
@@ -48,6 +50,7 @@ export class ProductorController {
   constructor(private readonly productorService: ProductorService) {}
 
   @Post()
+  @Roles(Role.Admin)
   @ApiOperation({ summary: 'Create a new Productor' })
   create(
     @Body(new ValidationPipe()) createProductorDto: CreateProductorDto,
@@ -56,6 +59,7 @@ export class ProductorController {
   }
 
   @Get()
+  @Roles(Role.User, Role.Admin)
   @ApiOperation({ summary: 'Get  all Productor data' })
   @ApiResponse({
     status: HttpStatus.OK,
@@ -67,12 +71,14 @@ export class ProductorController {
   }
 
   @Get('fincas')
+  @Roles(Role.User, Role.Admin)
   @ApiOperation({ summary: 'Get all Productor with their Finca' })
   async findAllProductorAndFinca() {
     return await this.productorService.findAllProductorAndFinca();
   }
 
   @Get('fincas/:id')
+  @Roles(Role.User, Role.Admin)
   @ApiOperation({ summary: 'Get a Productor with his Finca by ID' })
   async findAllFincaOneProductor(
     @Param(
@@ -85,6 +91,7 @@ export class ProductorController {
   }
 
   @Get(':id')
+  @Roles(Role.User, Role.Admin)
   @ApiOperation({ summary: 'Get one Productor data by ID' })
   findOne(
     @Param(
@@ -96,8 +103,8 @@ export class ProductorController {
     return this.productorService.findOne(id);
   }
 
-  //@Roles('admin')
   @Patch(':id')
+  @Roles(Role.Admin)
   @ApiOperation({ summary: 'update a Productor data' })
   update(
     @Param(
@@ -110,8 +117,9 @@ export class ProductorController {
     return this.productorService.update(id, updateProductorDto);
   }
 
-  @ApiOperation({ summary: 'Delete a Productor By ID' })
   @Delete(':id')
+  @Roles(Role.Admin)
+  @ApiOperation({ summary: 'Delete a Productor By ID' })
   remove(
     @Param(
       'id',

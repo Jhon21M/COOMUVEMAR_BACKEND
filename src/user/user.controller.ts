@@ -22,24 +22,26 @@ import {
   ApiBearerAuth,
   ApiResponse,
 } from '@nestjs/swagger';
-import { Roles } from 'src/auth/decorator/roles.decorador';
 import { RolesGuard } from 'src/auth/guard/auth.guard';
+import { Roles } from 'src/auth/decorator/roles.decorador';
 import { Role } from 'src/common/enum/role.enum';
 
-@ApiBearerAuth()
 @UseGuards(JwtGuard, RolesGuard)
+@ApiBearerAuth()
 @ApiTags('users - APi')
 @Controller('users')
 export class UserController {
   constructor(private userService: UserService) {}
 
   @Get('me')
+  @Roles(Role.User, Role.Admin)
   @ApiOperation({ summary: 'Get myself data from DB' })
   getMe(@GetUser() user: Usuario) {
     return user;
   }
 
   @Get()
+  @Roles(Role.User, Role.Admin)
   @ApiOperation({ summary: 'Get  all User data from DB' })
   @ApiResponse({
     status: HttpStatus.OK,
@@ -49,8 +51,8 @@ export class UserController {
     return await this.userService.findAll();
   }
 
-  @Roles(Role.Admin)
   @Get('oneUser/:id')
+  @Roles(Role.User, Role.Admin)
   @ApiOperation({ summary: 'Get one user data by ID' })
   findOne(
     @Param(
@@ -62,7 +64,6 @@ export class UserController {
     return this.userService.findOneUserByID(id);
   }
 
-  @Roles(Role.Admin)
   @Patch(':id')
   @Roles(Role.Admin)
   @ApiOperation({ summary: 'update a user data' })
@@ -77,8 +78,8 @@ export class UserController {
     return this.userService.update(id, updateUserDto);
   }
 
-  @Roles(Role.Admin)
   @Delete(':id')
+  @Roles(Role.Admin)
   @ApiOperation({ summary: 'delete a user data' })
   remove(
     @Param(

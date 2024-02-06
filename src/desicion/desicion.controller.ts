@@ -9,6 +9,7 @@ import {
   ValidationPipe,
   HttpStatus,
   ParseIntPipe,
+  UseGuards,
 } from '@nestjs/common';
 import { DesicionService } from './desicion.service';
 import { CreateDesicionDto } from './dto/create-desicion.dto';
@@ -21,9 +22,13 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { EntityDesicion } from './entities';
+import { Roles } from 'src/auth/decorator/roles.decorador';
+import { RolesGuard } from 'src/auth/guard/auth.guard';
+import { Role } from 'src/common/enum/role.enum';
+import { JwtGuard } from 'src/auth/guard';
 
 @ApiTags('desicion - APi')
-//@UseGuards(JwtGuard)
+@UseGuards(JwtGuard, RolesGuard)
 @ApiBearerAuth()
 @Controller({
   version: '1',
@@ -31,7 +36,9 @@ import { EntityDesicion } from './entities';
 })
 export class DesicionController {
   constructor(private readonly desicionService: DesicionService) {}
+
   @Post()
+  @Roles(Role.Admin)
   @ApiOperation({ summary: 'Create a new desicion of Ficha' })
   create(
     @Body(new ValidationPipe()) createDesicionDto: CreateDesicionDto,
@@ -40,6 +47,7 @@ export class DesicionController {
   }
 
   @Get()
+  @Roles(Role.Admin)
   @ApiOperation({ summary: 'Get  all Desicion data from DB' })
   @ApiResponse({
     status: HttpStatus.OK,
@@ -50,6 +58,7 @@ export class DesicionController {
   }
 
   @Get(':id')
+  @Roles(Role.Admin)
   @ApiOperation({ summary: 'Get one desicion data by ID' })
   findOne(
     @Param(
@@ -62,6 +71,7 @@ export class DesicionController {
   }
 
   @Patch(':id')
+  @Roles(Role.Admin)
   @ApiOperation({ summary: 'update a Desicion data by ID' })
   update(
     @Param(
@@ -74,8 +84,9 @@ export class DesicionController {
     return this.desicionService.update(id, updateDesicionDto);
   }
 
-  @ApiOperation({ summary: 'Delete a Desicion from DB By ID' })
   @Delete(':id')
+  @Roles(Role.Admin)
+  @ApiOperation({ summary: 'Delete a Desicion from DB By ID' })
   remove(
     @Param(
       'id',

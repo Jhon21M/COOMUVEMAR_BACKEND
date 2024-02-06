@@ -20,9 +20,12 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { JwtGuard } from 'src/auth/guard';
+import { RolesGuard } from 'src/auth/guard/auth.guard';
+import { Roles } from 'src/auth/decorator';
+import { Role } from 'src/common/enum/role.enum';
 
 @ApiTags('finca - APi')
-//@UseGuards(JwtGuard)
+@UseGuards(JwtGuard, RolesGuard)
 @ApiBearerAuth()
 @Controller({
   version: '1',
@@ -32,6 +35,7 @@ export class FincaController {
   constructor(private readonly fincaService: FincaService) {}
 
   @Post()
+  @Roles(Role.User, Role.Admin)
   @ApiOperation({ summary: 'Create a new Finca' })
   @ApiOkResponse({ description: 'Finca created' })
   create(@Body() createFincaDto: CreateFincaDto) {
@@ -39,12 +43,14 @@ export class FincaController {
   }
 
   @Get()
+  @Roles(Role.User, Role.Admin)
   @ApiOperation({ summary: 'Get all Finca of DB' })
   findAll() {
     return this.fincaService.findAll();
   }
 
   @Get(':id')
+  @Roles(Role.User, Role.Admin)
   @ApiOperation({ summary: 'get a finca by ID' })
   findOne(
     @Param(
@@ -57,6 +63,7 @@ export class FincaController {
   }
 
   @Patch(':id')
+  @Roles(Role.Admin)
   @ApiOperation({ summary: 'update a finca by id' })
   update(
     @Param(
@@ -70,6 +77,7 @@ export class FincaController {
   }
 
   @Delete(':id')
+  @Roles(Role.Admin)
   @ApiOperation({ summary: 'Delete a Finca by ID' })
   remove(
     @Param(

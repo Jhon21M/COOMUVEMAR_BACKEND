@@ -5,6 +5,6 @@ import { RolesGuard } from 'src/auth/guard/auth.guard';
 
 @Module({
   controllers: [UserController],
-  providers: [UserService, RolesGuard],
+  providers: [UserService],
 })
 export class UserModule {}

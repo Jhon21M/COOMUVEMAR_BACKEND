@@ -3,7 +3,7 @@ import { FichaInterface } from 'src/ficha/interfaces';
 
 export class EntityFicha implements FichaInterface {
   @ApiProperty({ required: false, nullable: true })
-  fecha: Date;
+  createdAT?: Date | null;
 
   @ApiProperty({ required: true, nullable: false })
   localizacion: string;

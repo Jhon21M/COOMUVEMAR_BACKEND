@@ -9,6 +9,7 @@ import {
   ValidationPipe,
   HttpStatus,
   ParseIntPipe,
+  UseGuards,
 } from '@nestjs/common';
 import { InfoDatoService } from './info-dato.service';
 import { CreateInfoDatoDto } from './dto/create-info-dato.dto';
@@ -20,9 +21,13 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { EntityInfoDato } from './entities';
+import { JwtGuard } from 'src/auth/guard';
+import { RolesGuard } from 'src/auth/guard/auth.guard';
+import { Roles } from 'src/auth/decorator';
+import { Role } from 'src/common/enum/role.enum';
 
 @ApiTags('informaciondato - APi')
-//@UseGuards(JwtGuard)
+@UseGuards(JwtGuard, RolesGuard)
 @ApiBearerAuth()
 @Controller({
   version: '1',
@@ -30,8 +35,10 @@ import { EntityInfoDato } from './entities';
 })
 export class InfoDatoController {
   constructor(private readonly infodatoService: InfoDatoService) {}
+
   @Post()
-  @ApiOperation({ summary: 'Create a new infornaciondato' })
+  @Roles(Role.User, Role.Admin)
+  @ApiOperation({ summary: 'Create a new informaciondato' })
   create(
     @Body(new ValidationPipe()) createInfoDato: CreateInfoDatoDto,
   ): Promise<EntityInfoDato> {
@@ -39,6 +46,7 @@ export class InfoDatoController {
   }
 
   @Get()
+  @Roles(Role.User, Role.Admin)
   @ApiOperation({ summary: 'Get  all informacionDato data' })
   @ApiResponse({
     status: HttpStatus.OK,
@@ -49,6 +57,7 @@ export class InfoDatoController {
   }
 
   @Get(':id')
+  @Roles(Role.User, Role.Admin)
   @ApiOperation({ summary: 'Get one informacionDato data by ID' })
   findOne(
     @Param(
@@ -61,6 +70,7 @@ export class InfoDatoController {
   }
 
   @Patch(':id')
+  @Roles(Role.Admin)
   @ApiOperation({ summary: 'update a informacionDato data by ID' })
   update(
     @Param(
@@ -73,8 +83,9 @@ export class InfoDatoController {
     return this.infodatoService.update(id, updateInfoDatoDto);
   }
 
-  @ApiOperation({ summary: 'Delete a informacionDato from DB By ID' })
   @Delete(':id')
+  @Roles(Role.Admin)
+  @ApiOperation({ summary: 'Delete a informacionDato from DB By ID' })
   remove(
     @Param(
       'id',

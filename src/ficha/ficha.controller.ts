@@ -23,9 +23,12 @@ import {
 } from '@nestjs/swagger';
 import { EntityFicha } from './entities';
 import { JwtGuard } from 'src/auth/guard';
+import { RolesGuard } from 'src/auth/guard/auth.guard';
+import { Roles } from 'src/auth/decorator';
+import { Role } from 'src/common/enum/role.enum';
 
 @ApiTags('ficha - APi')
-@UseGuards(JwtGuard)
+@UseGuards(JwtGuard, RolesGuard)
 @ApiBearerAuth()
 @Controller({
   version: '1',
@@ -35,14 +38,18 @@ export class FichaController {
   constructor(private readonly fichaService: FichaService) {}
 
   @Post()
+  @Roles(Role.User, Role.Admin)
   @ApiOperation({ summary: 'Create a new Ficha' })
-  create(
+  async create(
     @Body(new ValidationPipe()) createFichaDto: CreateFichaDto,
   ): Promise<EntityFicha> {
-    return this.fichaService.create(createFichaDto);
+    const nuevaFicha = await this.fichaService.create(createFichaDto);
+    console.log('impriendo ficha creada', nuevaFicha);
+    return nuevaFicha;
   }
 
   @Get()
+  @Roles(Role.User, Role.Admin)
   @ApiOperation({ summary: 'Get  all Ficha created' })
   @ApiResponse({
     status: HttpStatus.OK,
@@ -53,6 +60,7 @@ export class FichaController {
   }
 
   @Get(':id')
+  @Roles(Role.User, Role.Admin)
   @ApiOperation({ summary: 'Get one Ficha by ID..' })
   findOne(
     @Param(
@@ -65,6 +73,7 @@ export class FichaController {
   }
 
   @Get('structure/:id')
+  @Roles(Role.User, Role.Admin)
   @ApiOperation({ summary: 'Get One Ficha Data By ID' })
   Data(
     @Param(
@@ -77,6 +86,7 @@ export class FichaController {
   }
 
   @Patch(':id')
+  @Roles(Role.Admin)
   @ApiOperation({ summary: 'update a Ficha by ID' })
   update(
     @Param(
@@ -89,8 +99,9 @@ export class FichaController {
     return this.fichaService.update(id, updateProductorDto);
   }
 
-  @ApiOperation({ summary: 'Delete a Ficha By ID' })
   @Delete(':id')
+  @Roles(Role.Admin)
+  @ApiOperation({ summary: 'Delete a Ficha By ID' })
   remove(
     @Param(
       'id',
