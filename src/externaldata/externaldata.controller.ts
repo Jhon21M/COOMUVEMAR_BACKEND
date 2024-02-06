@@ -8,17 +8,21 @@ import {
   Delete,
   HttpStatus,
   UseGuards,
+  ValidationPipe,
 } from '@nestjs/common';
 import { ExternaldataService } from './externaldata.service';
-import { CreateExternaldatumDto } from './dto/create-externaldatum.dto';
+import { CreateExternaldataDto } from './dto/create-externaldatum.dto';
 import { UpdateExternaldatumDto } from './dto/update-externaldatum.dto';
 import { Roles } from 'src/auth/decorator';
 import { Role } from 'src/common/enum/role.enum';
-import { ApiBearerAuth, ApiOperation, ApiTags, ApiTooManyRequestsResponse } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiTags,
+  ApiTooManyRequestsResponse,
+} from '@nestjs/swagger';
 import { JwtGuard } from 'src/auth/guard';
 import { RolesGuard } from 'src/auth/guard/auth.guard';
-
-
 
 @ApiTags('ExternalDATA - API')
 @ApiTooManyRequestsResponse({
@@ -37,7 +41,9 @@ export class ExternaldataController {
   @Post('externalDATA')
   @Roles(Role.User, Role.Admin)
   @ApiOperation({ summary: 'post DATA from app Movil' })
-  create(@Body() createExternaldatumDto: CreateExternaldatumDto) {
+  create(
+    @Body(new ValidationPipe()) createExternaldatumDto: CreateExternaldataDto,
+  ) {
     return this.externaldataService.create(createExternaldatumDto);
   }
 

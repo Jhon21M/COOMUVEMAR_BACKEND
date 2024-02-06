@@ -1,21 +1,29 @@
 import { Injectable } from '@nestjs/common';
-import { CreateExternaldatumDto } from './dto/create-externaldatum.dto';
+import { CreateExternaldataDto } from './dto/create-externaldatum.dto';
 import { UpdateExternaldatumDto } from './dto/update-externaldatum.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class ExternaldataService {
-  constructor(private prisma: PrismaService){}
+  constructor(private prisma: PrismaService) {}
 
-  async create(ficha: any): Promise<any> {
-    const newFicha = await this.prisma.ficha.create({
-      data: {
-        ...ficha,
-      },
-    });
+  async create(ficha: CreateExternaldataDto): Promise<any> {
+    if (ficha.finca) {
+      const newFicha = await this.prisma.ficha.createMany({
+        data: {
+          ...ficha.ficha,
+        },
+        connect: {
+          finca: {
+            create: {
+              ...ficha.finca,
+            },
+          },
+        },
+      });
+    }
 
-    return newFicha;
-
+    //return newFicha;
   }
 
   findAll() {
