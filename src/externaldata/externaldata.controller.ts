@@ -1,13 +1,42 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  HttpStatus,
+  UseGuards,
+} from '@nestjs/common';
 import { ExternaldataService } from './externaldata.service';
 import { CreateExternaldatumDto } from './dto/create-externaldatum.dto';
 import { UpdateExternaldatumDto } from './dto/update-externaldatum.dto';
+import { Roles } from 'src/auth/decorator';
+import { Role } from 'src/common/enum/role.enum';
+import { ApiBearerAuth, ApiOperation, ApiTags, ApiTooManyRequestsResponse } from '@nestjs/swagger';
+import { JwtGuard } from 'src/auth/guard';
+import { RolesGuard } from 'src/auth/guard/auth.guard';
 
-@Controller('externaldata')
+
+
+@ApiTags('ExternalDATA - API')
+@ApiTooManyRequestsResponse({
+  status: HttpStatus.TOO_MANY_REQUESTS,
+  description: 'Too many requests in a short time',
+})
+@UseGuards(JwtGuard, RolesGuard)
+@ApiBearerAuth()
+@Controller({
+  version: '1',
+  path: 'externaldata',
+})
 export class ExternaldataController {
   constructor(private readonly externaldataService: ExternaldataService) {}
 
-  @Post()
+  @Post('externalDATA')
+  @Roles(Role.User, Role.Admin)
+  @ApiOperation({ summary: 'post DATA from app Movil' })
   create(@Body() createExternaldatumDto: CreateExternaldatumDto) {
     return this.externaldataService.create(createExternaldatumDto);
   }
@@ -23,7 +52,10 @@ export class ExternaldataController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateExternaldatumDto: UpdateExternaldatumDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updateExternaldatumDto: UpdateExternaldatumDto,
+  ) {
     return this.externaldataService.update(+id, updateExternaldatumDto);
   }
 
