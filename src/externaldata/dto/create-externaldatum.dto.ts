@@ -1,13 +1,10 @@
 import { Ficha, Finca, InformacionDato } from '@prisma/client';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNegative, IsNotEmpty, IsNumber, IsOptional } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsOptional } from 'class-validator';
 import { CreateInfoDatoDto } from 'src/info-dato/dto';
 import { CreateFichaDto } from 'src/ficha/dto';
 import { CreateFincaDto } from 'src/finca/dto';
-import { Public } from '@prisma/client/runtime/library';
-import { create } from 'domain';
 
-// Define una interfaz que extiende los DTOs existentes con la propiedad 'id'
 export class FichaWithID extends CreateFichaDto {
   @ApiProperty()
   @IsNumber()

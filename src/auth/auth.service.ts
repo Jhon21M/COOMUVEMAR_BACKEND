@@ -45,6 +45,12 @@ export class AuthService {
     userAuthSingnin: EntityAuthSignin,
   ): Promise<{ access_token: string }> {
     const { email, password } = userAuthSingnin;
+    console.log(
+      'hora:' +
+        new Date().getHours().toString() +
+        ':' +
+        new Date().getMinutes().toString(),
+    );
     console.log('imprimiento email: ', email);
     console.log('imprimiento password: ', password);
 
@@ -73,18 +79,18 @@ export class AuthService {
     userId: number,
     email: string,
   ): Promise<{ access_token: string }> {
-    if (role === 'ADMIN'){
+    if (role === 'ADMIN') {
       const payload = {
         sub: userId,
         email,
       };
       const secret = this.config.get('JWT_SECRET');
-  
+
       const token = await this.jwt.signAsync(payload, {
         expiresIn: '3h',
         secret,
       });
-  
+
       return {
         access_token: token,
       };
@@ -94,17 +100,16 @@ export class AuthService {
         email,
       };
       const secret = this.config.get('JWT_SECRET');
-  
+
       const token = await this.jwt.signAsync(payload, {
         expiresIn: '3d',
         secret,
       });
-  
+
       return {
         access_token: token,
       };
     }
-
   }
 
   signout() {}

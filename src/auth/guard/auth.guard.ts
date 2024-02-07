@@ -9,12 +9,12 @@ export class RolesGuard implements CanActivate {
   constructor(private reflector: Reflector) {}
 
   async canActivate(ctx: ExecutionContext): Promise<boolean> {
-    console.log('RolesGuard');
+    //console.log('RolesGuard');
     const rolesRequired = this.reflector.get<string[]>(
       'roles',
       ctx.getHandler(),
     );
-    console.log(rolesRequired);
+    //console.log(rolesRequired);
     if (!rolesRequired) {
       return true; // Si no se especifican roles, permitir el acceso
     }
