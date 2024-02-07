@@ -28,6 +28,14 @@ export class SecFichaService {
     });
   }
 
+  findAllDataSection(id: number) {
+    return this.prisma.dato.findMany({
+      where: {
+        IDSeccionesFicha: typeof id === 'number' ? id : Number.parseInt(id),
+      },
+    });
+  }
+
   async update(
     id: number,
     seccionficha: EntityUpdateSeccionFicha,

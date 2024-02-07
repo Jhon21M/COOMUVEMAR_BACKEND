@@ -22,7 +22,6 @@ import { APP_FILTER, APP_GUARD } from '@nestjs/core';
 import { RolesGuard } from './auth/guard/auth.guard';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { PrismaExceptionFilter } from './common/filters/prisma.filter.exception';
-import { HttpExceptionFilter } from './common/filters/http.filter.exception';
 import { ExternaldataModule } from './externaldata/externaldata.module';
 
 @Module({
