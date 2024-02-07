@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { DashboardData } from './interfaces';
+import { FiltroDashDto } from './dto';
 
 @Injectable()
 export class DashboardService {
@@ -14,11 +15,17 @@ export class DashboardService {
   //   return `This action returns all dashboard`;
   // }
 
-  async getDashboardData(): Promise<DashboardData> {
+  async getDashboardData(fecha: FiltroDashDto): Promise<DashboardData> {
     // Inspector DATA
     const totalInspectors = await this.getTotalInspectors();
-    const activeInspectorsLastMonth = await this.getActiveInspectorsLastMonth();
-    const inactiveInspectors = await this.getInactiveInspectors();
+    const activeInspectorsLastMonth = await this.getActiveInspectorsLastMonth(
+      fecha.fechaInicio,
+      fecha.fechaFinal,
+    );
+    const inactiveInspectors = await this.getInactiveInspectors(
+      fecha.fechaInicio,
+      fecha.fechaFinal,
+    );
 
     // Ficha DATA
     const fichasAprobadas = await this.getfichaAprobadas();
@@ -41,16 +48,62 @@ export class DashboardService {
     return this.prismaService.inspector.count();
   }
 
-  private async getActiveInspectorsLastMonth(): Promise<number> {
+  private async getActiveInspectorsLastMonth(
+    nombreMesInicio: string,
+    nombreMesFinal: string,
+  ): Promise<number> {
+    const mesesDelAnio = [
+      'enero',
+      'febrero',
+      'marzo',
+      'abril',
+      'mayo',
+      'junio',
+      'julio',
+      'agosto',
+      'septiembre',
+      'octubre',
+      'noviembre',
+      'diciembre',
+    ];
+
+    // Obtener el índice del mes de inicio y final
+    const indiceMesInicio = mesesDelAnio.findIndex(
+      (mes) => mes.toLowerCase() === nombreMesInicio.toLowerCase(),
+    );
+    const indiceMesFinal = mesesDelAnio.findIndex(
+      (mes) => mes.toLowerCase() === nombreMesFinal.toLowerCase(),
+    );
+
+    console.log('imprimiendo los indices\n', indiceMesInicio, indiceMesFinal);
+
+    // Verificar si se encontraron los nombres de mes válidos
+    if (indiceMesInicio === -1 || indiceMesFinal === -1) {
+      throw new Error('Nombre de mes inválido');
+    }
+
     const lastMonth = new Date();
     lastMonth.setMonth(lastMonth.getMonth() - 1);
+    console.log('Imprimiendo mes pasado\n', lastMonth);
+    lastMonth.setMonth(indiceMesInicio, 1); //
+    console.log(
+      'Imprimiendo mes pasado despues de enviar el indice\n',
+      lastMonth,
+    );
+
+    // Obtener la fecha de finalización del mes pasado
+    const fechaFinal = new Date();
+    fechaFinal.setMonth(indiceMesFinal + 1, 0); // Establecer el mes de finalización
+
     console.log(lastMonth);
+    console.log(fechaFinal);
 
     const fichasPorInspector = await this.prismaService.ficha.groupBy({
       by: ['IDInspector'],
       where: {
         createdAt: {
           gte: lastMonth,
+          lt: fechaFinal,
         },
       },
     });
@@ -59,23 +112,63 @@ export class DashboardService {
     return cantidadInspectores;
   }
 
-  private async getInactiveInspectors(): Promise<number> {
-    const lastMonth = new Date();
-    lastMonth.setMonth(lastMonth.getMonth() - 1); // Restar un mes
+  private async getInactiveInspectors(
+    nombreMesInicio: string,
+    nombreMesFinal: string,
+  ): Promise<number> {
+    const mesesDelAnio = [
+      'enero',
+      'febrero',
+      'marzo',
+      'abril',
+      'mayo',
+      'junio',
+      'julio',
+      'agosto',
+      'septiembre',
+      'octubre',
+      'noviembre',
+      'diciembre',
+    ];
 
-    const inactiveInspectors = await this.prismaService.inspector.findMany({
+    // Obtener el índice del mes de inicio y final
+    const indiceMesInicio = mesesDelAnio.findIndex(
+      (mes) => mes.toLowerCase() === nombreMesInicio.toLowerCase(),
+    );
+    const indiceMesFinal = mesesDelAnio.findIndex(
+      (mes) => mes.toLowerCase() === nombreMesFinal.toLowerCase(),
+    );
+
+    console.log('Imprimiendo los indices\n', indiceMesInicio, indiceMesFinal);
+
+    // Verificar si se encontraron los nombres de mes válidos
+    if (indiceMesInicio === -1 || indiceMesFinal === -1) {
+      throw new Error('Nombre de mes inválido');
+    }
+
+    const lastMonth = new Date();
+    lastMonth.setMonth(lastMonth.getMonth() - 1);
+    console.log('Imprimiendo mes pasado\n', lastMonth);
+    lastMonth.setMonth(indiceMesInicio, 1); //
+
+    // Obtener la fecha de finalización del mes pasado
+    const fechaFinal = new Date();
+    fechaFinal.setMonth(indiceMesFinal + 1, 0); // Establecer el mes de finalización
+
+    console.log(lastMonth);
+    console.log(fechaFinal);
+
+    const fichasPorInspector = await this.prismaService.ficha.groupBy({
+      by: ['IDInspector'],
       where: {
-        Ficha: {
-          none: {
-            createdAt: {
-              gte: lastMonth,
-            },
-          },
+        createdAt: {
+          gte: lastMonth,
+          lt: fechaFinal,
         },
       },
     });
-
-    return inactiveInspectors.length;
+    const cantidadInspectores = fichasPorInspector.length;
+    return cantidadInspectores;
   }
 
   private async getfichaAprobadas(): Promise<number> {

@@ -30,12 +30,6 @@ export class ExternaldataService {
           },
         });
         console.log('ficha creada...');
-        const buscarfichaCreada = await this.prisma.ficha.findUnique({
-          where: {
-            id: this.newFicha.id,
-          },
-        });
-        console.log('mostrando ficha creada', buscarfichaCreada);
       } catch (error) {
         console.error('Error al crear la ficha:', error.message);
         throw error;
@@ -95,7 +89,7 @@ export class ExternaldataService {
     return {
       ficha: this.newFicha,
       finca: this.newFinca,
-      InformacionDato: this.newInfoDato
+      InformacionDato: this.newInfoDato,
     };
   }
 
