@@ -4,6 +4,6 @@ import { FincaController } from './finca.controller';
 
 @Module({
   controllers: [FincaController],
-  providers: [FincaService]
+  providers: [FincaService],
 })
 export class FincaModule {}
