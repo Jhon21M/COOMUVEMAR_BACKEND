@@ -4,8 +4,10 @@ import {
   IsEmail,
   IsEnum,
   IsNotEmpty,
+  IsNumber,
   IsOptional,
   IsString,
+  IsUrl,
   Length,
   Matches,
 } from 'class-validator';
@@ -14,15 +16,25 @@ export class AuthSignupDto {
   @IsString()
   @IsNotEmpty()
   @ApiProperty({ required: true })
-  firstName: string;
+  nombre: string;
 
   @IsNotEmpty()
   @IsString()
   @ApiProperty({ required: false })
-  lastName: string;
+  apellido: string;
 
   @IsNotEmpty()
-  @ApiProperty({ required: true, example: 'jhoe@gmail.com' })
+  @IsString()
+  @ApiProperty({ required: false })
+  telefono: string;
+
+  @IsOptional()
+  @IsUrl()
+  @ApiProperty({ required: false })
+  url: string;
+
+  @IsNotEmpty()
+  @ApiProperty({ required: true, example: 'example@gmail.com' })
   @IsEmail({}, { message: 'La dirección de correo electrónico no es válida.' })
   @Length(14)
   @Matches(/^[a-zA-Z0-9._%+-]+@[a-z]{5,}\.[a-z]{3,}$/, {
@@ -33,7 +45,7 @@ export class AuthSignupDto {
   @IsString()
   @IsNotEmpty()
   @ApiProperty({ required: true })
-  hash: string;
+  password: string;
 
   @IsString()
   @IsOptional()
@@ -43,4 +55,9 @@ export class AuthSignupDto {
       'El valor del role proporcionado no es válido. Debe ser USER o ADMIN.',
   })
   role: Role;
+
+  @IsNumber()
+  @IsNotEmpty()
+  @ApiProperty({ required: true })
+  IDTrabajador: string;
 }

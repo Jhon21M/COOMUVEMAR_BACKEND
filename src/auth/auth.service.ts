@@ -17,16 +17,30 @@ export class AuthService {
 
   async singup(authSignup: EntityUser): Promise<{ access_token: string }> {
     //generate the password hash
-    const hash = await argon.hash(authSignup.hash);
+    const hash = await argon.hash(authSignup.password);
     try {
-      //add the new user to the db
-      const user = await this.prisma.usuario.create({
+      //add the new Trabajador to the db
+      const newTrabajador = await this.prisma.trabajador.create({
         data: {
-          firstName: authSignup.firstName,
-          lastName: authSignup.lastName,
-          email: authSignup.email,
-          hash,
-          role: authSignup.role,
+          nombre: authSignup.nombre,
+          apellido: authSignup.apellido,
+          numeroTelefono: authSignup.numeroTelefono,
+          urlImg: authSignup.urlImg,
+          Usuario: {
+            create: {
+              email: authSignup.email,
+              hash,
+              role: authSignup.role,
+              IDTrabajador: authSignup.IDTrabajador,
+            },
+          },
+        },
+      });
+
+      //get the user from the db
+      const user = await this.prisma.usuario.findUnique({
+        where: {
+          IDTrabajador: newTrabajador.id,
         },
       });
 
