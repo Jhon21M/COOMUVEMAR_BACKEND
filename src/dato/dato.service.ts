@@ -13,6 +13,7 @@ export class DatoService {
           ...dato,
         },
       });
+      console.log(newDato);
 
       return newDato;
     } catch (error) {

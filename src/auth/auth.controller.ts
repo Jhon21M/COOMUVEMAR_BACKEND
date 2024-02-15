@@ -5,7 +5,6 @@ import { ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { json } from 'body-parser';
 
 @ApiTags('Auth - API')
-
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}

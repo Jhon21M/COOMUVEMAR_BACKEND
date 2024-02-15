@@ -23,14 +23,9 @@ export class RolesGuard implements CanActivate {
     const userInfo = request.user as UserInterface;
     console.log(userInfo);
     if (userInfo) {
-      console.log('imprimiendo request del user', userInfo);
       //Verificar si el usuario tiene al menos uno de los roles requeridos
       return matchRoles(rolesRequired, userInfo.role);
-    } else {
-      console.log('El objeto user es indefinido');
     }
     return true;
-
-
   }
 }

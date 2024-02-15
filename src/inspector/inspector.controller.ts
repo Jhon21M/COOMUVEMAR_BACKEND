@@ -34,7 +34,7 @@ import { Role } from 'src/common/enum/role.enum';
 @ApiBearerAuth()
 @Controller({
   version: '1',
-  path: 'inspector',
+  path: 'trabajador',
 })
 export class InspectorController {
   constructor(private readonly inspectorService: InspectorService) {}
@@ -50,14 +50,14 @@ export class InspectorController {
 
   @Get()
   @Roles(Role.Admin)
-  @ApiOperation({ summary: 'Get all Inspector data' })
+  @ApiOperation({ summary: 'Get all Trabajador data' })
   findAll() {
     return this.inspectorService.findAll();
   }
 
   @Get(':id')
   @Roles(Role.User, Role.Admin)
-  @ApiOperation({ summary: 'Get one inispector By ID' })
+  @ApiOperation({ summary: 'Get one Trabajador By ID' })
   findOne(
     @Param(
       'id',
@@ -68,9 +68,23 @@ export class InspectorController {
     return this.inspectorService.findOne(id);
   }
 
+  @Get('user/:id')
+  @Roles(Role.User, Role.Admin)
+  @ApiOperation({ summary: 'Get one Trabajador Data By ID USER' })
+  findOneTrabajador(
+    @Param(
+      'id',
+      new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE }),
+    )
+    id: number,
+  ) {
+    return this.inspectorService.findOneTrabajador(id);
+  }
+
+
   @Patch(':id')
   @Roles(Role.Admin)
-  @ApiOperation({ summary: 'Update an Inspector by ID' })
+  @ApiOperation({ summary: 'Update an Trabajador by ID' })
   update(
     @Param(
       'id',
@@ -84,7 +98,7 @@ export class InspectorController {
 
   @Delete(':id')
   @Roles(Role.Admin)
-  @ApiOperation({ summary: 'Delete an Inspector by ID' })
+  @ApiOperation({ summary: 'Delete an Trabajador by ID' })
   remove(
     @Param(
       'id',

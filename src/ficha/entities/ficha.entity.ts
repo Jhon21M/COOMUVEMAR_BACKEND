@@ -9,7 +9,10 @@ export class EntityFicha implements FichaInterface {
   localizacion: string;
 
   @ApiProperty({ required: true, nullable: false })
-  IDInspector: number;
+  IDTrabajador: number;
+
+  @ApiProperty({ required: true, nullable: false })
+  IDFinca: number;
 
   constructor(partial: Partial<EntityFicha>) {
     Object.assign(this, partial);

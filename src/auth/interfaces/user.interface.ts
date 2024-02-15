@@ -1,7 +1,9 @@
 export interface UserInterface {
-  firstName: string;
-  lastName: string;
+  nombre: string;
+  apellido: string;
+  numeroTelefono: string;
+  urlImg: string;
   email: string;
-  hash: string;
-  role: string | null;
+  password: string;
+  role: string;
 }

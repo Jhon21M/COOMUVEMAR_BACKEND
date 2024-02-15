@@ -1,28 +1,41 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Role } from '@prisma/client';
 import {
   IsEmail,
   IsEnum,
   IsNotEmpty,
+  IsNumber,
   IsOptional,
   IsString,
+  IsUrl,
   Length,
   Matches,
+  isURL,
 } from 'class-validator';
 
 export class AuthSignupDto {
   @IsString()
   @IsNotEmpty()
   @ApiProperty({ required: true })
-  firstName: string;
+  nombre: string;
 
   @IsNotEmpty()
   @IsString()
   @ApiProperty({ required: false })
-  lastName: string;
+  apellido: string;
 
   @IsNotEmpty()
-  @ApiProperty({ required: true, example: 'jhoe@gmail.com' })
+  @IsString()
+  @ApiProperty({ required: false })
+  numeroTelefono: string;
+
+  @IsOptional()
+  @IsString()
+  @ApiPropertyOptional()
+  urlImg: string;
+
+  @IsNotEmpty()
+  @ApiProperty({ required: true, example: 'example@gmail.com' })
   @IsEmail({}, { message: 'La dirección de correo electrónico no es válida.' })
   @Length(14)
   @Matches(/^[a-zA-Z0-9._%+-]+@[a-z]{5,}\.[a-z]{3,}$/, {
@@ -33,7 +46,7 @@ export class AuthSignupDto {
   @IsString()
   @IsNotEmpty()
   @ApiProperty({ required: true })
-  hash: string;
+  password: string;
 
   @IsString()
   @IsOptional()

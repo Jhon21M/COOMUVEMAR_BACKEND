@@ -27,5 +27,10 @@ export class CreateFichaDto {
   @IsNotEmpty()
   @IsNumber()
   @ApiProperty({ required: true })
-  IDInspector: number;
+  IDTrabajador: number;
+
+  @IsNotEmpty()
+  @IsNumber()
+  @ApiProperty({ required: true })
+  IDFinca: number;
 }

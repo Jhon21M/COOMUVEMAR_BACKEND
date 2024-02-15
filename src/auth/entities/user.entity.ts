@@ -3,17 +3,23 @@ import { Role } from '@prisma/client';
 import { UserInterface } from 'src/auth/interfaces';
 
 export class EntityUser implements UserInterface {
-  @ApiProperty()
-  firstName: string;
+  @ApiProperty({ required: true, nullable: false })
+  nombre: string;
 
-  @ApiProperty()
-  lastName: string;
+  @ApiProperty({ required: true, nullable: false })
+  apellido: string;
+
+  @ApiProperty({ required: false, nullable: true })
+  numeroTelefono: string;
+
+  @ApiProperty({ required: false, nullable: true })
+  urlImg: string;
 
   @ApiProperty({ required: true, nullable: false })
   email: string;
 
   @ApiProperty({ required: true, nullable: false })
-  hash: string;
+  password: string;
 
   @ApiProperty({ required: false, nullable: true })
   role: Role | null;
