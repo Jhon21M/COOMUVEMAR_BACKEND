@@ -39,7 +39,7 @@ export class UserService {
     // if user does not exist throw exception
     if (!user) throw new ForbiddenException('User Not Found on DB');
 
-    //send back the user
+    //send back the user deleted
     return this.prisma.usuario.delete({
       where: {
         id: user.id,

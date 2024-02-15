@@ -45,7 +45,7 @@ export class DashboardService {
   }
 
   private async getTotalInspectors(): Promise<number> {
-    return this.prismaService.inspector.count();
+    return this.prismaService.trabajador.count();
   }
 
   private async getActiveInspectorsLastMonth(
@@ -99,7 +99,7 @@ export class DashboardService {
     console.log(fechaFinal);
 
     const fichasPorInspector = await this.prismaService.ficha.groupBy({
-      by: ['IDInspector'],
+      by: ['IDTrabajador'],
       where: {
         createdAt: {
           gte: lastMonth,
@@ -159,7 +159,7 @@ export class DashboardService {
     console.log(fechaFinal);
 
     const fichasPorInspector = await this.prismaService.ficha.groupBy({
-      by: ['IDInspector'],
+      by: ['IDTrabajador'],
       where: {
         createdAt: {
           gte: lastMonth,

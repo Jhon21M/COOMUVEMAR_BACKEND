@@ -1,5 +1,4 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEmail, IsStrongPassword } from 'class-validator';
 import { InspectorInterface } from 'src/inspector/interfaces';
 
 export class EntityInspector implements InspectorInterface {
@@ -12,11 +11,8 @@ export class EntityInspector implements InspectorInterface {
   @ApiProperty({ required: false, nullable: true })
   numeroTelefono: string | null;
 
-  @ApiProperty({ required: true, nullable: false })
-  email: string;
-
-  @ApiProperty({ required: true, nullable: false, type: IsStrongPassword })
-  password: string;
+  @ApiProperty({ required: false, nullable: true })
+  urlImg: string | null;
 
   constructor(partial: Partial<EntityInspector>) {
     Object.assign(this, partial);

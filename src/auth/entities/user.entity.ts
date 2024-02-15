@@ -12,7 +12,7 @@ export class EntityUser implements UserInterface {
   @ApiProperty({ required: false, nullable: true })
   numeroTelefono: string;
 
-  @ApiProperty({ required: true, nullable: false })
+  @ApiProperty({ required: false, nullable: true })
   urlImg: string;
 
   @ApiProperty({ required: true, nullable: false })
@@ -23,9 +23,6 @@ export class EntityUser implements UserInterface {
 
   @ApiProperty({ required: false, nullable: true })
   role: Role | null;
-
-  @ApiProperty({ required: true, nullable: false })
-  IDTrabajador: number;
 
   constructor(partial: Partial<EntityUser>) {
     Object.assign(this, partial);

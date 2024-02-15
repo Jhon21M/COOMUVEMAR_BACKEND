@@ -26,25 +26,20 @@ export class AuthService {
           apellido: authSignup.apellido,
           numeroTelefono: authSignup.numeroTelefono,
           urlImg: authSignup.urlImg,
-          Usuario: {
-            create: {
-              email: authSignup.email,
-              hash,
-              role: authSignup.role,
-              IDTrabajador: authSignup.IDTrabajador,
-            },
-          },
         },
       });
 
-      //get the user from the db
-      const user = await this.prisma.usuario.findUnique({
-        where: {
+      const newUser = await this.prisma.usuario.create({
+        data: {
+          email: authSignup.email,
+          hash,
+          role: authSignup.role,
           IDTrabajador: newTrabajador.id,
         },
-      });
+      })
 
-      return this.signToken(user.role, user.id, user.email);
+
+      return this.signToken(newUser.role, newUser.id, newUser.email);
     } catch (error) {
       if (error instanceof PrismaClientKnownRequestError) {
         if (error.code === 'P2002') {
@@ -56,9 +51,9 @@ export class AuthService {
   }
 
   async signin(
-    userAuthSingnin: EntityAuthSignin,
+    userAuthSignin: EntityAuthSignin,
   ): Promise<{ access_token: string }> {
-    const { email, password } = userAuthSingnin;
+    const { email, password } = userAuthSignin;
     console.log(
       'hora:' +
         new Date().getHours().toString() +
@@ -71,7 +66,7 @@ export class AuthService {
     // find the user by email
     const user = await this.prisma.usuario.findUnique({
       where: {
-        email: userAuthSingnin.email,
+        email: userAuthSignin.email,
       },
     });
 
@@ -79,7 +74,7 @@ export class AuthService {
     if (!user) throw new ForbiddenException('Incorrect credentials');
 
     //compare the password
-    const pwMatches = await argon.verify(user.hash, userAuthSingnin.password);
+    const pwMatches = await argon.verify(user.hash, userAuthSignin.password);
 
     // if password incorrect throw exception
     if (!pwMatches) throw new ForbiddenException('Incorrect credentials');
@@ -119,7 +114,6 @@ export class AuthService {
         expiresIn: '3d',
         secret,
       });
-
       return {
         access_token: token,
       };
