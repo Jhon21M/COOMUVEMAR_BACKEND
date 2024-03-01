@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { UserInterface } from 'src/auth/interfaces';
+import { AuthInterface } from 'src/auth/interfaces';
 
-export class EntityAuthSignin implements Partial<UserInterface> {
+export class EntityAuthSignin implements Partial<AuthInterface> {
 
   @ApiProperty({ required: true, nullable: false })
   email: string;

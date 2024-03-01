@@ -24,6 +24,7 @@ import { JwtGuard } from 'src/auth/guard';
 import { RolesGuard } from 'src/auth/guard/auth.guard';
 import { Roles } from 'src/auth/decorator';
 import { Role } from 'src/common/enum/role.enum';
+import { FormDataRequest } from 'nestjs-form-data';
 
 @ApiTags('Inspector - API')
 @ApiTooManyRequestsResponse({
@@ -41,6 +42,7 @@ export class InspectorController {
 
   @Post()
   @Roles(Role.Admin)
+  @FormDataRequest()
   @ApiOperation({ summary: 'Create a new Inspector' })
   create(
     @Body(new ValidationPipe()) createInspectorDto: CreateInspectorDto,
@@ -108,4 +110,5 @@ export class InspectorController {
   ) {
     return this.inspectorService.remove(id);
   }
+
 }

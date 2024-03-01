@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { File } from 'buffer';
 import { InspectorInterface } from 'src/inspector/interfaces';
 
 export class EntityInspector implements InspectorInterface {
@@ -12,7 +13,7 @@ export class EntityInspector implements InspectorInterface {
   numeroTelefono: string | null;
 
   @ApiProperty({ required: false, nullable: true })
-  urlImg: string | null;
+  urlImg: any | null;
 
   constructor(partial: Partial<EntityInspector>) {
     Object.assign(this, partial);

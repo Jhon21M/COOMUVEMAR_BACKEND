@@ -1,4 +1,6 @@
 export interface Profile {
-  name: string;
-  phone: string;
+  email: string;
+  hash: string;
+  role: string;
+  IDTrabajador: number;
 }

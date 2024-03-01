@@ -7,13 +7,14 @@ import {
   Param,
   ParseIntPipe,
   Patch,
+  Post,
   UseGuards,
   ValidationPipe,
 } from '@nestjs/common';
 import { JwtGuard } from '../auth/guard';
 import { GetUser } from '../auth/decorator';
 import { Usuario } from '@prisma/client';
-import { EditUserDto } from './dto';
+import { CreateUserDto, EditUserDto } from './dto';
 import { UserService } from './user.service';
 import {
   ApiOperation,
@@ -25,6 +26,7 @@ import {
 import { RolesGuard } from 'src/auth/guard/auth.guard';
 import { Roles } from 'src/auth/decorator/roles.decorador';
 import { Role } from 'src/common/enum/role.enum';
+import { EntityUser } from './entities';
 
 @UseGuards(JwtGuard, RolesGuard)
 @ApiBearerAuth()
@@ -32,6 +34,15 @@ import { Role } from 'src/common/enum/role.enum';
 @Controller('users')
 export class UserController {
   constructor(private userService: UserService) {}
+
+  @Post()
+  @Roles(Role.Admin)
+  @ApiOperation({ summary: 'Create a new Productor' })
+  create(
+    @Body(new ValidationPipe()) createUserDto: CreateUserDto,
+  ): Promise<EntityUser> {
+    return this.userService.create(createUserDto);
+  }
 
   @Get('me')
   @Roles(Role.User, Role.Admin)

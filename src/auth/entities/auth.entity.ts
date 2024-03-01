@@ -1,8 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Role } from '@prisma/client';
-import { UserInterface } from 'src/auth/interfaces';
+import { AuthInterface } from 'src/auth/interfaces';
 
-export class EntityUser implements UserInterface {
+export class EntityAuth implements AuthInterface {
   @ApiProperty({ required: true, nullable: false })
   nombre: string;
 
@@ -24,7 +24,7 @@ export class EntityUser implements UserInterface {
   @ApiProperty({ required: false, nullable: true })
   role: Role | null;
 
-  constructor(partial: Partial<EntityUser>) {
+  constructor(partial: Partial<EntityAuth>) {
     Object.assign(this, partial);
   }
 }

@@ -1,4 +1,4 @@
-export interface UserInterface {
+export interface AuthInterface {
   nombre: string;
   apellido: string;
   numeroTelefono: string;
