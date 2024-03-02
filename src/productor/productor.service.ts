@@ -6,6 +6,7 @@ import { EntityUpdateProductor, EntityProductor } from './entities';
 export class ProductorService {
   constructor(private prisma: PrismaService) {}
   async create(productor: EntityProductor): Promise<EntityProductor> {
+    console.log('Creando productor:', productor);
     const newProductor = await this.prisma.productor.create({
       data: {
         ...productor,

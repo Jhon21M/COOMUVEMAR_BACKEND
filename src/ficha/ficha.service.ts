@@ -46,30 +46,6 @@ export class FichaService {
           },
         },
       });
-
-      //console.log('ficha con seciones: ', fichaConSecciones);
-
-      // Convertir el objeto a JSON con formato y orden personalizado
-      // const fichaConSecciones2 = JSON.stringify(
-      //   fichaConSecciones,
-      //   (key, value) => {
-      //     console.log('impriendo key: ', key);
-      //     console.log('impriendo value: ', value);
-
-      //     // Ordenar las propiedades según tus preferencias
-      //     if (key === 'SeccionesFicha') return 1;
-      //     if (key === 'Dato') return 2;
-      //     if (key === 'InformacionDato') return 3;
-
-      //     console.log('volviendo a immprimir key: ', key);
-
-      //     return value;
-      //   },
-      //   2,
-      // ); // 2 espacios de indentación para mejorar la legibilidad
-
-      // console.log(fichaConSecciones2);
-      // return fichaConSecciones2;
     } catch (error) {
       console.error('Error en findOneData:', error);
       throw error;

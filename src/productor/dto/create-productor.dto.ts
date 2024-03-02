@@ -30,10 +30,11 @@ export class CreateProductorDto {
 
   @IsString()
   @IsOptional()
-  @Length(16)
+  @MinLength(16, { message: 'La cédula debe tener 16 dígitos' })
   @ApiProperty({ required: false })
   numeroCedula: string;
 
+  @IsString()
   @IsOptional()
   @ApiProperty({ required: false })
   @MinLength(8)

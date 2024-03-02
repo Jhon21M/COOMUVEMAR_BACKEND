@@ -4,7 +4,7 @@ import * as argon from 'argon2';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
-import { EntityUser } from './entities';
+import { EntityAuth } from './entities';
 import { EntityAuthSignin } from './entities/signin.entity';
 
 @Injectable()
@@ -15,7 +15,7 @@ export class AuthService {
     private config: ConfigService,
   ) {}
 
-  async singup(authSignup: EntityUser): Promise<{ access_token: string }> {
+  async singup(authSignup: EntityAuth): Promise<{ access_token: string }> {
     //generate the password hash
     const hash = await argon.hash(authSignup.password);
     try {
@@ -111,7 +111,7 @@ export class AuthService {
       const secret = this.config.get('JWT_SECRET');
 
       const token = await this.jwt.signAsync(payload, {
-        expiresIn: '3d',
+        expiresIn: '60s',
         secret,
       });
       return {

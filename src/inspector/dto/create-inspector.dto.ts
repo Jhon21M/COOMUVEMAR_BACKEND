@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Express } from 'express';
 import {
   IsOptional,
   IsNotEmpty,
@@ -7,6 +8,7 @@ import {
   MinLength,
   IsEmail,
 } from 'class-validator';
+import { HasMimeType, IsFile, MaxFileSize } from 'nestjs-form-data';
 
 export class CreateInspectorDto {
   @IsString()
@@ -26,9 +28,9 @@ export class CreateInspectorDto {
   @ApiProperty({ required: false })
   numeroTelefono: string;
 
-  @IsString()
-  @IsOptional()
-  @ApiProperty({ required: false })
-  urlImg: string;
-
+  @IsFile()
+  //@MaxFileSize(3000)
+  @HasMimeType(['image/jpeg', 'image/png', 'image/jpg'])
+  @ApiProperty({ required: false, nullable: true })
+  urlImg: File | null;
 }

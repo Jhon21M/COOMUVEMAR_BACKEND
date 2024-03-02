@@ -2,7 +2,7 @@ import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { matchRoles } from 'src/auth/util';
 import { Request } from 'express';
-import { UserInterface } from '../interfaces';
+import { AuthInterface } from '../interfaces';
 
 @Injectable()
 export class RolesGuard implements CanActivate {
@@ -20,8 +20,8 @@ export class RolesGuard implements CanActivate {
     }
 
     const request = ctx.switchToHttp().getRequest<Request>();
-    const userInfo = request.user as UserInterface;
-    console.log(userInfo);
+    const userInfo = request.user as AuthInterface;
+    //console.log(userInfo);
     if (userInfo) {
       //Verificar si el usuario tiene al menos uno de los roles requeridos
       return matchRoles(rolesRequired, userInfo.role);

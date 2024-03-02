@@ -23,12 +23,14 @@ import { RolesGuard } from './auth/guard/auth.guard';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { PrismaExceptionFilter } from './common/filters/prisma.filter.exception';
 import { ExternaldataModule } from './externaldata/externaldata.module';
+import { NestjsFormDataModule } from 'nestjs-form-data';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
     }),
+    NestjsFormDataModule,
     AuthModule,
     PrismaModule,
     ProductorModule,

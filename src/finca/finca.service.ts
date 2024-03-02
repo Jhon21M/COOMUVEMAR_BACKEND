@@ -20,8 +20,18 @@ export class FincaService {
     }
   }
 
-  findAll() {
-    return this.prisma.productor.findMany();
+  async findAll() {
+    const fincas = await this.prisma.finca.findMany({
+      include: {
+        productor: true,
+      },
+    });
+    console.log('inprimiendo finca', fincas);
+
+    return fincas.map((finca) => ({
+      ...finca,
+      productor: finca.productor.nombre,
+    }));
   }
 
   findOne(id: number) {
