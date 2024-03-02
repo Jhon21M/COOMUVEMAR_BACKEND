@@ -70,4 +70,33 @@ export class FichaService {
       },
     });
   }
+
+  async anasysis() {
+    let seccionesFicha: {
+      nombre: string;
+    }[] = await this.prisma.seccionesFicha.findMany({
+      select: {
+        nombre: true,
+      },
+    });
+
+    let datosFicha: {
+      titulo: string;
+    }[] = await this.prisma.dato.findMany({
+      select: {
+        titulo: true,
+      },
+    });
+
+    let informacionDato: {
+      informacion: string;
+    }[] = await this.prisma.informacionDato.findMany({
+      select: {
+        informacion: true,
+      },
+    });
+
+
+  }
+
 }
