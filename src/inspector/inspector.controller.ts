@@ -70,20 +70,6 @@ export class InspectorController {
     return this.inspectorService.findOne(id);
   }
 
-  @Get('user/:id')
-  @Roles(Role.User, Role.Admin)
-  @ApiOperation({ summary: 'Get one Trabajador Data By ID USER' })
-  findOneTrabajador(
-    @Param(
-      'id',
-      new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE }),
-    )
-    id: number,
-  ) {
-    return this.inspectorService.findOneTrabajador(id);
-  }
-
-
   @Patch(':id')
   @Roles(Role.Admin)
   @ApiOperation({ summary: 'Update an Trabajador by ID' })

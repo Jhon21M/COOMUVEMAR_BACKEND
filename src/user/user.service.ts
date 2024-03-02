@@ -18,6 +18,22 @@ export class UserService {
     return await this.prisma.usuario.findMany();
   }
 
+  async findOneTrabajador(id: number) {
+    const user = await this.prisma.usuario.findUnique({
+      where: {
+        id: typeof id === 'number' ? id : Number.parseInt(id),
+      },
+    });
+
+    if (!user) throw new ForbiddenException('User Not Found on DB');
+
+    return await this.prisma.trabajador.findUnique({
+      where: {
+        id: user.IDTrabajador,
+      },
+    });
+  }
+
   async update(
     id: number,
     informacion: Partial<EntityUser>,

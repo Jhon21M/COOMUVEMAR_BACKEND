@@ -75,6 +75,19 @@ export class UserController {
     return this.userService.findOneUserByID(id);
   }
 
+  @Get('trabajador/:id')
+  @Roles(Role.User, Role.Admin)
+  @ApiOperation({ summary: 'Get one Trabajador Data By ID USER' })
+  findOneTrabajador(
+    @Param(
+      'id',
+      new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE }),
+    )
+    id: number,
+  ) {
+    return this.userService.findOneTrabajador(id);
+  }
+
   @Patch(':id')
   @Roles(Role.Admin)
   @ApiOperation({ summary: 'update a user data' })
