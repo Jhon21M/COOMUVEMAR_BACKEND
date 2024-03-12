@@ -19,7 +19,7 @@ export class InspectorService {
   }
   async create(inspector: EntityInspector): Promise<any> {
     const { urlImg } = inspector;
-    console.log('imprimiendo el inspector antes de guardar', inspector);
+    console.log('En servicio...', inspector);
 
     if (urlImg) {
       console.log('1');
@@ -34,6 +34,7 @@ export class InspectorService {
         },
       });
     } else {
+      console.log('imprimiendo inspector sin imagen', inspector);
       return this.prisma.trabajador.create({
         data: {
           nombre: inspector.nombre,

@@ -43,7 +43,7 @@ model Trabajador {
   nombre         String
   apellido       String
   numeroTelefono String
-  urlImg         String    @unique
+  urlImg         String?    @unique
   createAt       DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
   Ficha          Ficha[]
