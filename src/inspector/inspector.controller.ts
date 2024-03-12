@@ -47,6 +47,7 @@ export class InspectorController {
   create(
     @Body(new ValidationPipe()) createInspectorDto: CreateInspectorDto,
   ): Promise<CreateInspectorDto> {
+    console.log('En el controlador', createInspectorDto);
     return this.inspectorService.create(createInspectorDto);
   }
 
@@ -96,5 +97,4 @@ export class InspectorController {
   ) {
     return this.inspectorService.remove(id);
   }
-
 }

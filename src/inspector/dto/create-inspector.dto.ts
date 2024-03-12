@@ -28,9 +28,10 @@ export class CreateInspectorDto {
   @ApiProperty({ required: false })
   numeroTelefono: string;
 
-  @IsFile()
+  //@IsFile()
+  @IsOptional()
   //@MaxFileSize(3000)
-  @HasMimeType(['image/jpeg', 'image/png', 'image/jpg'])
+  //@HasMimeType(['image/jpeg', 'image/png', 'image/jpg'])
   @ApiProperty({ required: false, nullable: true })
   urlImg: File | null;
 }

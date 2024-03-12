@@ -59,16 +59,17 @@ export class FichaController {
     return await this.fichaService.findAll();
   }
 
-  @Get()
-  @Roles(Role.Admin)
-  @ApiOperation({ summary: 'Analyze Ficha stored' })
-  @ApiResponse({
-    status: HttpStatus.OK,
-    description: 'API is up',
-  })
-  async analisis() {
-    return await this.fichaService.anasysis();
-  }
+  // @Get()
+  // @Roles(Role.Admin)
+  // @ApiOperation({ summary: 'Analyze Ficha stored' })
+  // @ApiResponse({
+  //   status: HttpStatus.OK,
+  //   description: 'API is up',
+  // })
+  // async analisis() {
+  //   return await this.fichaService.anasysis();
+  // }
+
   @Get(':id')
   @Roles(Role.User, Role.Admin)
   @ApiOperation({ summary: 'Get one Ficha by ID..' })

@@ -1,5 +1,5 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
-import { EntityUser } from 'src/user/entities/user.entity';
+import { EntityUser } from 'src/user/entities';
 import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
