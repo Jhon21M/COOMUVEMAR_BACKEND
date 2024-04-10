@@ -72,31 +72,16 @@ export class FichaService {
   }
 
   async anasysis() {
-    let seccionesFicha: {
-      nombre: string;
-    }[] = await this.prisma.seccionesFicha.findMany({
-      select: {
-        nombre: true,
-      },
-    });
+    const ficha = await this.prisma.ficha.findMany();
 
-    let datosFicha: {
-      titulo: string;
-    }[] = await this.prisma.dato.findMany({
-      select: {
-        titulo: true,
-      },
-    });
+    const seccionesFicha = await this.prisma.seccionesFicha.findMany();
 
-    let informacionDato: {
-      informacion: string;
-    }[] = await this.prisma.informacionDato.findMany({
-      select: {
-        informacion: true,
-      },
-    });
+    const preguntas = await this.prisma.dato.findMany();
 
-    
+    const respuestas = await this.prisma.informacionDato.findMany();
+
+    const cantSeccion = seccionesFicha.length;
+
+    for (let index = 0; index <= cantSeccion; index++) {}
   }
-
 }

@@ -80,6 +80,21 @@ export class seccionesFichaController {
     return this.secFichaService.findAllDataSection(id);
   }
 
+  @Get('datoseccioninfo/:id')
+  @Roles(Role.User, Role.Admin)
+  @ApiOperation({
+    summary: 'Get DATO data and answer from  an seccionFicha by ID',
+  })
+  findAllDataAndAnswerSection(
+    @Param(
+      'id',
+      new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE }),
+    )
+    id: number,
+  ) {
+    return this.secFichaService.findAllDataAndAnswerSection(id);
+  }
+
   @Patch(':id')
   @Roles(Role.Admin)
   @ApiOperation({ summary: 'update a seccionFicha data by ID' })

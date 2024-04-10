@@ -4,7 +4,7 @@ import { InspectorController } from './inspector.controller';
 import { NestjsFormDataModule } from 'nestjs-form-data';
 
 @Module({
-  imports: [NestjsFormDataModule],
+  //imports: [NestjsFormDataModule],
   controllers: [InspectorController],
   providers: [InspectorService]
 })

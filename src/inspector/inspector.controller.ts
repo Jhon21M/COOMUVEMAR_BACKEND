@@ -42,12 +42,15 @@ export class InspectorController {
 
   @Post()
   @Roles(Role.Admin)
-  @FormDataRequest()
   @ApiOperation({ summary: 'Create a new Inspector' })
   create(
     @Body(new ValidationPipe()) createInspectorDto: CreateInspectorDto,
   ): Promise<CreateInspectorDto> {
-    console.log('En el controlador', createInspectorDto);
+    if (createInspectorDto.urlImg) {
+      console.log('Si se recibe la imagen', createInspectorDto.urlImg);
+    } else {
+      console.log('No se recibe la imagen');
+    }
     return this.inspectorService.create(createInspectorDto);
   }
 

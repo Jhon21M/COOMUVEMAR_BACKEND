@@ -36,6 +36,17 @@ export class SecFichaService {
     });
   }
 
+  findAllDataAndAnswerSection(id: number) {
+    return this.prisma.dato.findMany({
+      include: {
+        InformacionDato: true,
+      },
+      where: {
+        IDSeccionesFicha: typeof id === 'number' ? id : Number.parseInt(id),
+      },
+    });
+  }
+
   async update(
     id: number,
     seccionficha: EntityUpdateSeccionFicha,
