@@ -82,5 +82,6 @@ export class FichaService {
 
     const cantSeccion = seccionesFicha.length;
 
+    for (let index = 0; index <= cantSeccion; index++) {}
   }
 }
