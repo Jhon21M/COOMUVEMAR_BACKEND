@@ -6,6 +6,7 @@ import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { EntityAuth } from './entities';
 import { EntityAuthSignin } from './entities/signin.entity';
+import { Role, Usuario } from '@prisma/client';
 
 @Injectable()
 export class AuthService {
@@ -36,8 +37,7 @@ export class AuthService {
           role: authSignup.role,
           IDTrabajador: newTrabajador.id,
         },
-      })
-
+      });
 
       return this.signToken(newUser.role, newUser.id, newUser.email);
     } catch (error) {
@@ -118,6 +118,54 @@ export class AuthService {
         access_token: token,
       };
     }
+  }
+
+  async signinMovil(userAuthSignin: EntityAuthSignin): Promise<any> {
+    const { email, password } = userAuthSignin;
+    console.log(
+      'hora:' +
+        new Date().getHours().toString() +
+        ':' +
+        new Date().getMinutes().toString(),
+    );
+    console.log('imprimiento email: ', email);
+    console.log('imprimiento password: ', password);
+
+    // find the user by email
+    const user = await this.prisma.usuario.findUnique({
+      where: {
+        email: userAuthSignin.email,
+      },
+    });
+
+    // if user does not exist throw exception
+    if (!user) throw new ForbiddenException('Incorrect credentials');
+
+    //compare the password
+    const pwMatches = await argon.verify(user.hash, userAuthSignin.password);
+
+    // if password incorrect throw exception
+    if (!pwMatches) throw new ForbiddenException('Incorrect credentials');
+
+    const trabajador = await this.prisma.trabajador.findUnique({
+      where: {
+        id: user.IDTrabajador,
+      },
+      select: {
+        id: true,
+        nombre: true,
+        apellido: true,
+      },
+    });
+    const role = user.role;
+    //send back the user
+    const access_token = await this.signToken(user.role, user.id, user.email);
+
+    return {
+      trabajador: trabajador,
+      role: role,
+      access_token: access_token.access_token,
+    };
   }
 
   signout() {}

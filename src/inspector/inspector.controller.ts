@@ -12,7 +12,11 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { InspectorService } from './inspector.service';
-import { CreateInspectorDto, UpdateInspectorDto } from './dto';
+import {
+  CreateInspectorDto,
+  CreateTrabajadorProductorDto,
+  UpdateInspectorDto,
+} from './dto';
 
 import {
   ApiBearerAuth,
@@ -52,6 +56,16 @@ export class InspectorController {
       console.log('No se recibe la imagen');
     }
     return this.inspectorService.create(createInspectorDto);
+  }
+
+  @Post()
+  @Roles(Role.Admin)
+  @ApiOperation({ summary: 'Create a new InspectorProductor' })
+  createTP(
+    @Body(new ValidationPipe())
+    createInspectorDto: CreateTrabajadorProductorDto,
+  ) {
+    return this.inspectorService.createTP(createInspectorDto);
   }
 
   @Get()

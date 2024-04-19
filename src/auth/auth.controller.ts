@@ -3,6 +3,8 @@ import { AuthService } from './auth.service';
 import { AuthSignupDto, AuthSigninDto } from './dto';
 import { ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { json } from 'body-parser';
+import { Usuario } from '@prisma/client';
+import { GetUser } from './decorator';
 
 @ApiTags('Auth - API')
 @Controller('auth')
@@ -21,7 +23,11 @@ export class AuthController {
   signin(@Body(new ValidationPipe()) dto: AuthSigninDto) {
     return this.authService.signin(dto);
   }
-
+  @Post('movilsignin')
+  @ApiOperation({ summary: 'Login with an account from Movil app' })
+  signinMovil(@Body(new ValidationPipe()) authSignin: AuthSigninDto) {
+    return this.authService.signinMovil(authSignin);
+  }
   @Get('signout')
   @ApiOperation({ summary: 'Get out From the session online' })
   signout() {

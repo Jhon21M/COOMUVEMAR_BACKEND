@@ -58,6 +58,8 @@ export class InspectorService {
     }
   }
 
+  async createTP(ouhoubo: any) {}
+
   async findAll() {
     return await this.prisma.trabajador.findMany();
   }
