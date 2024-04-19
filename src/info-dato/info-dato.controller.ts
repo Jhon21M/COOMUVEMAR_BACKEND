@@ -69,6 +69,20 @@ export class InfoDatoController {
     return this.infodatoService.findOne(id);
   }
 
+  // no esta en el documento de team
+  @Get('fichainfo/:id')
+  @Roles(Role.User, Role.Admin)
+  @ApiOperation({ summary: 'Get All informacionDato data from One IDFicha' })
+  findAllInfoOneFicha(
+    @Param(
+      'id',
+      new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE }),
+    )
+    id: number,
+  ) {
+    return this.infodatoService.findAllInfoOneFicha(id);
+  }
+
   @Patch(':id')
   @Roles(Role.Admin)
   @ApiOperation({ summary: 'update a informacionDato data by ID' })

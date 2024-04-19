@@ -72,16 +72,22 @@ export class FichaService {
   }
 
   async anasysis() {
-    const ficha = await this.prisma.ficha.findMany();
+    const RegAdministrativo = await this.prisma.seccionesFicha.findMany({
+      where: {
+        nombre: 'Registros Administrativos',
+      },
+    });
 
-    const seccionesFicha = await this.prisma.seccionesFicha.findMany();
+    const inforParcela = await this.prisma.seccionesFicha.findMany({
+      where: {
+        nombre: 'Información de las Parcelas',
+      },
+    });
 
-    const preguntas = await this.prisma.dato.findMany();
-
-    const respuestas = await this.prisma.informacionDato.findMany();
-
-    const cantSeccion = seccionesFicha.length;
-
-    for (let index = 0; index <= cantSeccion; index++) {}
+    const RegEpidemiologico = await this.prisma.seccionesFicha.findMany({
+      where: {
+        nombre: 'Registro Epidemiologico',
+      },
+    });
   }
 }

@@ -34,6 +34,14 @@ export class InfoDatoService {
     });
   }
 
+  findAllInfoOneFicha(id: number) {
+    return this.prisma.informacionDato.findMany({
+      where: {
+        IDFicha: typeof id === 'number' ? id : Number.parseInt(id),
+      },
+    });
+  }
+
   async update(
     id: number,
     informacion: EntityUpdateInfoDato,
