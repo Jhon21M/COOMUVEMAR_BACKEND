@@ -5,10 +5,10 @@ export class CreateTrabajadorProductorDto {
   @IsNumber()
   @IsNotEmpty()
   @ApiProperty()
-  IDProductor: string;
+  IDProductor: number;
 
   @IsNumber()
   @IsNotEmpty()
   @ApiProperty()
-  IDTranajador: string;
+  IDTrabajador: number;
 }

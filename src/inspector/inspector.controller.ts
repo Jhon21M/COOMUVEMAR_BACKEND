@@ -63,9 +63,9 @@ export class InspectorController {
   @ApiOperation({ summary: 'Create a new InspectorProductor' })
   createTP(
     @Body(new ValidationPipe())
-    createInspectorDto: CreateTrabajadorProductorDto,
+    createTPDto: CreateTrabajadorProductorDto,
   ) {
-    return this.inspectorService.createTP(createInspectorDto);
+    return this.inspectorService.createTP(createTPDto);
   }
 
   @Get()

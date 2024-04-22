@@ -19,6 +19,47 @@ export class FichaService {
   async findAll() {
     return await this.prisma.ficha.findMany();
   }
+  async getHeader(id: number) {
+    const FincaFichaID = await this.prisma.ficha.findUnique({
+      where: {
+        id: typeof id === 'number' ? id : Number.parseInt(id),
+      },
+      // select: {
+      //   IDFinca: true,
+      // },
+    });
+
+    const productorFinca = await this.prisma.finca.findUnique({
+      where: {
+        id: FincaFichaID.IDFinca,
+      },
+      // select: {
+      //   IDProductor: true,
+      // },
+    });
+
+    const productorData = await this.prisma.productor.findUnique({
+      where: {
+        id: productorFinca.IDProductor,
+      },
+    });
+
+    return {
+      productor: productorData.nombre + productorData.apellido,
+      cedula: productorData.numeroCedula,
+      telefono: productorData.numeroTelefono,
+      fechaInspeccion: FincaFichaID.createdAt,
+      codProductor: productorData.id,
+      comunidad: productorFinca.comunidad,
+      finca: productorFinca.nombre,
+      produccionultimoCiclo: productorFinca.produccionUltimoSiclo,
+      estimadoCosecha: productorFinca.estimadoCosecha,
+      areaDesarrollo: productorFinca.areaCacaoDesarrollo,
+      areaProduccion: productorFinca.areaCacaoProduccion,
+      ingresoCertificacion: productorData.fechaIngresoPrograma,
+      estadoCertificacion: productorData.estado,
+    };
+  }
 
   findOne(id: number) {
     return this.prisma.ficha.findUnique({

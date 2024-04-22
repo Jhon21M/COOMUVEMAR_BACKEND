@@ -5,6 +5,7 @@ import { EntityUpdateInspector } from './entities/update.productor.entity';
 import { MemoryStoredFile } from 'nestjs-form-data';
 import { writeFileSync, unlinkSync } from 'fs';
 import { GoogleService } from 'src/common/google_cloud/upload-google.service';
+import { CreateTrabajadorProductorDto } from './dto';
 
 @Injectable()
 export class InspectorService {
@@ -58,7 +59,14 @@ export class InspectorService {
     }
   }
 
-  async createTP(ouhoubo: any) {}
+  async createTP(asignacion: CreateTrabajadorProductorDto) {
+    return this.prisma.inspectorProductor.create({
+      data: {
+        IDProductor: asignacion.IDProductor,
+        IDTrabajador: asignacion.IDTrabajador,
+      },
+    });
+  }
 
   async findAll() {
     return await this.prisma.trabajador.findMany();
