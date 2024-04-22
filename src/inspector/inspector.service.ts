@@ -6,6 +6,7 @@ import { MemoryStoredFile } from 'nestjs-form-data';
 import { writeFileSync, unlinkSync } from 'fs';
 import { GoogleService } from 'src/common/google_cloud/upload-google.service';
 import { CreateTrabajadorProductorDto } from './dto';
+import { Usuario } from '@prisma/client';
 
 @Injectable()
 export class InspectorService {
@@ -68,6 +69,44 @@ export class InspectorService {
     });
   }
 
+  async getTP(user: Usuario) {
+    const productorIDs = await this.prisma.inspectorProductor.findMany({
+      where: {
+        IDTrabajador: user.IDTrabajador,
+      },
+    });
+    const cantproductorsIDs = productorIDs.length;
+    if (cantproductorsIDs === 1) {
+      const productorData = await this.prisma.productor.findUnique({
+        where: {
+          id: productorIDs[0].IDProductor,
+        },
+      });
+
+      return productorData;
+    } else if (cantproductorsIDs === 2) {
+      let dataProductor;
+      for (let cuenta = 1; cuenta < cantproductorsIDs; cuenta++) {
+        dataProductor = await this.prisma.productor.findUnique({
+          where: {
+            id: productorIDs[cuenta].IDProductor,
+          },
+        });
+      }
+      return dataProductor;
+    } else {
+      return 'No cuenta con asignaciones aun..';
+    }
+  }
+
+  async getDataBase() {
+    const fincaData = await this.prisma.finca.findMany();
+    const productoresData = await this.prisma.productor.findMany();
+    const secFichaData = await this.prisma.seccionesFicha.findMany();
+    const datoData = await this.prisma.dato.findMany();
+
+    return { fincaData, productoresData, secFichaData, datoData };
+  }
   async findAll() {
     return await this.prisma.trabajador.findMany();
   }
