@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
 import { InspectorService } from './inspector.service';
 import { InspectorController } from './inspector.controller';
-import { NestjsFormDataModule } from 'nestjs-form-data';
+import { GoogleModule } from 'src/common/google_cloud/google.module';
 
 @Module({
-  //imports: [NestjsFormDataModule],
+  imports: [GoogleModule],
   controllers: [InspectorController],
   providers: [InspectorService]
 })

@@ -11,16 +11,31 @@ datasource db {
 }
 
 model Productor {
-  id                   Int      @id @default(autoincrement())
+  id                   Int                  @id @default(autoincrement())
   nombre               String
   apellido             String
-  numeroCedula         String?  @db.VarChar(30)
+  numeroCedula         String?              @db.VarChar(30)
   numeroTelefono       String?
-  fechaIngresoPrograma DateTime @default(now())
+  fechaIngresoPrograma DateTime             @default(now())
   estado               Int
   Finca                Finca[]
+  Inspectorproductor   InspectorProductor[]
 
   @@map("productores")
+}
+
+model InspectorProductor {
+  id          Int       @id @default(autoincrement())
+  IDProductor Int
+  productor   Productor @relation(fields: [IDProductor], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  IDTrabajador Int
+  trabajador   Trabajador @relation(fields: [IDTrabajador], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  estado String?
+
+  created DateTime @default(now())
+  updated DateTime @updatedAt
 }
 
 model Finca {
@@ -30,6 +45,7 @@ model Finca {
   areaCacaoProduccion   String?
   areaCacaoDesarrollo   String?
   produccionUltimoSiclo String?
+  estimadoCosecha       String?
 
   IDProductor Int
   productor   Productor @relation(fields: [IDProductor], references: [id], onDelete: Cascade, onUpdate: Cascade)
@@ -39,15 +55,16 @@ model Finca {
 }
 
 model Trabajador {
-  id             Int       @id @default(autoincrement())
-  nombre         String
-  apellido       String
-  numeroTelefono String
-  urlImg         String?    @unique
-  createAt       DateTime  @default(now())
-  updatedAt      DateTime  @updatedAt
-  Ficha          Ficha[]
-  Usuario        Usuario[]
+  id                 Int                  @id @default(autoincrement())
+  nombre             String
+  apellido           String
+  numeroTelefono     String
+  urlImg             String?              @unique
+  createAt           DateTime             @default(now())
+  updatedAt          DateTime             @updatedAt
+  Ficha              Ficha[]
+  Usuario            Usuario[]
+  Inspectorproductor InspectorProductor[]
 
   @@map("trabajadores")
 }
@@ -72,9 +89,9 @@ model Ficha {
 }
 
 model Documento {
-  id          Int    @id @default(autoincrement())
-  declaracion String
-  huella      Bytes
+  id               Int    @id @default(autoincrement())
+  declaracion      String
+  huella           Bytes
   DOCDictamenFinal String
 
   IDFicha Int   @unique

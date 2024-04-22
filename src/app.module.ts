@@ -4,6 +4,7 @@ import { ProductorController } from './productor/productor.controller';
 import { ProductorService } from './productor/productor.service';
 import { ConfigModule } from '@nestjs/config';
 import { PrismaModule } from './prisma/prisma.module';
+import { GoogleModule } from './common/google_cloud/google.module';
 import { AuthModule } from './auth/auth.module';
 import { AuthController } from './auth/auth.controller';
 import { AuthService } from './auth/auth.service';
@@ -33,6 +34,7 @@ import { NestjsFormDataModule } from 'nestjs-form-data';
     NestjsFormDataModule,
     AuthModule,
     PrismaModule,
+    GoogleModule,
     ProductorModule,
     UserModule,
     FincaModule,

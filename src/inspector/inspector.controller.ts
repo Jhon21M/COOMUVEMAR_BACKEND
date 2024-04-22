@@ -12,7 +12,11 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { InspectorService } from './inspector.service';
-import { CreateInspectorDto, UpdateInspectorDto } from './dto';
+import {
+  CreateInspectorDto,
+  CreateTrabajadorProductorDto,
+  UpdateInspectorDto,
+} from './dto';
 
 import {
   ApiBearerAuth,
@@ -22,9 +26,9 @@ import {
 } from '@nestjs/swagger';
 import { JwtGuard } from 'src/auth/guard';
 import { RolesGuard } from 'src/auth/guard/auth.guard';
-import { Roles } from 'src/auth/decorator';
+import { GetUser, Roles } from 'src/auth/decorator';
 import { Role } from 'src/common/enum/role.enum';
-import { FormDataRequest } from 'nestjs-form-data';
+import { Usuario } from '@prisma/client';
 
 @ApiTags('Inspector - API')
 @ApiTooManyRequestsResponse({
@@ -52,6 +56,30 @@ export class InspectorController {
       console.log('No se recibe la imagen');
     }
     return this.inspectorService.create(createInspectorDto);
+  }
+
+  @Post('asignacionproductor')
+  @Roles(Role.Admin)
+  @ApiOperation({ summary: 'Create a new InspectorProductor' })
+  createTP(
+    @Body(new ValidationPipe())
+    createTPDto: CreateTrabajadorProductorDto,
+  ) {
+    return this.inspectorService.createTP(createTPDto);
+  }
+
+  @Get('getproductor')
+  @Roles(Role.Admin, Role.User)
+  @ApiOperation({ summary: 'Get the InspectorProductor' })
+  getTP(@GetUser() user: Usuario) {
+    return this.inspectorService.getTP(user);
+  }
+
+  @Get('getdatabase')
+  @Roles(Role.Admin, Role.User)
+  @ApiOperation({ summary: 'Get DataBase' })
+  getDataBase() {
+    return this.inspectorService.getDataBase();
   }
 
   @Get()

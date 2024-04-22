@@ -70,6 +70,24 @@ export class FichaController {
   //   return await this.fichaService.anasysis();
   // }
 
+  // no esta en teams
+  @Get('fichaheader/:id')
+  @Roles(Role.User, Role.Admin)
+  @ApiOperation({ summary: 'Get  header of a Ficha created' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'API is up',
+  })
+  async getHeader(
+    @Param(
+      'id',
+      new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE }),
+    )
+    id: number,
+  ) {
+    return await this.fichaService.getHeader(id);
+  }
+
   @Get(':id')
   @Roles(Role.User, Role.Admin)
   @ApiOperation({ summary: 'Get one Ficha by ID..' })
