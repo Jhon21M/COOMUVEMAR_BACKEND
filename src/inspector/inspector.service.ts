@@ -20,21 +20,21 @@ export class InspectorService {
 
     if (urlImg) {
       console.log(inspector);
+      // Llamada a la función para obtener el tipo de imagen
+
+      const tipoImagen = await this.google.obtenerTipoImagen(urlImg);
 
       const base64Data = inspector.urlImg.replace(
         /^data:image\/\w+;base64,/,
         '',
       );
-
-      // Llamada a la función para obtener el tipo de imagen
-      const tipoImagen = this.google.obtenerTipoImagen(base64Data);
       // Convertir la cadena base64 a un buffer
       const buffer = Buffer.from(base64Data, 'base64');
       console.log('imprimiendo buffer luego de convertir', buffer);
 
       // Guarda la imagen en el servidor
       const nombre = inspector.nombre + inspector.apellido;
-      const filePath = `src/common/perfil-foto/${nombre}.${tipoImagen}`;
+      const filePath = `src/common/file/perfil-foto/${nombre}.${tipoImagen}`;
       writeFileSync(filePath, buffer);
 
       const photoUrl = await this.google.uploadFile(filePath);

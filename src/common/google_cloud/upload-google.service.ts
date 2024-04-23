@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Storage } from '@google-cloud/storage';
-
+import { GcsConfig } from './cloud_storage';
 import { unlinkSync } from 'fs';
 
 @Injectable()
@@ -8,7 +8,7 @@ export class GoogleService {
   private readonly storage: Storage;
 
   constructor() {
-    const GCP_PROJECT_ID = 'plated-will-415517';
+    const GCP_PROJECT_ID = GcsConfig.project_id; //'plated-will-415517';
     const GCP_KEY_FILE_PATH = 'gsc-cloud.json';
 
     this.storage = new Storage({
@@ -43,7 +43,7 @@ export class GoogleService {
     return `https://storage.cloud.google.com/${GCP_BUCKET}/${fileName}`;
   }
 
-  obtenerTipoImagen(base64String: string): string | null {
+  async obtenerTipoImagen(base64String: string): Promise<string> {
     const tipo_imagen = base64String.substring(5, base64String.indexOf(';'));
 
     let finaltype = '';
