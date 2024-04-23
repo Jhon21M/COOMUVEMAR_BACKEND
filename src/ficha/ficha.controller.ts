@@ -26,6 +26,7 @@ import { JwtGuard } from 'src/auth/guard';
 import { RolesGuard } from 'src/auth/guard/auth.guard';
 import { Roles } from 'src/auth/decorator';
 import { Role } from 'src/common/enum/role.enum';
+import { FichaInterfaceReturn } from './interfaces';
 
 @ApiTags('ficha - APi')
 @UseGuards(JwtGuard, RolesGuard)
@@ -97,7 +98,7 @@ export class FichaController {
       new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE }),
     )
     id: number,
-  ) {
+  ): Promise<FichaInterfaceReturn> {
     return this.fichaService.findOne(id);
   }
 
