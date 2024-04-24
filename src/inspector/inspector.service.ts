@@ -65,6 +65,7 @@ export class InspectorService {
       data: {
         IDProductor: asignacion.IDProductor,
         IDTrabajador: asignacion.IDTrabajador,
+        estadoInspeccion: asignacion.estadoInspeccion,
       },
     });
   }

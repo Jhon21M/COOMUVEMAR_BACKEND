@@ -6,7 +6,7 @@ export interface FichaInterfaceReturn {
   urlmagen: string;
   finca: string;
   productor: string;
-  location: {
+  localizacion: {
     latitud: string;
     longitud: string;
   };

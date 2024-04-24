@@ -64,7 +64,7 @@ export class AuthService {
     console.log('imprimiento password: ', password);
 
     // find the user by email
-    const user = await this.prisma.usuario.findUnique({
+    const user = await this.prisma.usuario.findFirst({
       where: {
         email: userAuthSignin.email,
       },
@@ -132,7 +132,7 @@ export class AuthService {
     console.log('imprimiento password: ', password);
 
     // find the user by email
-    const user = await this.prisma.usuario.findUnique({
+    const user = await this.prisma.usuario.findFirst({
       where: {
         email: userAuthSignin.email,
       },

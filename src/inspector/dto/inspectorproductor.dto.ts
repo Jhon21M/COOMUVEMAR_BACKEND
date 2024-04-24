@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsNumber } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
 
 export class CreateTrabajadorProductorDto {
   @IsNumber()
@@ -11,4 +11,9 @@ export class CreateTrabajadorProductorDto {
   @IsNotEmpty()
   @ApiProperty()
   IDTrabajador: number;
+
+  @IsString()
+  @IsNotEmpty()
+  @ApiProperty()
+  estadoInspeccion: string;
 }

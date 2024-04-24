@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { JsonValue } from '@prisma/client/runtime/library';
 import { FichaInterface } from 'src/ficha/interfaces';
 
 export class EntityFicha implements FichaInterface {
@@ -6,7 +7,9 @@ export class EntityFicha implements FichaInterface {
   createdAT?: Date | null;
 
   @ApiProperty({ required: true, nullable: false })
-  localizacion: string;
+  localizacion: JsonValue
+
+  analizada: boolean;
 
   @ApiProperty({ required: true, nullable: false })
   IDTrabajador: number;

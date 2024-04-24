@@ -10,7 +10,10 @@ export class FichaService {
   async create(ficha: EntityFicha): Promise<EntityFicha> {
     const newFicha = await this.prisma.ficha.create({
       data: {
-        ...ficha,
+        localizacion: ficha.localizacion,
+        analizada: ficha.analizada,
+        IDTrabajador: ficha.IDTrabajador,
+        IDFinca: ficha.IDFinca,
       },
     });
 
@@ -49,7 +52,7 @@ export class FichaService {
         finca: ficha.finca.nombre,
         productor:
           ficha.finca.productor.nombre + ficha.finca.productor.apellido,
-        location: {
+        localizacion: {
           latitud: 'ibiyiuboiuouoiyfy',
           longitud: 'ubouboeufbwofbowufbowufbowr',
         },
@@ -63,44 +66,36 @@ export class FichaService {
   }
 
   async getHeader(id: number) {
-    const FincaFichaID = await this.prisma.ficha.findUnique({
+    const fichaData = await this.prisma.ficha.findUnique({
       where: {
         id: typeof id === 'number' ? id : Number.parseInt(id),
       },
-      // select: {
-      //   IDFinca: true,
-      // },
-    });
-
-    const productorFinca = await this.prisma.finca.findUnique({
-      where: {
-        id: FincaFichaID.IDFinca,
-      },
-      // select: {
-      //   IDProductor: true,
-      // },
-    });
-
-    const productorData = await this.prisma.productor.findUnique({
-      where: {
-        id: productorFinca.IDProductor,
+      include: {
+        finca: {
+          include: {
+            productor: true,
+          },
+        },
+        trabajador: true,
       },
     });
 
     return {
-      productor: productorData.nombre + productorData.apellido,
-      cedula: productorData.numeroCedula,
-      telefono: productorData.numeroTelefono,
-      fechaInspeccion: FincaFichaID.createdAt,
-      codProductor: productorData.id,
-      comunidad: productorFinca.comunidad,
-      finca: productorFinca.nombre,
-      produccionultimoCiclo: productorFinca.produccionUltimoSiclo,
-      estimadoCosecha: productorFinca.estimadoCosecha,
-      areaDesarrollo: productorFinca.areaCacaoDesarrollo,
-      areaProduccion: productorFinca.areaCacaoProduccion,
-      ingresoCertificacion: productorData.fechaIngresoPrograma,
-      estadoCertificacion: productorData.estado,
+      productor:
+        fichaData.finca.productor.nombre + fichaData.finca.productor.apellido,
+      cedula: fichaData.finca.productor.numeroCedula,
+      telefono: fichaData.finca.productor.numeroTelefono,
+      fechaInspeccion: fichaData.createdAt,
+      codProductor: fichaData.finca.productor.id,
+      comunidad: fichaData.finca.comunidad,
+      finca: fichaData.finca.nombre,
+      produccionultimoCiclo: fichaData.finca.produccionUltimoSiclo,
+      estimadoCosecha: fichaData.finca.estimadoCosecha,
+      areaDesarrollo: fichaData.finca.areaCacaoDesarrollo,
+      areaProduccion: fichaData.finca.areaCacaoProduccion,
+      ingresoCertificacion: fichaData.finca.productor.fechaIngresoPrograma,
+      estadoCertificacion: fichaData.finca.productor.estadoProgramaC,
+      inspector: fichaData.trabajador.nombre + fichaData.trabajador.apellido,
     };
   }
 
@@ -143,7 +138,7 @@ export class FichaService {
       urlmagen: inspectorData.urlImg,
       finca: fincaData.nombre,
       productor: productorData.nombre + productorData.apellido,
-      location: {
+      localizacion: {
         latitud: 'ibiyiuboiuouoiyfy',
         longitud: 'ubouboeufbwofbowufbowufbowr',
       },
