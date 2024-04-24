@@ -75,6 +75,19 @@ export class InspectorController {
     return this.inspectorService.getTP(user);
   }
 
+  @Get('getproductor/:id')
+  @Roles(Role.Admin)
+  @ApiOperation({ summary: 'Get the InspectorProductor' })
+  getTPAdmin(
+    @Param(
+      'id',
+      new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE }),
+    )
+    id: number,
+  ) {
+    return this.inspectorService.getTPAdmin(id);
+  }
+
   @Get('getdatabase')
   @Roles(Role.Admin, Role.User)
   @ApiOperation({ summary: 'Get DataBase' })

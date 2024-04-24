@@ -142,7 +142,7 @@ export class FichaService {
         latitud: 'ibiyiuboiuouoiyfy',
         longitud: 'ubouboeufbwofbowufbowufbowr',
       },
-      analizada: true,
+      analizada: fichaData.analizada,
     };
 
     return returndata;

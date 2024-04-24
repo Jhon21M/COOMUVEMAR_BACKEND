@@ -44,9 +44,7 @@ export class FichaController {
   async create(
     @Body(new ValidationPipe()) createFichaDto: CreateFichaDto,
   ): Promise<EntityFicha> {
-    const nuevaFicha = await this.fichaService.create(createFichaDto);
-    console.log('impriendo ficha creada', nuevaFicha);
-    return nuevaFicha;
+    return this.fichaService.create(createFichaDto);
   }
 
   @Get()

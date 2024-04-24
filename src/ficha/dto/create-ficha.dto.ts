@@ -20,7 +20,7 @@ export class CreateFichaDto {
   @ApiProperty({ nullable: true })
   createdAt: Date;
 
-  @IsJSON()
+  //@IsJSON()
   @IsNotEmpty()
   @ApiProperty()
   localizacion: {

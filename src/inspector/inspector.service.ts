@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { EntityInspector } from './entities';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { EntityUpdateInspector } from './entities/update.productor.entity';
@@ -7,6 +7,8 @@ import { writeFileSync, unlinkSync } from 'fs';
 import { GoogleService } from 'src/common/google_cloud/upload-google.service';
 import { CreateTrabajadorProductorDto } from './dto';
 import { Usuario } from '@prisma/client';
+import { EntityProductor } from 'src/productor/entities';
+import { forbidden } from 'joi';
 
 @Injectable()
 export class InspectorService {
@@ -87,7 +89,7 @@ export class InspectorService {
       return productorData;
     } else if (cantproductorsIDs === 2) {
       let dataProductor;
-      for (let cuenta = 1; cuenta < cantproductorsIDs; cuenta++) {
+      for (let cuenta = 0; cuenta < cantproductorsIDs; cuenta++) {
         dataProductor = await this.prisma.productor.findUnique({
           where: {
             id: productorIDs[cuenta].IDProductor,
@@ -98,6 +100,28 @@ export class InspectorService {
     } else {
       return 'No cuenta con asignaciones aun..';
     }
+  }
+
+  async getTPAdmin(id: number) {
+    const productorIDs = await this.prisma.inspectorProductor.findMany({
+      where: {
+        IDTrabajador: id,
+      },
+    });
+
+    if (productorIDs.length === 0) {
+      throw new NotFoundException('No cuenta con asignaciones aun..');
+    }
+    let productorData;
+    for (const productor of productorIDs) {
+      productorData = await this.prisma.productor.findUnique({
+        where: {
+          id: productor.IDProductor,
+        },
+      });
+      console.log(productorData);
+    }
+    return productorData;
   }
 
   async getDataBase() {
