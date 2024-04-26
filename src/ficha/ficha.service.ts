@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { EntityFicha, EntityUpdateFicha } from './entities';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { FichaInterfaceReturn } from './interfaces';
+import { Usuario } from '@prisma/client';
 
 @Injectable()
 export class FichaService {
@@ -10,6 +11,7 @@ export class FichaService {
   async create(ficha: EntityFicha): Promise<EntityFicha> {
     const newFicha = await this.prisma.ficha.create({
       data: {
+        createdAt: ficha?.createdAT,
         localizacion: ficha.localizacion,
         analizada: ficha.analizada,
         IDTrabajador: ficha.IDTrabajador,
@@ -20,49 +22,87 @@ export class FichaService {
     return newFicha;
   }
 
-  async findAll(): Promise<FichaInterfaceReturn[]> {
-    const fichaData = await this.prisma.ficha.findMany({
-      include: {
-        finca: {
-          include: {
-            productor: true,
+  async findAll(user: Usuario): Promise<FichaInterfaceReturn[]> {
+    if (user.role === 'ADMIN') {
+      const fichaData = await this.prisma.ficha.findMany({
+        include: {
+          finca: {
+            include: {
+              productor: true,
+            },
           },
-        },
-        trabajador: true,
-      },
-    });
-
-    const returndata: FichaInterfaceReturn[] = [];
-
-    for (const ficha of fichaData) {
-      const userInspector = await this.prisma.usuario.findFirst({
-        where: {
-          IDTrabajador: ficha.trabajador.id,
+          trabajador: true,
         },
       });
 
-      const email = userInspector ? userInspector.email : '';
+      const returndata: FichaInterfaceReturn[] = [];
 
-      const returndataItem: FichaInterfaceReturn = {
-        id: ficha.id,
-        nombre: ficha.trabajador.nombre + ficha.trabajador.apellido,
-        fecha: ficha.createdAt,
-        email: email,
-        urlmagen: ficha.trabajador.urlImg,
-        finca: ficha.finca.nombre,
-        productor:
-          ficha.finca.productor.nombre + ficha.finca.productor.apellido,
-        localizacion: {
-          latitud: 'ibiyiuboiuouoiyfy',
-          longitud: 'ubouboeufbwofbowufbowufbowr',
+      for (const ficha of fichaData) {
+        const userInspector = await this.prisma.usuario.findFirst({
+          where: {
+            IDTrabajador: ficha.trabajador.id,
+          },
+        });
+
+        const returndataItem: FichaInterfaceReturn = {
+          id: ficha.id,
+          nombre: ficha.trabajador.nombre + ficha.trabajador.apellido,
+          fecha: ficha.createdAt,
+          email: userInspector.email,
+          urlmagen: ficha.trabajador.urlImg,
+          finca: ficha.finca.nombre,
+          productor:
+            ficha.finca.productor.nombre + ficha.finca.productor.apellido,
+          localizacion: ficha.localizacion,
+          analizada: true,
+        };
+
+        returndata.push(returndataItem);
+      }
+
+      return returndata;
+    } else {
+      const fichaData = await this.prisma.ficha.findMany({
+        where: {
+          IDTrabajador: user.IDTrabajador,
         },
-        analizada: true,
-      };
+        include: {
+          finca: {
+            include: {
+              productor: true,
+            },
+          },
+          trabajador: true,
+        },
+      });
 
-      returndata.push(returndataItem);
+      const returndata: FichaInterfaceReturn[] = [];
+
+      for (const ficha of fichaData) {
+        const userInspector = await this.prisma.usuario.findFirst({
+          where: {
+            id: user.id,
+          },
+        });
+
+        const returndataItem: FichaInterfaceReturn = {
+          id: ficha.id,
+          nombre: ficha.trabajador.nombre + ficha.trabajador.apellido,
+          fecha: ficha.createdAt,
+          email: userInspector.email,
+          urlmagen: ficha.trabajador.urlImg,
+          finca: ficha.finca.nombre,
+          productor:
+            ficha.finca.productor.nombre + ficha.finca.productor.apellido,
+          localizacion: ficha.localizacion,
+          analizada: true,
+        };
+
+        returndata.push(returndataItem);
+      }
+
+      return returndata;
     }
-
-    return returndata;
   }
 
   async getHeader(id: number) {
@@ -104,44 +144,30 @@ export class FichaService {
       where: {
         id: typeof id === 'number' ? id : Number.parseInt(id),
       },
-    });
-
-    const fincaData = await this.prisma.finca.findUnique({
-      where: {
-        id: fichaData.IDFinca,
-      },
-    });
-
-    const productorData = await this.prisma.productor.findUnique({
-      where: {
-        id: fincaData.IDProductor,
-      },
-    });
-
-    const inspectorData = await this.prisma.trabajador.findUnique({
-      where: {
-        id: fichaData.IDTrabajador,
-      },
-    });
-
-    const userInspector = await this.prisma.usuario.findFirst({
-      where: {
-        IDTrabajador: inspectorData.id,
+      include: {
+        finca: {
+          include: {
+            productor: true,
+          },
+        },
+        trabajador: {
+          include: {
+            Usuario: true,
+          },
+        },
       },
     });
 
     const returndata: FichaInterfaceReturn = {
       id: fichaData.id,
-      nombre: inspectorData.nombre + inspectorData.apellido,
+      nombre: fichaData.trabajador.nombre + fichaData.trabajador.apellido,
       fecha: fichaData.createdAt,
-      email: userInspector.email,
-      urlmagen: inspectorData.urlImg,
-      finca: fincaData.nombre,
-      productor: productorData.nombre + productorData.apellido,
-      localizacion: {
-        latitud: 'ibiyiuboiuouoiyfy',
-        longitud: 'ubouboeufbwofbowufbowufbowr',
-      },
+      email: fichaData.trabajador.Usuario[0].email,
+      urlmagen: fichaData.trabajador.urlImg,
+      finca: fichaData.finca.nombre,
+      productor:
+        fichaData.finca.productor.nombre + fichaData.finca.productor.apellido,
+      localizacion: fichaData.localizacion,
       analizada: fichaData.analizada,
     };
 

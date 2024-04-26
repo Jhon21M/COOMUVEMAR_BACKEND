@@ -24,9 +24,10 @@ import {
 import { EntityFicha } from './entities';
 import { JwtGuard } from 'src/auth/guard';
 import { RolesGuard } from 'src/auth/guard/auth.guard';
-import { Roles } from 'src/auth/decorator';
+import { GetUser, Roles } from 'src/auth/decorator';
 import { Role } from 'src/common/enum/role.enum';
 import { FichaInterfaceReturn } from './interfaces';
+import { Usuario } from '@prisma/client';
 
 @ApiTags('ficha - APi')
 @UseGuards(JwtGuard, RolesGuard)
@@ -38,6 +39,7 @@ import { FichaInterfaceReturn } from './interfaces';
 export class FichaController {
   constructor(private readonly fichaService: FichaService) {}
 
+  //***********APP MOVIL Y WEB */
   @Post()
   @Roles(Role.User, Role.Admin)
   @ApiOperation({ summary: 'Create a new Ficha' })
@@ -54,8 +56,8 @@ export class FichaController {
     status: HttpStatus.OK,
     description: 'API is up',
   })
-  async findAll() {
-    return await this.fichaService.findAll();
+  async findAll(@GetUser() user: Usuario) {
+    return await this.fichaService.findAll(user);
   }
 
   // @Get()

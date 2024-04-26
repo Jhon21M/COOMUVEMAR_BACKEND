@@ -6,9 +6,10 @@ import { MemoryStoredFile } from 'nestjs-form-data';
 import { writeFileSync, unlinkSync } from 'fs';
 import { GoogleService } from 'src/common/google_cloud/upload-google.service';
 import { CreateTrabajadorProductorDto } from './dto';
-import { Usuario } from '@prisma/client';
+import { InspectorProductor, Usuario } from '@prisma/client';
 import { EntityProductor } from 'src/productor/entities';
 import { forbidden } from 'joi';
+import { triggerAsyncId } from 'async_hooks';
 
 @Injectable()
 export class InspectorService {
@@ -78,50 +79,120 @@ export class InspectorService {
         IDTrabajador: user.IDTrabajador,
       },
     });
-    const cantproductorsIDs = productorIDs.length;
-    if (cantproductorsIDs === 1) {
-      const productorData = await this.prisma.productor.findUnique({
-        where: {
-          id: productorIDs[0].IDProductor,
-        },
-      });
 
-      return productorData;
-    } else if (cantproductorsIDs === 2) {
-      let dataProductor;
-      for (let cuenta = 0; cuenta < cantproductorsIDs; cuenta++) {
-        dataProductor = await this.prisma.productor.findUnique({
-          where: {
-            id: productorIDs[cuenta].IDProductor,
-          },
-        });
-      }
-      return dataProductor;
-    } else {
-      return 'No cuenta con asignaciones aun..';
-    }
-  }
-
-  async getTPAdmin(id: number) {
-    const productorIDs = await this.prisma.inspectorProductor.findMany({
-      where: {
-        IDTrabajador: id,
-      },
-    });
-
-    if (productorIDs.length === 0) {
-      throw new NotFoundException('No cuenta con asignaciones aun..');
-    }
     let productorData;
     for (const productor of productorIDs) {
+      console.log(productor.IDProductor);
       productorData = await this.prisma.productor.findUnique({
         where: {
           id: productor.IDProductor,
         },
       });
-      console.log(productorData);
     }
     return productorData;
+  }
+
+  async getTPAdmin(id: number) {
+    const productorinspectorData =
+      await this.prisma.inspectorProductor.findMany({
+        where: {
+          IDTrabajador: id,
+        },
+        include: {
+          trabajador: true,
+        },
+      });
+
+    if (productorinspectorData.length === 0) {
+      throw new NotFoundException('No cuenta con asignaciones aun..');
+    }
+    const returndata = [];
+
+    for (const productor of productorinspectorData) {
+      const productorData = await this.prisma.productor.findUnique({
+        where: {
+          id: productor.IDProductor,
+        },
+        include: {
+          Finca: true,
+        },
+      });
+
+      returndata.push(productorData);
+    }
+    return returndata;
+  }
+
+  async getAllTPAdmin() {
+    const inspectorsWithProductors = {};
+
+    // Obtener todos los registros de inspector-productor
+    const inspectorProductorData =
+      await this.prisma.inspectorProductor.findMany({
+        include: {
+          trabajador: true,
+        },
+      });
+
+    // Recorrer cada registro de inspector-productor
+    for (const inspectorProductor of inspectorProductorData) {
+      const inspector = inspectorProductor.trabajador;
+
+      // Obtener los datos del productor asociado a este inspector-productor
+      const productorData = await this.prisma.productor.findUnique({
+        where: {
+          id: inspectorProductor.IDProductor,
+        },
+        include: {
+          Finca: true,
+        },
+      });
+
+      // Si el inspector aún no tiene una entrada en inspectorsWithProductors, crear una nueva entrada
+      if (!inspectorsWithProductors[inspector.id]) {
+        inspectorsWithProductors[inspector.id] = {
+          inspector: inspector,
+          productores: [],
+        };
+      }
+
+      // Agregar el productor a la lista de productores del inspector
+      inspectorsWithProductors[inspector.id].productores.push(productorData);
+    }
+
+    // Convertir el objeto en un array para mantener el formato deseado
+    const resultArray = Object.values(inspectorsWithProductors);
+
+    // Verificar si se encontraron datos
+    if (resultArray.length === 0) {
+      throw new NotFoundException(
+        'No se encontraron inspectores con productores asignados.',
+      );
+    }
+
+    return resultArray;
+  }
+
+  async removeProductorInsector(IDsProductor: number[]) {
+    console.log(IDsProductor);
+    let selec = [];
+    for (const idProductor of IDsProductor) {
+      console.log('imprimiendo iterador', idProductor);
+      const data = await this.prisma.inspectorProductor.findFirst({
+        where: {
+          IDProductor: idProductor,
+        },
+      });
+      selec.push(data);
+    }
+    console.log('selec', selec);
+    for (const data of selec) {
+      return await this.prisma.inspectorProductor.delete({
+        where: {
+          id: data.id,
+        },
+      });
+    }
   }
 
   async getDataBase() {

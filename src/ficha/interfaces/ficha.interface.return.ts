@@ -1,3 +1,5 @@
+import { JsonValue } from "@prisma/client/runtime/library";
+
 export interface FichaInterfaceReturn {
   id?: number;
   nombre: string;
@@ -6,9 +8,6 @@ export interface FichaInterfaceReturn {
   urlmagen: string;
   finca: string;
   productor: string;
-  localizacion: {
-    latitud: string;
-    longitud: string;
-  };
+  localizacion: JsonValue
   analizada: boolean;
 }

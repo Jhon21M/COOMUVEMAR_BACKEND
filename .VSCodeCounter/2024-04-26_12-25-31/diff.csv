@@ -1,0 +1,38 @@
+"filename", "language", "JSON", "JSON with Comments", "SQL", "TypeScript", "Markdown", "Prisma", "Properties", "JavaScript", "comment", "blank", "total"
+"c:\Users\INNOVACIÓN\Documents\JhonM\Archivos de Backend - COOMUVEMAR\backend-\.env", "Properties", 0, 0, 0, 0, 0, 0, 2, 0, 4, 2, 8
+"c:\Users\INNOVACIÓN\Documents\JhonM\Archivos de Backend - COOMUVEMAR\backend-\.eslintrc.js", "JavaScript", 0, 0, 0, 0, 0, 0, 0, 25, 0, 1, 26
+"c:\Users\INNOVACIÓN\Documents\JhonM\Archivos de Backend - COOMUVEMAR\backend-\.prettierrc", "JSON", 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4
+"c:\Users\INNOVACIÓN\Documents\JhonM\Archivos de Backend - COOMUVEMAR\backend-\README.md", "Markdown", 0, 0, 0, 0, 51, 0, 0, 0, 2, 21, 74
+"c:\Users\INNOVACIÓN\Documents\JhonM\Archivos de Backend - COOMUVEMAR\backend-\gsc-cloud.json", "JSON", 13, 0, 0, 0, 0, 0, 0, 0, 0, 0, 13
+"c:\Users\INNOVACIÓN\Documents\JhonM\Archivos de Backend - COOMUVEMAR\backend-\nest-cli.json", "JSON", 8, 0, 0, 0, 0, 0, 0, 0, 0, 1, 9
+"c:\Users\INNOVACIÓN\Documents\JhonM\Archivos de Backend - COOMUVEMAR\backend-\package-lock.json", "JSON", 14380, 0, 0, 0, 0, 0, 0, 0, 0, 1, 14381
+"c:\Users\INNOVACIÓN\Documents\JhonM\Archivos de Backend - COOMUVEMAR\backend-\package.json", "JSON", 92, 0, 0, 0, 0, 0, 0, 0, 0, 1, 93
+"c:\Users\INNOVACIÓN\Documents\JhonM\Archivos de Backend - COOMUVEMAR\backend-\prisma\migrations\20240119203528_shema_1\migration.sql", "SQL", 0, 0, 106, 0, 0, 0, 0, 0, 28, 39, 173
+"c:\Users\INNOVACIÓN\Documents\JhonM\Archivos de Backend - COOMUVEMAR\backend-\prisma\migrations\20240122223637_edit_finca\migration.sql", "SQL", 0, 0, 2, 0, 0, 0, 0, 0, 1, 1, 4
+"c:\Users\INNOVACIÓN\Documents\JhonM\Archivos de Backend - COOMUVEMAR\backend-\prisma\migrations\20240123171350_edit_finca_2\migration.sql", "SQL", 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 3
+"c:\Users\INNOVACIÓN\Documents\JhonM\Archivos de Backend - COOMUVEMAR\backend-\prisma\migrations\20240123210810_edit_inspector\migration.sql", "SQL", 0, 0, 2, 0, 0, 0, 0, 0, 7, 1, 10
+"c:\Users\INNOVACIÓN\Documents\JhonM\Archivos de Backend - COOMUVEMAR\backend-\prisma\migrations\20240124030552_edit_ficha\migration.sql", "SQL", 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 3
+"c:\Users\INNOVACIÓN\Documents\JhonM\Archivos de Backend - COOMUVEMAR\backend-\prisma\migrations\20240124154003_edit_secciones_ficha\migration.sql", "SQL", 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1
+"c:\Users\INNOVACIÓN\Documents\JhonM\Archivos de Backend - COOMUVEMAR\backend-\prisma\migrations\20240124154854_edit_secciones_ficha\migration.sql", "SQL", 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 3
+"c:\Users\INNOVACIÓN\Documents\JhonM\Archivos de Backend - COOMUVEMAR\backend-\prisma\migrations\20240124174127_modi_foreign_fey\migration.sql", "SQL", 0, 0, 2, 0, 0, 0, 0, 0, 2, 2, 6
+"c:\Users\INNOVACIÓN\Documents\JhonM\Archivos de Backend - COOMUVEMAR\backend-\prisma\migrations\20240124181206_modi_dato\migration.sql", "SQL", 0, 0, 4, 0, 0, 0, 0, 0, 4, 4, 12
+"c:\Users\INNOVACIÓN\Documents\JhonM\Archivos de Backend - COOMUVEMAR\backend-\prisma\migrations\20240125172243_modi_desicion\migration.sql", "SQL", 0, 0, 7, 0, 0, 0, 0, 0, 15, 6, 28
+"c:\Users\INNOVACIÓN\Documents\JhonM\Archivos de Backend - COOMUVEMAR\backend-\prisma\migrations\20240125172822_modi_desicion2\migration.sql", "SQL", 0, 0, 2, 0, 0, 0, 0, 0, 8, 1, 11
+"c:\Users\INNOVACIÓN\Documents\JhonM\Archivos de Backend - COOMUVEMAR\backend-\prisma\migrations\20240125230435_modi_info_dato\migration.sql", "SQL", 0, 0, 2, 0, 0, 0, 0, 0, 8, 2, 12
+"c:\Users\INNOVACIÓN\Documents\JhonM\Archivos de Backend - COOMUVEMAR\backend-\prisma\migrations\20240201213608_edit_ficha\migration.sql", "SQL", 0, 0, 3, 0, 0, 0, 0, 0, 8, 1, 12
+"c:\Users\INNOVACIÓN\Documents\JhonM\Archivos de Backend - COOMUVEMAR\backend-\prisma\migrations\20240212230635_edit_user\migration.sql", "SQL", 0, 0, 55, 0, 0, 0, 0, 0, 41, 28, 124
+"c:\Users\INNOVACIÓN\Documents\JhonM\Archivos de Backend - COOMUVEMAR\backend-\prisma\migrations\20240306200446_edit_urltrabajador\migration.sql", "SQL", 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 3
+"c:\Users\INNOVACIÓN\Documents\JhonM\Archivos de Backend - COOMUVEMAR\backend-\prisma\migrations\20240419223155_asignacion_productor_trabajador\migration.sql", "SQL", 0, 0, 11, 0, 0, 0, 0, 0, 3, 4, 18
+"c:\Users\INNOVACIÓN\Documents\JhonM\Archivos de Backend - COOMUVEMAR\backend-\prisma\migrations\20240422171942_edit_finca\migration.sql", "SQL", 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 3
+"c:\Users\INNOVACIÓN\Documents\JhonM\Archivos de Backend - COOMUVEMAR\backend-\prisma\migrations\20240423021342_edit_fichaa\migration.sql", "SQL", 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 3
+"c:\Users\INNOVACIÓN\Documents\JhonM\Archivos de Backend - COOMUVEMAR\backend-\prisma\migrations\20240423170655_edit_ficha_productor\migration.sql", "SQL", 0, 0, 3, 0, 0, 0, 0, 0, 9, 3, 15
+"c:\Users\INNOVACIÓN\Documents\JhonM\Archivos de Backend - COOMUVEMAR\backend-\prisma\migrations\20240423180356_mmmmmm\migration.sql", "SQL", 0, 0, 5, 0, 0, 0, 0, 0, 13, 3, 21
+"c:\Users\INNOVACIÓN\Documents\JhonM\Archivos de Backend - COOMUVEMAR\backend-\prisma\migrations\20240423192541_edit_usuarios\migration.sql", "SQL", 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 3
+"c:\Users\INNOVACIÓN\Documents\JhonM\Archivos de Backend - COOMUVEMAR\backend-\prisma\migrations\20240423194115_edit_usuariosm\migration.sql", "SQL", 0, 0, 1, 0, 0, 0, 0, 0, 7, 1, 9
+"c:\Users\INNOVACIÓN\Documents\JhonM\Archivos de Backend - COOMUVEMAR\backend-\prisma\migrations\20240425182855_edit_estado_inspec_ip\migration.sql", "SQL", 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 3
+"c:\Users\INNOVACIÓN\Documents\JhonM\Archivos de Backend - COOMUVEMAR\backend-\prisma\schema.prisma", "Prisma", 0, 0, 0, 0, 0, 126, 0, 0, 2, 36, 164
+"c:\Users\INNOVACIÓN\Documents\JhonM\Archivos de Backend - COOMUVEMAR\backend-\test\app.e2e-spec.ts", "TypeScript", 0, 0, 0, 20, 0, 0, 0, 0, 0, 5, 25
+"c:\Users\INNOVACIÓN\Documents\JhonM\Archivos de Backend - COOMUVEMAR\backend-\test\jest-e2e.json", "JSON", 9, 0, 0, 0, 0, 0, 0, 0, 0, 1, 10
+"c:\Users\INNOVACIÓN\Documents\JhonM\Archivos de Backend - COOMUVEMAR\backend-\tsconfig.build.json", "JSON", 4, 0, 0, 0, 0, 0, 0, 0, 0, 1, 5
+"c:\Users\INNOVACIÓN\Documents\JhonM\Archivos de Backend - COOMUVEMAR\backend-\tsconfig.json", "JSON with Comments", 0, 21, 0, 0, 0, 0, 0, 0, 0, 1, 22
+"Total", "-", 14510, 21, 213, 20, 51, 126, 2, 25, 170, 176, 15314
