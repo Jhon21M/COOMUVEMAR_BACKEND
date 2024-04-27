@@ -3,6 +3,7 @@ import { EntityFicha, EntityUpdateFicha } from './entities';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { FichaInterfaceReturn } from './interfaces';
 import { Usuario } from '@prisma/client';
+import e from 'express';
 
 @Injectable()
 export class FichaService {
@@ -59,6 +60,34 @@ export class FichaService {
 
         returndata.push(returndataItem);
       }
+
+      // let dato = [
+      //   'El mapa de la Finca esta Actualizado?',
+      //   'Conserva los recibos o facturas de Venta?',
+      //   'El registro de cosecha esta actualizado?',
+      //   'El registro de actividades mensuales esta al día?',
+      //   'Se realizó el cronograma de actividades del ciclo?',
+      // ];
+      // for (let datas of dato) {
+      //   const data = await this.prisma.dato.create({
+      //     data: {
+      //       titulo: datas,
+      //       IDSeccionesFicha: 1,
+      //     },
+      //   });
+      // }
+
+      // let InformacionDato = ['si', 'no todas las acturas', 'si', 'si', 'si'];
+
+      // for (let index = 1; index <= InformacionDato.length; index++) {
+      //   const data = await this.prisma.informacionDato.create({
+      //     data: {
+      //       informacion: InformacionDato[index],
+      //       IDDato: index,
+      //       IDFicha: 4,
+      //     },
+      //   });
+      // }
 
       return returndata;
     } else {
@@ -217,12 +246,34 @@ export class FichaService {
     });
   }
 
-  async anasysis() {
+  async analysis() {
+    let puntajeRegAdminis = 0;
     const RegAdministrativo = await this.prisma.seccionesFicha.findMany({
-      where: {
-        nombre: 'Registros Administrativos',
+      include: {
+        Dato: {
+          include: {
+            InformacionDato: true,
+          },
+        },
       },
     });
+
+    // Recorremos cada sección
+    RegAdministrativo.forEach((seccion) => {
+      console.log('Desde seccion', seccion);
+      // Recorremos cada dato en la sección
+      seccion.Dato.forEach((dato) => {
+        console.log('Desde dato', dato);
+        // Recorremos cada InformacionDato en el dato
+        dato.InformacionDato.forEach((info) => {
+          if (info.informacion === 'si') {
+            puntajeRegAdminis += 2;
+          }
+        });
+      });
+    });
+
+    console.log('Puntaje Reg Adminis:', puntajeRegAdminis);
 
     const inforParcela = await this.prisma.seccionesFicha.findMany({
       where: {
@@ -235,5 +286,25 @@ export class FichaService {
         nombre: 'Registro Epidemiologico',
       },
     });
+  }
+
+  async InsertData() {
+    //   let dato = [
+    //     'El mapa de la Finca esta Actualizado?',
+    //     'Conserva los recibos o facturas de Venta?',
+    //     'El registro de cosecha esta actualizado?',
+    //     'El registro de actividades mensuales esta al día?',
+    //     'Se realizó el cronograma de actividades del ciclo?',
+    //   ];
+    //   for (let datas of dato) {
+    //     const data = await this.prisma.dato.create({
+    //       data: {
+    //         titulo: datas,
+    //         IDSeccionesFicha: 1,
+    //       },
+    //     });
+    //   }
+    // }
+    console.log('ooooooooooooooo');
   }
 }

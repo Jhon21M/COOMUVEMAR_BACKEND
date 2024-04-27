@@ -60,16 +60,16 @@ export class FichaController {
     return await this.fichaService.findAll(user);
   }
 
-  // @Get()
-  // @Roles(Role.Admin)
-  // @ApiOperation({ summary: 'Analyze Ficha stored' })
-  // @ApiResponse({
-  //   status: HttpStatus.OK,
-  //   description: 'API is up',
-  // })
-  // async analisis() {
-  //   return await this.fichaService.anasysis();
-  // }
+  @Get('analysisficha')
+  @Roles(Role.Admin)
+  @ApiOperation({ summary: 'Analyze Ficha stored....' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'API is up',
+  })
+  async analysis() {
+    return await this.fichaService.analysis();
+  }
 
   // no esta en teams
   @Get('fichaheader/:id')
@@ -140,5 +140,16 @@ export class FichaController {
     id: number,
   ) {
     return this.fichaService.remove(id);
+  }
+
+  @Get('insertdata')
+  @Roles(Role.User, Role.Admin)
+  @ApiOperation({ summary: 'insert' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'API is up',
+  })
+  insertData() {
+    return this.fichaService.InsertData();
   }
 }

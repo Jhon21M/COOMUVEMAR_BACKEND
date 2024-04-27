@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { EntityInspector } from './entities';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { EntityUpdateInspector } from './entities/update.productor.entity';
@@ -10,6 +10,7 @@ import { InspectorProductor, Usuario } from '@prisma/client';
 import { EntityProductor } from 'src/productor/entities';
 import { forbidden } from 'joi';
 import { triggerAsyncId } from 'async_hooks';
+import { ExceptionsHandler } from '@nestjs/core/exceptions/exceptions-handler';
 
 @Injectable()
 export class InspectorService {
@@ -64,6 +65,18 @@ export class InspectorService {
   }
 
   async createTP(asignacion: CreateTrabajadorProductorDto) {
+    const productor = await this.prisma.inspectorProductor.findFirst({
+      where: {
+        IDProductor: asignacion.IDProductor,
+      },
+    });
+
+    if (productor) {
+      throw new ConflictException(
+        'El productor ya tiene un inspector asignado',
+      );
+    }
+
     return this.prisma.inspectorProductor.create({
       data: {
         IDProductor: asignacion.IDProductor,
@@ -175,23 +188,34 @@ export class InspectorService {
 
   async removeProductorInsector(IDsProductor: number[]) {
     console.log(IDsProductor);
-    let selec = [];
-    for (const idProductor of IDsProductor) {
-      console.log('imprimiendo iterador', idProductor);
-      const data = await this.prisma.inspectorProductor.findFirst({
-        where: {
-          IDProductor: idProductor,
-        },
-      });
-      selec.push(data);
-    }
-    console.log('selec', selec);
-    for (const data of selec) {
-      return await this.prisma.inspectorProductor.delete({
-        where: {
-          id: data.id,
-        },
-      });
+    try {
+      let selec = [];
+      for (let productor of IDsProductor) {
+        for (let index = 0; index < 1; index++) {
+          console.log('imprimiendo iterador');
+          const data = await this.prisma.inspectorProductor.findFirst({
+            where: {
+              IDProductor: productor,
+            },
+          });
+          selec.push(data);
+        }
+      }
+      console.log('selec', selec);
+      for (const data of selec) {
+        console.log('Impriminedo Ids', data.id);
+        console.log('Impriminedo Ids', data);
+
+        await this.prisma.inspectorProductor.delete({
+          where: {
+            id: data.id,
+          },
+        });
+      }
+      return 'Eliminacion completa';
+    } catch (error) {
+      console.log(error.message);
+      return { 'No se pudo eliminar el registro': error };
     }
   }
 

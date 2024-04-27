@@ -71,7 +71,7 @@ export class InspectorController {
   /** APP MOVIL */
   @Get('getproductor')
   @Roles(Role.Admin, Role.User)
-  @ApiOperation({ summary: 'Get the InspectorProductor' })
+  @ApiOperation({ summary: 'Get the InspectorProductor App Movil' })
   getTP(@GetUser() user: Usuario) {
     return this.inspectorService.getTP(user);
   }
@@ -79,7 +79,7 @@ export class InspectorController {
   /**App WEB */
   @Get('getproductor/:id')
   @Roles(Role.Admin)
-  @ApiOperation({ summary: 'Get the InspectorProductor' })
+  @ApiOperation({ summary: 'Get an InspectorProductor by ID' })
   getTPAdmin(
     @Param(
       'id',
@@ -97,7 +97,7 @@ export class InspectorController {
     return this.inspectorService.getAllTPAdmin();
   }
 
-  @Delete('asignacionproductor/:id')
+  @Delete('asignacionproductor')
   @Roles(Role.Admin)
   @ApiOperation({ summary: 'Delete an ProductorInspector by ID' })
   removeProductorInsector(
