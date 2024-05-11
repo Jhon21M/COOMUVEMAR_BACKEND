@@ -54,6 +54,11 @@ model Finca {
   @@map("fincas")
 }
 
+model DetalleFinca {
+  id Int @id @default(autoincrement())
+  
+}
+
 model Trabajador {
   id                 Int                  @id @default(autoincrement())
   nombre             String

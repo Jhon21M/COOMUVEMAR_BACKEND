@@ -62,32 +62,31 @@ export class FichaService {
       }
 
       // let dato = [
-      //   'El mapa de la Finca esta Actualizado?',
-      //   'Conserva los recibos o facturas de Venta?',
-      //   'El registro de cosecha esta actualizado?',
-      //   'El registro de actividades mensuales esta al día?',
-      //   'Se realizó el cronograma de actividades del ciclo?',
+      //   'Nombre de la Parcela',
+      //   'Área en Mz',
+      //   'Cultivo',
+      //   'Insumos Utilizados',
       // ];
       // for (let datas of dato) {
       //   const data = await this.prisma.dato.create({
       //     data: {
       //       titulo: datas,
-      //       IDSeccionesFicha: 1,
+      //       IDSeccionesFicha: 2,
       //     },
       //   });
       // }
 
-      // let InformacionDato = ['si', 'no todas las acturas', 'si', 'si', 'si'];
+      let InformacionDato = ['Parcela numero 1', '5mz', 'cacao', 'si'];
 
-      // for (let index = 1; index <= InformacionDato.length; index++) {
-      //   const data = await this.prisma.informacionDato.create({
-      //     data: {
-      //       informacion: InformacionDato[index],
-      //       IDDato: index,
-      //       IDFicha: 4,
-      //     },
-      //   });
-      // }
+      for (let index = 1; index <= InformacionDato.length; index++) {
+        const data = await this.prisma.informacionDato.create({
+          data: {
+            informacion: InformacionDato[index],
+            IDDato: index,
+            IDFicha: 4,
+          },
+        });
+      }
 
       return returndata;
     } else {

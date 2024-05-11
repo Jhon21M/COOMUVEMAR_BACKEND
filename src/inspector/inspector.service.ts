@@ -1,4 +1,10 @@
-import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  HttpException,
+  HttpStatus,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { EntityInspector } from './entities';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { EntityUpdateInspector } from './entities/update.productor.entity';
@@ -187,36 +193,54 @@ export class InspectorService {
   }
 
   async removeProductorInsector(IDsProductor: number[]) {
-    console.log(IDsProductor);
-    try {
-      let selec = [];
-      for (let productor of IDsProductor) {
-        for (let index = 0; index < 1; index++) {
-          console.log('imprimiendo iterador');
-          const data = await this.prisma.inspectorProductor.findFirst({
-            where: {
-              IDProductor: productor,
-            },
-          });
-          selec.push(data);
-        }
-      }
-      console.log('selec', selec);
-      for (const data of selec) {
-        console.log('Impriminedo Ids', data.id);
-        console.log('Impriminedo Ids', data);
+    console.log('imprimiendo numeros', IDsProductor);
+    const comprobacioDataFound = [];
+    const comprobacioDataNotFound = [];
+    for (let com of IDsProductor) {
+      const data = await this.prisma.inspectorProductor.findFirst({
+        where: {
+          IDProductor: com,
+        },
+      });
 
-        await this.prisma.inspectorProductor.delete({
-          where: {
-            id: data.id,
-          },
-        });
+      if (data) {
+        comprobacioDataFound.push(data);
+      } else {
+        comprobacioDataNotFound.push(com);
       }
-      return 'Eliminacion completa';
-    } catch (error) {
-      console.log(error.message);
-      return { 'No se pudo eliminar el registro': error };
     }
+    console.log('comprobacioDataFound', comprobacioDataFound);
+    console.log('comprobacioDataNotFound', comprobacioDataNotFound);
+
+    let selec = [];
+    // for (let productor of comprobacioDataFound) {
+    //   console.log('imprimiendo iterador', productor);
+    //   const data = await this.prisma.inspectorProductor.findFirst({
+    //     where: {
+    //       IDProductor: productor.IDProductor,
+    //     },
+    //   });
+    //   selec.push(data);
+    // }
+    //console.log('selec', selec);
+    for (const data of comprobacioDataFound) {
+      console.log('Impriminedo Ids', data.id);
+      console.log('Impriminedo Ids', data);
+
+      await this.prisma.inspectorProductor.delete({
+        where: {
+          id: data.id,
+        },
+      });
+    }
+
+    if (comprobacioDataNotFound.length > 0) {
+      throw new NotFoundException({
+        'Eliminacion completa de Productor/res': comprobacioDataFound,
+        'No se encontraron Productores con Ids': comprobacioDataNotFound,
+      });
+    }
+    throw new HttpException('Eliminacion completa', HttpStatus.OK);
   }
 
   async getDataBase() {
