@@ -47,7 +47,7 @@ export class CreateProductorDto {
   fechaIngresoPrograma: Date;
 
   @IsNotEmpty()
-  @IsNumber()
+  @IsString()
   @ApiProperty()
-  estado: number;
+  estadoProgramaC: string;
 }

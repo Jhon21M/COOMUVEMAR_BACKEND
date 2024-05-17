@@ -64,7 +64,7 @@ export class AuthService {
     console.log('imprimiento password: ', password);
 
     // find the user by email
-    const user = await this.prisma.usuario.findUnique({
+    const user = await this.prisma.usuario.findFirst({
       where: {
         email: userAuthSignin.email,
       },
@@ -111,7 +111,7 @@ export class AuthService {
       const secret = this.config.get('JWT_SECRET');
 
       const token = await this.jwt.signAsync(payload, {
-        expiresIn: '60s',
+        expiresIn: '6d',
         secret,
       });
       return {
@@ -132,7 +132,7 @@ export class AuthService {
     console.log('imprimiento password: ', password);
 
     // find the user by email
-    const user = await this.prisma.usuario.findUnique({
+    const user = await this.prisma.usuario.findFirst({
       where: {
         email: userAuthSignin.email,
       },
@@ -157,15 +157,80 @@ export class AuthService {
         apellido: true,
       },
     });
+
     const role = user.role;
     //send back the user
     const access_token = await this.signToken(user.role, user.id, user.email);
 
+    const productoresAssing = await this.getProductores(user);
+    const fincas = await this.getFinca(user);
+    const seccionesFicha = await this.getSeccionFicha();
+    const datosFicha = await this.getDatoFicha();
+
+    const productoresArray = [productoresAssing];
+    const fincasArray = [fincas];
     return {
       trabajador: trabajador,
       role: role,
       access_token: access_token.access_token,
+      Db: {
+        productores: productoresArray,
+        fincas: fincasArray,
+        seccionesFicha: seccionesFicha,
+        datosFicha: datosFicha,
+      },
     };
+  }
+
+  async getProductores(user: Usuario) {
+    const productorIDs = await this.prisma.inspectorProductor.findMany({
+      where: {
+        IDTrabajador: user.IDTrabajador,
+      },
+    });
+
+    let productorData;
+    for (const productor of productorIDs) {
+      console.log(productor.IDProductor);
+      productorData = await this.prisma.productor.findUnique({
+        where: {
+          id: productor.IDProductor,
+        },
+      });
+    }
+    return productorData;
+  }
+
+  async getFinca(user: Usuario) {
+    try {
+      const productorIDs = await this.prisma.inspectorProductor.findMany({
+        where: {
+          IDTrabajador: user.IDTrabajador,
+        },
+      });
+
+      let fincaData: any;
+      for (const productor of productorIDs) {
+        console.log(productor.IDProductor);
+        fincaData = await this.prisma.finca.findFirst({
+          where: {
+            IDProductor: productor.IDProductor,
+          },
+        });
+      }
+      return fincaData;
+    } catch (error) {
+      console.error('Error en getFinca:', error);
+      throw error;
+    }
+  }
+
+  async getSeccionFicha() {
+    return await this.prisma.seccionesFicha.findMany();
+  }
+
+  async getDatoFicha() {
+    return await this.prisma.dato.findMany();
   }
 
   signout() {}

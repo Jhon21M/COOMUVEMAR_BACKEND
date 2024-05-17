@@ -9,6 +9,8 @@ import {
   IsEmail,
   IsDate,
   IsNumber,
+  IsJSON,
+  IsBoolean,
 } from 'class-validator';
 
 export class CreateFichaDto {
@@ -18,11 +20,18 @@ export class CreateFichaDto {
   @ApiProperty({ nullable: true })
   createdAt: Date;
 
-  @IsString()
+  //@IsJSON()
   @IsNotEmpty()
-  @Length(3, 30)
   @ApiProperty()
-  localizacion: string;
+  localizacion: {
+    latitud: string;
+    longitud: string;
+  };
+
+  @IsNotEmpty()
+  @IsBoolean()
+  @ApiProperty({ required: true })
+  analizada: boolean;
 
   @IsNotEmpty()
   @IsNumber()

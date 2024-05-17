@@ -24,8 +24,10 @@ import {
 import { EntityFicha } from './entities';
 import { JwtGuard } from 'src/auth/guard';
 import { RolesGuard } from 'src/auth/guard/auth.guard';
-import { Roles } from 'src/auth/decorator';
+import { GetUser, Roles } from 'src/auth/decorator';
 import { Role } from 'src/common/enum/role.enum';
+import { FichaInterfaceReturn } from './interfaces';
+import { Usuario } from '@prisma/client';
 
 @ApiTags('ficha - APi')
 @UseGuards(JwtGuard, RolesGuard)
@@ -37,15 +39,14 @@ import { Role } from 'src/common/enum/role.enum';
 export class FichaController {
   constructor(private readonly fichaService: FichaService) {}
 
+  //***********APP MOVIL Y WEB */
   @Post()
   @Roles(Role.User, Role.Admin)
   @ApiOperation({ summary: 'Create a new Ficha' })
   async create(
     @Body(new ValidationPipe()) createFichaDto: CreateFichaDto,
   ): Promise<EntityFicha> {
-    const nuevaFicha = await this.fichaService.create(createFichaDto);
-    console.log('impriendo ficha creada', nuevaFicha);
-    return nuevaFicha;
+    return this.fichaService.create(createFichaDto);
   }
 
   @Get()
@@ -55,20 +56,20 @@ export class FichaController {
     status: HttpStatus.OK,
     description: 'API is up',
   })
-  async findAll() {
-    return await this.fichaService.findAll();
+  async findAll(@GetUser() user: Usuario) {
+    return await this.fichaService.findAll(user);
   }
 
-  // @Get()
-  // @Roles(Role.Admin)
-  // @ApiOperation({ summary: 'Analyze Ficha stored' })
-  // @ApiResponse({
-  //   status: HttpStatus.OK,
-  //   description: 'API is up',
-  // })
-  // async analisis() {
-  //   return await this.fichaService.anasysis();
-  // }
+  @Get('analysisficha')
+  @Roles(Role.Admin)
+  @ApiOperation({ summary: 'Analyze Ficha stored....' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'API is up',
+  })
+  async analysis() {
+    return await this.fichaService.analysis();
+  }
 
   // no esta en teams
   @Get('fichaheader/:id')
@@ -97,7 +98,7 @@ export class FichaController {
       new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE }),
     )
     id: number,
-  ) {
+  ): Promise<FichaInterfaceReturn> {
     return this.fichaService.findOne(id);
   }
 
@@ -140,4 +141,15 @@ export class FichaController {
   ) {
     return this.fichaService.remove(id);
   }
-}
+
+  // @Get('insertdata')
+  // @Roles(Role.User, Role.Admin)
+  // @ApiOperation({ summary: 'insert' })
+  // @ApiResponse({
+  //   status: HttpStatus.OK,
+  //   description: 'API is up',
+  // })
+  // insertData() {
+  //   return this.fichaService.InsertData();
+  // }
+}   

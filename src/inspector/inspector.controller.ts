@@ -68,18 +68,36 @@ export class InspectorController {
     return this.inspectorService.createTP(createTPDto);
   }
 
-  @Get('getproductor')
-  @Roles(Role.Admin, Role.User)
-  @ApiOperation({ summary: 'Get the InspectorProductor' })
-  getTP(@GetUser() user: Usuario) {
-    return this.inspectorService.getTP(user);
+  /**App WEB */
+  @Get('getproductor/:id')
+  @Roles(Role.Admin)
+  @ApiOperation({ summary: 'Get an InspectorProductor by ID' })
+  getTPAdmin(
+    @Param(
+      'id',
+      new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE }),
+    )
+    id: number,
+  ) {
+    return this.inspectorService.getTPAdmin(id);
   }
 
-  @Get('getdatabase')
-  @Roles(Role.Admin, Role.User)
-  @ApiOperation({ summary: 'Get DataBase' })
-  getDataBase() {
-    return this.inspectorService.getDataBase();
+  @Get('getallproductor')
+  @Roles(Role.Admin)
+  @ApiOperation({ summary: 'Get the All InspectorProductor' })
+  getAllTPAdmin() {
+    return this.inspectorService.getAllTPAdmin();
+  }
+
+  @Delete('asignacionproductor')
+  @Roles(Role.Admin)
+  @ApiOperation({ summary: 'Delete an ProductorInspector by ID' })
+  removeProductorInsector(
+    @Body()
+    numeros: number[],
+  ) {
+    console.log('controlesr');
+    return this.inspectorService.removeProductorInsector(numeros);
   }
 
   @Get()

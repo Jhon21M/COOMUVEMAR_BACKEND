@@ -10,23 +10,16 @@ import {
 } from 'class-validator';
 
 export class FiltroDashDto {
-  // @IsNotEmpty()
-  // @ApiProperty()
-  // @IsString()
-  // titulo: string;
-
-  // @IsString()
-  // @IsOptional()
-  // @ApiProperty()
-  // descripcion: string;
   
-  @IsNotEmpty()
-  @IsString()
+  @IsDate()
+  @Transform(({ value }) => (value instanceof Date ? value : new Date(value)))
+  @IsOptional()
   @ApiProperty({ nullable: false })
-  fechaInicio: string;
+  fechaInicio: Date;
 
-  @IsNotEmpty()
-  @IsString()
+  @IsDate()
+  @Transform(({ value }) => (value instanceof Date ? value : new Date(value)))
+  @IsOptional()
   @ApiProperty({ nullable: false })
-  fechaFinal: string;
+  fechaFinal: Date;
 }

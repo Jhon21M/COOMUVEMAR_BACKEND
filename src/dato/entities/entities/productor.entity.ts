@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
-import { number } from 'joi';
+import { number, string } from 'joi';
 import { ProductorInterface } from 'src/productor/interfaces';
 
 export class EntityProductor implements ProductorInterface {
@@ -20,8 +20,8 @@ export class EntityProductor implements ProductorInterface {
   fechaIngresoPrograma: Date | null;
 
   @Transform(({ value }) => value.toNumber()) // ejemplo del uso de tansform, para mostrar datos hacia el usuario
-  @ApiProperty({ type: number })
-  estado: number;
+  @ApiProperty({ type: string })
+  estadoProgramaC: string;
 
   constructor(partial: Partial<EntityProductor>) {
     Object.assign(this, partial);

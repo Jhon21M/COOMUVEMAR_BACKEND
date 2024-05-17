@@ -16,15 +16,16 @@ export class DashboardService {
   // }
 
   async getDashboardData(fecha: FiltroDashDto): Promise<DashboardData> {
+    console.log(fecha);
     // Inspector DATA
     const totalInspectors = await this.getTotalInspectors();
     const activeInspectorsLastMonth = await this.getActiveInspectorsLastMonth(
-      fecha.fechaInicio,
-      fecha.fechaFinal,
+      fecha.fechaInicio.toDateString(),
+      fecha.fechaFinal.toDateString(),
     );
     const inactiveInspectors = await this.getInactiveInspectors(
-      fecha.fechaInicio,
-      fecha.fechaFinal,
+      fecha.fechaInicio.toDateString(),
+      fecha.fechaFinal.toDateString(),
     );
 
     // Ficha DATA
