@@ -68,14 +68,6 @@ export class InspectorController {
     return this.inspectorService.createTP(createTPDto);
   }
 
-  /** APP MOVIL */
-  @Get('getproductor')
-  @Roles(Role.Admin, Role.User)
-  @ApiOperation({ summary: 'Get the InspectorProductor App Movil' })
-  getTP(@GetUser() user: Usuario) {
-    return this.inspectorService.getTP(user);
-  }
-
   /**App WEB */
   @Get('getproductor/:id')
   @Roles(Role.Admin)
@@ -106,13 +98,6 @@ export class InspectorController {
   ) {
     console.log('controlesr');
     return this.inspectorService.removeProductorInsector(numeros);
-  }
-
-  @Get('getdatabase')
-  @Roles(Role.Admin, Role.User)
-  @ApiOperation({ summary: 'Get DataBase' })
-  getDataBase() {
-    return this.inspectorService.getDataBase();
   }
 
   @Get()

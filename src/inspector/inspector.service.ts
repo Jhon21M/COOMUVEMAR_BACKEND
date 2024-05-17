@@ -87,28 +87,9 @@ export class InspectorService {
       data: {
         IDProductor: asignacion.IDProductor,
         IDTrabajador: asignacion.IDTrabajador,
-        estadoInspeccion: asignacion.estadoInspeccion,
+        estadoInspeccion: asignacion?.estadoInspeccion,
       },
     });
-  }
-
-  async getTP(user: Usuario) {
-    const productorIDs = await this.prisma.inspectorProductor.findMany({
-      where: {
-        IDTrabajador: user.IDTrabajador,
-      },
-    });
-
-    let productorData;
-    for (const productor of productorIDs) {
-      console.log(productor.IDProductor);
-      productorData = await this.prisma.productor.findUnique({
-        where: {
-          id: productor.IDProductor,
-        },
-      });
-    }
-    return productorData;
   }
 
   async getTPAdmin(id: number) {
@@ -243,14 +224,6 @@ export class InspectorService {
     throw new HttpException('Eliminacion completa', HttpStatus.OK);
   }
 
-  async getDataBase() {
-    const fincaData = await this.prisma.finca.findMany();
-    const productoresData = await this.prisma.productor.findMany();
-    const secFichaData = await this.prisma.seccionesFicha.findMany();
-    const datoData = await this.prisma.dato.findMany();
-
-    return { fincaData, productoresData, secFichaData, datoData };
-  }
   async findAll() {
     return await this.prisma.trabajador.findMany();
   }

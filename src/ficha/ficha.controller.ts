@@ -142,14 +142,14 @@ export class FichaController {
     return this.fichaService.remove(id);
   }
 
-  @Get('insertdata')
-  @Roles(Role.User, Role.Admin)
-  @ApiOperation({ summary: 'insert' })
-  @ApiResponse({
-    status: HttpStatus.OK,
-    description: 'API is up',
-  })
-  insertData() {
-    return this.fichaService.InsertData();
-  }
-}
+  // @Get('insertdata')
+  // @Roles(Role.User, Role.Admin)
+  // @ApiOperation({ summary: 'insert' })
+  // @ApiResponse({
+  //   status: HttpStatus.OK,
+  //   description: 'API is up',
+  // })
+  // insertData() {
+  //   return this.fichaService.InsertData();
+  // }
+}   
