@@ -34,10 +34,10 @@ export class InfoDatoService {
     });
   }
 
-  findAllInfoOneFicha(id: number) {
+  findAllInfoOneFicha(id: string) {
     return this.prisma.informacionDato.findMany({
       where: {
-        IDFicha: typeof id === 'number' ? id : Number.parseInt(id),
+        IDFicha: id,
       },
     });
   }

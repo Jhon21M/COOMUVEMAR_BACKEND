@@ -12,7 +12,7 @@ export class EntityInfoDato implements InfoDatoInterface {
   IDDato: number;
 
   @ApiProperty({ required: true, nullable: false })
-  IDFicha: number;
+  IDFicha: string;
 
   constructor(partial: Partial<EntityInfoDato>) {
     Object.assign(this, partial);

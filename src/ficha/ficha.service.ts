@@ -3,7 +3,6 @@ import { EntityFicha, EntityUpdateFicha } from './entities';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { FichaInterfaceReturn } from './interfaces';
 import { Usuario } from '@prisma/client';
-import e from 'express';
 
 @Injectable()
 export class FichaService {
@@ -12,11 +11,16 @@ export class FichaService {
   async create(ficha: EntityFicha): Promise<EntityFicha> {
     const newFicha = await this.prisma.ficha.create({
       data: {
+        id: ficha.id,
         createdAt: ficha?.createdAT,
         localizacion: ficha.localizacion,
         analizada: ficha.analizada,
-        IDTrabajador: ficha.IDTrabajador,
-        IDFinca: ficha.IDFinca,
+        trabajador: {
+          connect: { id: ficha.IDTrabajador },
+        },
+        finca: {
+          connect: { id: ficha.IDFinca },
+        },
       },
     });
 
@@ -106,10 +110,10 @@ export class FichaService {
     }
   }
 
-  async getHeader(id: number) {
+  async getHeader(id: string) {
     const fichaData = await this.prisma.ficha.findUnique({
       where: {
-        id: typeof id === 'number' ? id : Number.parseInt(id),
+        id: id,
       },
       include: {
         finca: {
@@ -140,10 +144,10 @@ export class FichaService {
     };
   }
 
-  async findOne(id: number): Promise<FichaInterfaceReturn> {
+  async findOne(id: string): Promise<FichaInterfaceReturn> {
     const fichaData = await this.prisma.ficha.findUnique({
       where: {
-        id: typeof id === 'number' ? id : Number.parseInt(id),
+        id: id,
       },
       include: {
         finca: {
@@ -175,11 +179,11 @@ export class FichaService {
     return returndata;
   }
 
-  async findOneData(id: number) {
+  async findOneData(id: string) {
     try {
       return await this.prisma.ficha.findUnique({
         where: {
-          id: typeof id === 'number' ? id : Number.parseInt(id),
+          id: id,
         },
         include: {
           InformacionDato: {
@@ -199,10 +203,10 @@ export class FichaService {
     }
   }
 
-  async update(id: number, ficha: EntityUpdateFicha): Promise<EntityFicha> {
+  async update(id: string, ficha: EntityUpdateFicha): Promise<EntityFicha> {
     return await this.prisma.ficha.update({
       where: {
-        id: typeof id === 'number' ? id : Number.parseInt(id),
+        id: id,
       },
       data: {
         ...ficha,
@@ -210,10 +214,10 @@ export class FichaService {
     });
   }
 
-  remove(id: number) {
+  remove(id: string) {
     return this.prisma.ficha.delete({
       where: {
-        id: typeof id === 'number' ? id : Number.parseInt(id),
+        id: id,
       },
     });
   }
@@ -278,7 +282,6 @@ export class FichaService {
   //     }
   //   }
 
-    
   //     let dato = [
   //       'Nombre de la Parcela',
   //       'Área en Mz',
@@ -306,5 +309,4 @@ export class FichaService {
   //       });
   //     }
   //   console.log('ooooooooooooooo');
-  
 }

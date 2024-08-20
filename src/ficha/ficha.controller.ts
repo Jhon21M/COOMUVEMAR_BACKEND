@@ -80,11 +80,8 @@ export class FichaController {
     description: 'API is up',
   })
   async getHeader(
-    @Param(
-      'id',
-      new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE }),
-    )
-    id: number,
+    @Param('id')
+    id: string,
   ) {
     return await this.fichaService.getHeader(id);
   }
@@ -93,11 +90,8 @@ export class FichaController {
   @Roles(Role.User, Role.Admin)
   @ApiOperation({ summary: 'Get one Ficha by ID..' })
   findOne(
-    @Param(
-      'id',
-      new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE }),
-    )
-    id: number,
+    @Param('id')
+    id: string,
   ): Promise<FichaInterfaceReturn> {
     return this.fichaService.findOne(id);
   }
@@ -106,11 +100,8 @@ export class FichaController {
   @Roles(Role.User, Role.Admin)
   @ApiOperation({ summary: 'Get One Ficha Data By ID' })
   Data(
-    @Param(
-      'id',
-      new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE }),
-    )
-    id: number,
+    @Param('id')
+    id: string,
   ) {
     return this.fichaService.findOneData(id);
   }
@@ -119,11 +110,8 @@ export class FichaController {
   @Roles(Role.Admin)
   @ApiOperation({ summary: 'update a Ficha by ID' })
   update(
-    @Param(
-      'id',
-      new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE }),
-    )
-    id: number,
+    @Param('id',)
+    id: string,
     @Body() updateProductorDto: UpdateFichaDto,
   ) {
     return this.fichaService.update(id, updateProductorDto);
@@ -133,11 +121,8 @@ export class FichaController {
   @Roles(Role.Admin)
   @ApiOperation({ summary: 'Delete a Ficha By ID' })
   remove(
-    @Param(
-      'id',
-      new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE }),
-    )
-    id: number,
+    @Param('id',)
+    id: string,
   ) {
     return this.fichaService.remove(id);
   }

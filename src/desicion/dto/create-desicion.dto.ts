@@ -15,5 +15,5 @@ export class CreateDesicionDto {
   @IsNotEmpty()
   @IsNumber()
   @ApiProperty({ required: true })
-  IDFicha: number;
+  IDFicha: string;
 }

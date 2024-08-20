@@ -43,7 +43,7 @@ export class AuthService {
     } catch (error) {
       if (error instanceof PrismaClientKnownRequestError) {
         if (error.code === 'P2002') {
-          throw new ForbiddenException('Email already in use');
+          throw new ForbiddenException('Email already in use' + error.message);
         }
       }
       throw error;
@@ -70,14 +70,17 @@ export class AuthService {
       },
     });
 
+    console.log(user);
+    console.log('1');
     // if user does not exist throw exception
-    if (!user) throw new ForbiddenException('Incorrect credentials');
-
+    if (!user) throw new ForbiddenException('User not found');
+    console.log('2');
     //compare the password
+    console.log(user.hash, userAuthSignin.password);
     const pwMatches = await argon.verify(user.hash, userAuthSignin.password);
-
+    console.log('3');
     // if password incorrect throw exception
-    if (!pwMatches) throw new ForbiddenException('Incorrect credentials');
+    if (!pwMatches) throw new ForbiddenException('Incorrect credentials.....');
 
     //send back the user
     return this.signToken(user.role, user.id, user.email);

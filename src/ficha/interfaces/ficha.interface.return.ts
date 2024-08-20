@@ -1,7 +1,7 @@
 import { JsonValue } from "@prisma/client/runtime/library";
 
 export interface FichaInterfaceReturn {
-  id?: number;
+  id?: string;
   nombre: string;
   fecha: Date;
   email: string;

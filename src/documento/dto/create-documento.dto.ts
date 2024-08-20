@@ -22,5 +22,5 @@ export class CreateDocumentoDto {
   @IsNotEmpty()
   @IsNumber()
   @ApiProperty({ required: true })
-  IDFicha: number;
+  IDFicha: string;
 }

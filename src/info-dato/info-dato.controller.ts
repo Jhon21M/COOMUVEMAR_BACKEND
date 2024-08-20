@@ -74,11 +74,8 @@ export class InfoDatoController {
   @Roles(Role.User, Role.Admin)
   @ApiOperation({ summary: 'Get All informacionDato data from One IDFicha' })
   findAllInfoOneFicha(
-    @Param(
-      'id',
-      new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE }),
-    )
-    id: number,
+    @Param('id')
+    id: string,
   ) {
     return this.infodatoService.findAllInfoOneFicha(id);
   }

@@ -20,5 +20,5 @@ export class CreateInfoDatoDto {
   @IsNotEmpty()
   @IsNumber()
   @ApiProperty()
-  IDFicha: number;
+  IDFicha: string;
 }

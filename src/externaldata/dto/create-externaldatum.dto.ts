@@ -1,15 +1,15 @@
 import { Ficha, Finca, InformacionDato } from '@prisma/client';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsNumber, IsOptional } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 import { CreateInfoDatoDto } from 'src/info-dato/dto';
 import { CreateFichaDto } from 'src/ficha/dto';
 import { CreateFincaDto } from 'src/finca/dto';
 
 export class FichaWithID extends CreateFichaDto {
   @ApiProperty()
-  @IsNumber()
+  @IsString()
   @IsNotEmpty()
-  id: number;
+  id: string;
 }
 
 export class InformacionDatoWithID extends CreateInfoDatoDto {

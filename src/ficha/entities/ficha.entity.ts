@@ -3,6 +3,9 @@ import { JsonValue } from '@prisma/client/runtime/library';
 import { FichaInterface } from 'src/ficha/interfaces';
 
 export class EntityFicha implements FichaInterface {
+  @ApiProperty({ required: true, nullable: false })
+  id: string;
+
   @ApiProperty({ required: false, nullable: true })
   createdAT?: Date | null;
 

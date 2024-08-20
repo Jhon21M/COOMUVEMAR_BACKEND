@@ -11,9 +11,15 @@ import {
   IsNumber,
   IsJSON,
   IsBoolean,
+  IsUUID,
 } from 'class-validator';
 
 export class CreateFichaDto {
+  @IsNotEmpty()
+  @IsUUID()
+  @ApiProperty({ required: true })
+  id: string;
+
   @IsDate()
   @Transform(({ value }) => (value instanceof Date ? value : new Date(value)))
   @IsOptional()

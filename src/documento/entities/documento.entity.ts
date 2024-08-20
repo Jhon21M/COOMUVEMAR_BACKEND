@@ -12,7 +12,7 @@ export class EntityDocumento implements DocumentoInterface {
   DOCDictamenFinal: string;
 
   @ApiProperty({ required: true, nullable: false })
-  IDFicha: number;
+  IDFicha: string;
 
   constructor(partial: Partial<EntityDocumento>) {
     Object.assign(this, partial);

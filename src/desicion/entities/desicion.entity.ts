@@ -8,7 +8,7 @@ export class EntityDesicion {
   descripcion: string;
 
   @ApiProperty({ required: true, nullable: false })
-  IDFicha: number;
+  IDFicha: string;
 
   constructor(partial: Partial<EntityDesicion>) {
     Object.assign(this, partial);

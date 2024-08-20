@@ -22,5 +22,4 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
     delete user.hash;
     return user;
   }
-
 }
