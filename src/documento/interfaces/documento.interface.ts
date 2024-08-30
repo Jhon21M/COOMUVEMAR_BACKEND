@@ -1,6 +1,6 @@
 export interface DocumentoInterface {
-  declaracion: string;
-  huella: Buffer;
-  DOCDictamenFinal: string;
+  declaracion?: string | null;
+  ImgCedula: string;
+  //DOCDictamenFinal: string;
   IDFicha: string;
 }

@@ -91,9 +91,9 @@ model Ficha {
 
 model Documento {
   id               Int    @id @default(autoincrement())
-  declaracion      String
+  declaracion      String?
   ImgCedula         String?
-
+  
   IDFicha String @db.Uuid @unique
   ficha   Ficha @relation(fields: [IDFicha], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }

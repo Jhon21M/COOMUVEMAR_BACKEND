@@ -3,13 +3,13 @@ import { DocumentoInterface } from '../interfaces';
 
 export class EntityDocumento implements DocumentoInterface {
   @ApiProperty({ required: true, nullable: false })
-  declaracion: string;
+  declaracion: string | null;
 
   @ApiProperty({ required: true, nullable: false })
-  huella: Buffer;
+  ImgCedula: string;
 
-  @ApiProperty({ required: false, nullable: true })
-  DOCDictamenFinal: string;
+  // @ApiProperty({ required: false, nullable: true })
+  // DOCDictamenFinal: string;
 
   @ApiProperty({ required: true, nullable: false })
   IDFicha: string;

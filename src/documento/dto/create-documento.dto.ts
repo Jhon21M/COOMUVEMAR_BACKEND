@@ -1,26 +1,27 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsOptional, IsString, IsNumber } from 'class-validator';
+import { IsNotEmpty, IsOptional, IsString, IsNumber, IsUUID } from 'class-validator';
 import { IsBufferString } from 'src/common/Dto/dto.Buffer';
 
 export class CreateDocumentoDto {
-  @IsNotEmpty()
+  @IsOptional()
   @ApiProperty()
   @IsString()
   declaracion: string;
 
-  //@IsNotEmpty()
+  //@IsFile()
   @IsOptional()
-  @ApiProperty()
-  @IsBufferString()
-  huella: Buffer;
+  //@MaxFileSize(3000)
+  //@HasMimeType(['image/jpeg', 'image/png', 'image/jpg'])
+  @ApiProperty({ required: false, nullable: true })
+  ImgCedula: string;
 
-  @IsString()
-  @IsOptional()
-  @ApiProperty({ nullable: true })
-  DOCDictamenFinal: string;
+  // @IsString()
+  // @IsOptional()
+  // @ApiProperty({ nullable: true })
+  // DOCDictamenFinal: string;
 
   @IsNotEmpty()
-  @IsNumber()
+  @IsUUID()
   @ApiProperty({ required: true })
   IDFicha: string;
 }
