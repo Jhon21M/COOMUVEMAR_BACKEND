@@ -1,6 +1,15 @@
 language: node_js
 node_js:
   - "stable"
+edge: true
+stages:
+  - name: build
 cache:
   directories:
     - "node_modules"
+jobs:
+  include:
+    - stage: build
+      script:
+        - npm install
+        - npm run build
