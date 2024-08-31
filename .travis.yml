@@ -4,12 +4,34 @@ node_js:
 edge: true
 stages:
   - name: build
+  - name: deploy
+
+notifications:
+  email:
+    recipients:
+      - osmanmelendez208@gmail.com
+    on_success: never
+    on_failure: always 
+
 cache:
   directories:
     - "node_modules"
+
 jobs:
   include:
     - stage: build
       script:
         - npm install
         - npm run build
+
+    - stage: deploy
+      script:
+        - npm install
+        - npm run build
+      deploy: 
+        provider: heroku
+        edge: true
+        api_key: $HEROKU_API_KEY
+        app: coomuvemarbackend
+        on:
+          branch: main 
