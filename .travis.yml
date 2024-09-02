@@ -1,10 +1,19 @@
 language: node_js
 node_js:
   - "16"
+
+
 edge: true
+
+branches:
+  only:
+    - main
+
+
 stages:
   - name: build
   - name: deploy
+
 
 notifications:
   email:
@@ -13,21 +22,36 @@ notifications:
     on_success: never
     on_failure: always 
 
+
 cache:
   directories:
     - "node_modules"
 
+
 jobs:
   include:
     - stage: build
-      script:
+      before_install:
+        - npm install -g npm@latest
+      install:
+        - echo "Installing dependencies"
         - npm install
+      script:
+        - echo "Building the project"
         - npm run build
+      after_script:
+        - echo "after_script script phase"
+        - npm run generate-report
 
     - stage: deploy
+      before_deploy:
+        - echo "Deploying the project"
       script:
+      - echo "script_deploy phase"
         - npm install
         - npm run build
+        - npx prisma migrate deploy
+        - npx prisma generate
       deploy: 
         provider: heroku
         edge: true
