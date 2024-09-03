@@ -31,8 +31,6 @@ cache:
 jobs:
   include:
     - stage: build
-      before_install:
-        - npm install -g npm@latest
       install:
         - echo "Installing dependencies"
         - npm install
