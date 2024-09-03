@@ -48,6 +48,7 @@ jobs:
         - echo "script_deploy phase"
         - npm install
         - npm run build
+        - npm run start:prod
         - npx prisma migrate deploy
         - npx prisma generate
         - echo la clave es $HEROKU_API_KEY
