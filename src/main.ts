@@ -15,6 +15,6 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document, { customSiteTitle: 'COOMUVEMAR' });
 
-  await app.listen($PORT || 3000);
+  await app.listen(3000);
 }
 bootstrap();
