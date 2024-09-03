@@ -58,3 +58,4 @@ jobs:
         app: coomuvemar-backend
         on:
           branch: main 
+
