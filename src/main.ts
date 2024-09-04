@@ -4,7 +4,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { cors: true });
-  //app.useGlobalPipes(new ValidationPipe());
+  //app.useGlobalPipes(new ValidationPipe());--> se comenta para que no se aplique la validacion de los datos
 
   const config = new DocumentBuilder()
     .setTitle('COOMUVEMAR BACKEND')
