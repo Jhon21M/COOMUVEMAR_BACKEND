@@ -51,6 +51,12 @@ export class UserController {
     return user;
   }
 
+  @Get('meee')
+  @ApiOperation({ summary: 'Get myself data from DB' })
+  getMep() {
+    return 'Tamos activo papi';
+  }
+
   @Get()
   @Roles(Role.User, Role.Admin)
   @ApiOperation({ summary: 'Get  all User data from DB' })
