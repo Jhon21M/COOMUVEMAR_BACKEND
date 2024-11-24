@@ -1,30 +1,207 @@
-import { Injectable } from '@nestjs/common';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 import { EntityFicha, EntityUpdateFicha } from './entities';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { FichaInterfaceReturn } from './interfaces';
-import { Usuario } from '@prisma/client';
+import { Documento, Ficha, InformacionDato, Usuario } from '@prisma/client';
+import { CreateExternaldataDto } from './dto/load_ficha_dto';
 
 @Injectable()
 export class FichaService {
   constructor(private prisma: PrismaService) {}
+  async cleanDB() {
+    try {
+      //const clean = await this.prisma.cleanDB();
+      const seed = await this.prisma.seedDB();
 
-  async create(ficha: EntityFicha): Promise<EntityFicha> {
-    const newFicha = await this.prisma.ficha.create({
-      data: {
-        id: ficha.id,
-        createdAt: ficha?.createdAT,
-        localizacion: ficha.localizacion,
-        analizada: ficha.analizada,
-        trabajador: {
-          connect: { id: ficha.IDTrabajador },
-        },
-        finca: {
-          connect: { id: ficha.IDFinca },
-        },
-      },
-    });
+      return seed;
+    } catch (error) {
+      return error;
+    }
+  }
 
-    return newFicha;
+  async loadFicha(
+    externalData: CreateExternaldataDto,
+    user: Usuario,
+  ): Promise<{
+    ficha: Ficha[];
+    documento: Documento[];
+    InformacionDato: InformacionDato[];
+  }> {
+    const fichas = externalData.ficha;
+    const informacionDatos = externalData.InformacionDato;
+    const documentos = externalData.documento;
+
+    const fichasReturn = [];
+    if (externalData.ficha.length > 1) {
+      try {
+        for (const f of fichas) {
+          const fichaCreada = this.create(f, user);
+          fichasReturn.push(fichaCreada);
+        }
+        // this.newFicha = await this.prisma.ficha.createMany({
+        //   data: {
+        //     ...externalData.ficha,
+        //   },
+        // });
+      } catch (error) {
+        console.error('Error al crear la ficha:', error.message);
+        throw error;
+      }
+    } else {
+      try {
+        const fichaCreada = await this.create(fichas[0], user);
+        // console.log('creando ficha:', externalData.ficha[0]);
+        // this.newFicha = await this.prisma.ficha.create({
+        //   data: {
+        //     ...externalData.ficha[0],
+        //   },
+        // });
+        // console.log('ficha creada...');
+        fichasReturn.push(fichaCreada);
+      } catch (error) {
+        console.error('Error al crear la ficha:', error.message);
+        throw error;
+      }
+    }
+    const documentosReturn = [];
+    if (documentos.length > 0) {
+      if (documentos.length > 1) {
+        try {
+          const documento = await this.prisma.documento.createMany({
+            data: {
+              ...documentos,
+            },
+          });
+          documentosReturn.push(documento);
+        } catch (error) {
+          console.error('Error al crear la Documento:', error.message);
+          throw error;
+        }
+      } else {
+        try {
+          const documento = await this.prisma.documento.create({
+            data: {
+              ...informacionDatos[0],
+            },
+          });
+          documentosReturn.push(documento);
+        } catch (error) {
+          console.error('Error al crear la Documento:', error.message);
+          throw error;
+        }
+      }
+    }
+
+    const informacionDatosReturn = [];
+    if (informacionDatos.length > 1) {
+      try {
+        const infoDato = await this.prisma.informacionDato.createMany({
+          data: {
+            ...informacionDatos,
+          },
+        });
+        informacionDatosReturn.push(infoDato);
+      } catch (error) {
+        console.error('Error al crear la InfoDato:', error.message);
+        throw error;
+      }
+    } else {
+      try {
+        const infoDato = await this.prisma.informacionDato.create({
+          data: {
+            ...informacionDatos[0],
+          },
+        });
+        informacionDatosReturn.push(infoDato);
+      } catch (error) {
+        console.error('Error al crear la infoDato:', error.message);
+        throw error;
+      }
+    }
+
+    return {
+      ficha: fichasReturn,
+      documento: documentosReturn,
+      InformacionDato: informacionDatosReturn,
+    };
+  }
+
+  async create(ficha: EntityFicha, user: Usuario): Promise<EntityFicha> {
+    if (user.role === 'ADMIN') {
+      const fichareturn = await this.prisma.ficha.create({
+        data: {
+          id: ficha.id,
+          createdAt: ficha?.createdAT,
+          localizacion: ficha.localizacion,
+          analizada: ficha.analizada,
+          trabajador: {
+            connect: { id: ficha.IDTrabajador },
+          },
+          finca: {
+            connect: { id: ficha.IDFinca },
+          },
+        },
+      });
+      return fichareturn;
+    } else {
+      const finca = await this.prisma.finca.findFirst({
+        where: {
+          id: ficha.IDFinca,
+        },
+      });
+      if (!finca) {
+        throw new ForbiddenException('Finca no encontrada');
+      }
+
+      const productor = await this.prisma.productor.findFirst({
+        where: {
+          Finca: {
+            some: {
+              id: ficha.IDFinca,
+            },
+          },
+        },
+      });
+
+      const comproAsig = await this.prisma.inspectorProductor.findFirst({
+        where: {
+          IDProductor: productor.id,
+          IDTrabajador: ficha.IDTrabajador,
+        },
+      });
+
+      if (!comproAsig) {
+        throw new ForbiddenException(
+          'El inspector no esta asignado a este productor',
+        );
+      }
+
+      const newFicha = await this.prisma.ficha.create({
+        data: {
+          id: ficha.id,
+          createdAt: ficha?.createdAT,
+          localizacion: ficha.localizacion,
+          analizada: ficha.analizada,
+          trabajador: {
+            connect: { id: ficha.IDTrabajador },
+          },
+          finca: {
+            connect: { id: ficha.IDFinca },
+          },
+        },
+      });
+
+      await this.prisma.inspectorProductor.update({
+        where: {
+          id: comproAsig.id,
+        },
+        data: {
+          estadoInspeccion: 'realizada',
+        },
+      });
+
+      return newFicha;
+    }
   }
 
   async findAll(user: Usuario): Promise<FichaInterfaceReturn[]> {
@@ -139,7 +316,7 @@ export class FichaService {
       areaDesarrollo: fichaData.finca.areaCacaoDesarrollo,
       areaProduccion: fichaData.finca.areaCacaoProduccion,
       ingresoCertificacion: fichaData.finca.productor.fechaIngresoPrograma,
-      estadoCertificacion: fichaData.finca.productor.estadoProgramaC,
+      estadoCertificacion: fichaData.finca.productor.estado,
       inspector: fichaData.trabajador.nombre + fichaData.trabajador.apellido,
     };
   }

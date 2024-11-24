@@ -12,8 +12,6 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { FichaService } from './ficha.service';
-import { CreateFichaDto } from './dto/create-ficha.dto';
-import { UpdateFichaDto } from './dto/update-ficha.dto';
 import {
   ApiBearerAuth,
   ApiOkResponse,
@@ -22,12 +20,14 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { EntityFicha } from './entities';
-import { JwtGuard } from 'src/auth/guard';
+import { JwtGuard, JwtGuardToken } from 'src/auth/guard';
 import { RolesGuard } from 'src/auth/guard/auth.guard';
 import { GetUser, Roles } from 'src/auth/decorator';
 import { Role } from 'src/common/enum/role.enum';
 import { FichaInterfaceReturn } from './interfaces';
 import { Usuario } from '@prisma/client';
+import { CreateExternaldataDto } from './dto/load_ficha_dto';
+import { CreateFichaDto, UpdateFichaDto } from './dto/create_ficha_dto';
 
 @ApiTags('ficha - APi')
 @UseGuards(JwtGuard, RolesGuard)
@@ -39,14 +39,37 @@ import { Usuario } from '@prisma/client';
 export class FichaController {
   constructor(private readonly fichaService: FichaService) {}
 
-  //***********APP MOVIL Y WEB */
+  @Get('cleanseed')
+  @ApiOperation({ summary: 'CleanDB and seedDB' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'API is up',
+  })
+  async CleanAndSeed() {
+    return await this.fichaService.cleanDB();
+  }
+
+  //***********APP MOVIL Y WEB */ pppppp
   @Post()
   @Roles(Role.User, Role.Admin)
   @ApiOperation({ summary: 'Create a new Ficha' })
   async create(
+    @GetUser() user: Usuario,
     @Body(new ValidationPipe()) createFichaDto: CreateFichaDto,
   ): Promise<EntityFicha> {
-    return this.fichaService.create(createFichaDto);
+    return this.fichaService.create(createFichaDto, user);
+  }
+
+
+  @Post('loadficha')
+  @UseGuards(JwtGuardToken)
+  @Roles(Role.User, Role.Admin)
+  @ApiOperation({ summary: 'post DATA from app Movil' })
+  loadFicha(
+    @GetUser() user: Usuario,
+    @Body(new ValidationPipe()) createExternaldatumDto: CreateExternaldataDto,
+  ) {
+    return this.fichaService.loadFicha(createExternaldatumDto, user);
   }
 
   @Get()
@@ -110,7 +133,7 @@ export class FichaController {
   @Roles(Role.Admin)
   @ApiOperation({ summary: 'update a Ficha by ID' })
   update(
-    @Param('id',)
+    @Param('id')
     id: string,
     @Body() updateProductorDto: UpdateFichaDto,
   ) {
@@ -121,7 +144,7 @@ export class FichaController {
   @Roles(Role.Admin)
   @ApiOperation({ summary: 'Delete a Ficha By ID' })
   remove(
-    @Param('id',)
+    @Param('id')
     id: string,
   ) {
     return this.fichaService.remove(id);
@@ -137,4 +160,4 @@ export class FichaController {
   // insertData() {
   //   return this.fichaService.InsertData();
   // }
-}   
+}

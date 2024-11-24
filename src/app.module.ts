@@ -23,7 +23,6 @@ import { APP_FILTER, APP_GUARD } from '@nestjs/core';
 import { RolesGuard } from './auth/guard/auth.guard';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { PrismaExceptionFilter } from './common/filters/prisma.filter.exception';
-import { ExternaldataModule } from './externaldata/externaldata.module';
 import { NestjsFormDataModule } from 'nestjs-form-data';
 
 @Module({
@@ -46,7 +45,6 @@ import { NestjsFormDataModule } from 'nestjs-form-data';
     DocumentoModule,
     DesicionModule,
     DashboardModule,
-    ExternaldataModule,
   ],
   controllers: [ProductorController, AuthController, UserController],
   providers: [

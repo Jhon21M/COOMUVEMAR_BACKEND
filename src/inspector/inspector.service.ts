@@ -71,18 +71,38 @@ export class InspectorService {
   }
 
   async createTP(asignacion: CreateTrabajadorProductorDto) {
-    const productor = await this.prisma.inspectorProductor.findFirst({
+    const inspector = await this.prisma.trabajador.findFirst({
+      where: {
+        id: asignacion.IDTrabajador,
+      },
+    });
+    if (!inspector) {
+      throw new NotFoundException(
+        'No existe ese Inspector en la base de datos',
+      );
+    }
+
+    const productor = await this.prisma.productor.findFirst({
+      where: {
+        id: asignacion.IDProductor,
+      },
+    });
+    if (!productor) {
+      throw new NotFoundException(
+        'No existe ese Productor en la base de datos',
+      );
+    }
+
+    const find_asingnacion = await this.prisma.inspectorProductor.findFirst({
       where: {
         IDProductor: asignacion.IDProductor,
       },
     });
-
-    if (productor) {
+    if (find_asingnacion) {
       throw new ConflictException(
         'El productor ya tiene un inspector asignado',
       );
     }
-
     return this.prisma.inspectorProductor.create({
       data: {
         IDProductor: asignacion.IDProductor,
@@ -224,8 +244,20 @@ export class InspectorService {
     throw new HttpException('Eliminacion completa', HttpStatus.OK);
   }
 
-  async findAll() {
-    return await this.prisma.trabajador.findMany();
+  async findAllInspector() {
+    return await this.prisma.trabajador.findMany({
+      where: {
+        Usuario: {
+          some: {
+            role: 'USER',
+          },
+        },
+      },
+    });
+  }
+
+  findAll() {
+    return this.prisma.trabajador.findMany();
   }
 
   findOne(id: number) {
@@ -251,11 +283,18 @@ export class InspectorService {
   }
 
   remove(id: number) {
-    return this.prisma.trabajador.delete({
+    const remove = this.prisma.trabajador.delete({
       where: {
         id: typeof id === 'number' ? id : Number.parseInt(id),
       },
     });
+    if (!remove) {
+      throw new NotFoundException('No se ha encontrado el inspector');
+    }
+    return {
+      message: 'Inspector eliminado',
+      remove,
+    };
   }
 
   // https://storage.cloud.google.com/storage-img-j/kitten.png

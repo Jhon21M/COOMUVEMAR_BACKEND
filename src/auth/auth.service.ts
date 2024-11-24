@@ -170,7 +170,7 @@ export class AuthService {
     const seccionesFicha = await this.getSeccionFicha();
     const datosFicha = await this.getDatoFicha();
 
-    const productoresArray = [productoresAssing];
+    const productoresArray = productoresAssing;
     const fincasArray = [fincas];
     return {
       trabajador: trabajador,
@@ -186,20 +186,26 @@ export class AuthService {
   }
 
   async getProductores(user: Usuario) {
-    const productorIDs = await this.prisma.inspectorProductor.findMany({
+    const productorAsign = await this.prisma.inspectorProductor.findMany({
       where: {
         IDTrabajador: user.IDTrabajador,
       },
     });
 
-    let productorData;
-    for (const productor of productorIDs) {
-      console.log(productor.IDProductor);
-      productorData = await this.prisma.productor.findUnique({
+    if (!productorAsign) {
+      return { message: 'No tienes Productores asignados' };
+    }
+
+    const productorData = [];
+    for (const productorID of productorAsign) {
+      const productor = await this.prisma.productor.findUnique({
         where: {
-          id: productor.IDProductor,
+          id: productorID.IDProductor,
         },
       });
+      if (productor) {
+        productorData.push(productor);
+      }
     }
     return productorData;
   }

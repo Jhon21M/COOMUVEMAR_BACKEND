@@ -17,7 +17,7 @@ model Productor {
   numeroCedula         String?              @db.VarChar(30)
   numeroTelefono       String?
   fechaIngresoPrograma DateTime             @default(now())
-  estadoProgramaC      String
+  estado               Int
   Finca                Finca[]
   Inspectorproductor   InspectorProductor[]
 
@@ -70,7 +70,7 @@ model Trabajador {
 }
 
 model Ficha {
-  id      String    @id  @db.Uuid
+  id           String   @id
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
   localizacion Json
@@ -90,20 +90,20 @@ model Ficha {
 }
 
 model Documento {
-  id               Int    @id @default(autoincrement())
-  declaracion      String?
-  ImgCedula         String?
-  
-  IDFicha String @db.Uuid @unique
-  ficha   Ficha @relation(fields: [IDFicha], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  id          Int     @id @default(autoincrement())
+  declaracion String?
+  ImgCedula   String?
+
+  IDFicha String @unique
+  ficha   Ficha  @relation(fields: [IDFicha], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
 
 model Desicion {
   id          Int    @id @default(autoincrement())
   desicion    String
   descripcion String
-  IDFicha String @db.Uuid  @unique
-  ficha   Ficha @relation(fields: [IDFicha], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  IDFicha     String @unique
+  ficha       Ficha  @relation(fields: [IDFicha], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
 
 model SeccionesFicha {
@@ -136,8 +136,8 @@ model InformacionDato {
   dato   Dato @relation(fields: [IDDato], references: [id], onDelete: Cascade, onUpdate: Cascade)
   IDDato Int
 
-  ficha   Ficha @relation(fields: [IDFicha], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  IDFicha String @db.Uuid @unique
+  ficha   Ficha  @relation(fields: [IDFicha], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  IDFicha String @unique
 
   @@map("informacionDatos")
 }

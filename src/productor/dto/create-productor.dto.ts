@@ -49,5 +49,5 @@ export class CreateProductorDto {
   @IsNotEmpty()
   @IsString()
   @ApiProperty()
-  estadoProgramaC: string;
+  estado: number;
 }

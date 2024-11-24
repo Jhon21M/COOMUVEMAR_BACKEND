@@ -16,7 +16,8 @@ import {
 
 export class CreateFichaDto {
   @IsNotEmpty()
-  @IsUUID()
+  //@IsUUID()
+  @IsString()
   @ApiProperty({ required: true })
   id: string;
 
