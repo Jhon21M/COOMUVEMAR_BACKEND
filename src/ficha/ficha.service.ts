@@ -4,10 +4,14 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { FichaInterfaceReturn } from './interfaces';
 import { Documento, Ficha, InformacionDato, Usuario } from '@prisma/client';
 import { CreateExternaldataDto } from './dto/load_ficha_dto';
+import { DocumentoService } from 'src/documento/documento.service';
 
 @Injectable()
 export class FichaService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private readonly documentoService: DocumentoService,
+  ) {}
   async cleanDB() {
     try {
       //const clean = await this.prisma.cleanDB();
@@ -64,26 +68,21 @@ export class FichaService {
       }
     }
     const documentosReturn = [];
+
     if (documentos.length > 0) {
       if (documentos.length > 1) {
         try {
-          const documento = await this.prisma.documento.createMany({
-            data: {
-              ...documentos,
-            },
-          });
-          documentosReturn.push(documento);
+          for (const doc of documentos) {
+            const documento = await this.documentoService.create(doc);
+            documentosReturn.push(documento);
+          }
         } catch (error) {
           console.error('Error al crear la Documento:', error.message);
           throw error;
         }
       } else {
         try {
-          const documento = await this.prisma.documento.create({
-            data: {
-              ...informacionDatos[0],
-            },
-          });
+          const documento = await this.documentoService.create(documentos[0]);
           documentosReturn.push(documento);
         } catch (error) {
           console.error('Error al crear la Documento:', error.message);
@@ -236,7 +235,7 @@ export class FichaService {
           productor:
             ficha.finca.productor.nombre + ficha.finca.productor.apellido,
           localizacion: ficha.localizacion,
-          analizada: true,
+          analizada: ficha.analizada,
         };
 
         returndata.push(returndataItem);
@@ -277,7 +276,7 @@ export class FichaService {
           productor:
             ficha.finca.productor.nombre + ficha.finca.productor.apellido,
           localizacion: ficha.localizacion,
-          analizada: true,
+          analizada: ficha.analizada,
         };
 
         returndata.push(returndataItem);

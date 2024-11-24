@@ -49,7 +49,7 @@ export class FichaController {
     return await this.fichaService.cleanDB();
   }
 
-  //***********APP MOVIL Y WEB */ pppppp
+  //***********APP MOVIL Y WEB */
   @Post()
   @Roles(Role.User, Role.Admin)
   @ApiOperation({ summary: 'Create a new Ficha' })

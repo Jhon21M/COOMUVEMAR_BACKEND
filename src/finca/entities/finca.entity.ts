@@ -18,6 +18,9 @@ export class EntityFinca implements FincaInterface {
   @ApiProperty({ required: false, nullable: true })
   produccionUltimoSiclo: string | null;
 
+  @ApiProperty({ required: false, nullable: true })
+  estimadoCosecha: string | null;
+
   @ApiProperty({ required: false, nullable: false, type: number })
   IDProductor: number;
 

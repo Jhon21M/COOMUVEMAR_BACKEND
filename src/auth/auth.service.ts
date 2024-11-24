@@ -6,7 +6,7 @@ import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { EntityAuth } from './entities';
 import { EntityAuthSignin } from './entities/signin.entity';
-import { Role, Usuario } from '@prisma/client';
+import { Productor, Role, Usuario } from '@prisma/client';
 
 @Injectable()
 export class AuthService {
@@ -162,27 +162,45 @@ export class AuthService {
     });
 
     const role = user.role;
-    //send back the user
     const access_token = await this.signToken(user.role, user.id, user.email);
 
-    const productoresAssing = await this.getProductores(user);
-    const fincas = await this.getFinca(user);
-    const seccionesFicha = await this.getSeccionFicha();
-    const datosFicha = await this.getDatoFicha();
-
-    const productoresArray = productoresAssing;
-    const fincasArray = [fincas];
-    return {
-      trabajador: trabajador,
-      role: role,
-      access_token: access_token.access_token,
-      Db: {
-        productores: productoresArray,
-        fincas: fincasArray,
-        seccionesFicha: seccionesFicha,
-        datosFicha: datosFicha,
+    const verificarAsignacion = await this.prisma.inspectorProductor.findFirst({
+      where: {
+        IDTrabajador: user.IDTrabajador,
       },
-    };
+    });
+
+    // verificar si el usuario tiene asignacion
+    if (verificarAsignacion) {
+      const productoresAssing = await this.getProductores(user);
+      const fincas = await this.getFinca(productoresAssing);
+      const seccionesFicha = await this.getSeccionFicha();
+      const datosFicha = await this.getDatoFicha();
+
+      return {
+        trabajador: trabajador,
+        role: role,
+        access_token: access_token.access_token,
+        Db: {
+          productores: productoresAssing,
+          fincas: fincas,
+          seccionesFicha: seccionesFicha,
+          datosFicha: datosFicha,
+        },
+      };
+    } else {
+      const seccionesFicha = await this.getSeccionFicha();
+      const datosFicha = await this.getDatoFicha();
+      return {
+        trabajador: trabajador,
+        role: user.role,
+        access_token: access_token.access_token,
+        Db: {
+          seccionesFicha: seccionesFicha,
+          datosFicha: datosFicha,
+        },
+      };
+    }
   }
 
   async getProductores(user: Usuario) {
@@ -193,7 +211,9 @@ export class AuthService {
     });
 
     if (!productorAsign) {
-      return { message: 'No tienes Productores asignados' };
+      throw new ForbiddenException({
+        message: 'No tienes Productores asignados',
+      });
     }
 
     const productorData = [];
@@ -203,29 +223,28 @@ export class AuthService {
           id: productorID.IDProductor,
         },
       });
-      if (productor) {
-        productorData.push(productor);
-      }
+      productorData.push(productor);
     }
     return productorData;
   }
 
-  async getFinca(user: Usuario) {
+  async getFinca(productoresIDs: Productor[]) {
     try {
-      const productorIDs = await this.prisma.inspectorProductor.findMany({
-        where: {
-          IDTrabajador: user.IDTrabajador,
-        },
-      });
-
-      let fincaData: any;
-      for (const productor of productorIDs) {
-        console.log(productor.IDProductor);
-        fincaData = await this.prisma.finca.findFirst({
+      const fincaData = [];
+      for (const productor of productoresIDs) {
+        const finca = await this.prisma.finca.findMany({
           where: {
-            IDProductor: productor.IDProductor,
+            IDProductor: productor.id,
           },
         });
+
+        if (finca) {
+          fincaData.push(...finca);
+        } else {
+          throw new ForbiddenException({
+            message: 'El productor no tienes fincas Registradas',
+          });
+        }
       }
       return fincaData;
     } catch (error) {

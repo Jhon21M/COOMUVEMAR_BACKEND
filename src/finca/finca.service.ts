@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 import { EntityFinca, EntityUpdateFinca } from 'src/finca/entities';
 import { PrismaService } from 'src/prisma/prisma.service';
 
@@ -6,12 +6,36 @@ import { PrismaService } from 'src/prisma/prisma.service';
 export class FincaService {
   constructor(private prisma: PrismaService) {}
   async create(Finca: EntityFinca): Promise<EntityFinca> {
+    const productor = await this.prisma.productor.findUnique({
+      where: {
+        id: Finca.IDProductor,
+      },
+    });
+    if (!productor) {
+      throw new ForbiddenException('No existe el productor');
+    }
     try {
       const newFinca = await this.prisma.finca.create({
         data: {
-          ...Finca,
+          nombre: Finca.nombre,
+
+          comunidad: Finca.comunidad,
+
+          areaCacaoProduccion: Finca.areaCacaoProduccion,
+
+          areaCacaoDesarrollo: Finca.areaCacaoDesarrollo,
+
+          produccionUltimoSiclo: Finca.produccionUltimoSiclo,
+
+          estimadoCosecha: Finca.estimadoCosecha,
+
+          productor: {
+            connect: { id: Finca.IDProductor },
+          },
         },
       });
+
+      console.log('newFinca', newFinca);
 
       return newFinca;
     } catch (error) {
