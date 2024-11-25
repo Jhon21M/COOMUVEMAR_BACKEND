@@ -34,7 +34,9 @@ export class FichaService {
     const fichas = externalData.ficha;
     const informacionDatos = externalData.InformacionDato;
     const documentos = externalData.documento;
-
+    console.log('fichas:', fichas);
+    console.log('informacionDatos:', informacionDatos);
+    console.log('documentos:', documentos);
     const fichasReturn = [];
     if (externalData.ficha.length > 1) {
       try {
