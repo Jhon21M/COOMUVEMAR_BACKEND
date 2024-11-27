@@ -3,6 +3,9 @@ import { DocumentoInterface } from '../interfaces';
 
 export class EntityDocumento implements DocumentoInterface {
   @ApiProperty({ required: true, nullable: false })
+  id: string;
+
+  @ApiProperty({ required: true, nullable: false })
   declaracion: string | null;
 
   @ApiProperty({ required: true, nullable: false })

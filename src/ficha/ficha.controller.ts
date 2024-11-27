@@ -10,6 +10,7 @@ import {
   ParseIntPipe,
   ValidationPipe,
   UseGuards,
+  BadRequestException,
 } from '@nestjs/common';
 import { FichaService } from './ficha.service';
 import {
@@ -60,15 +61,18 @@ export class FichaController {
     return this.fichaService.create(createFichaDto, user);
   }
 
-
   @Post('loadficha')
-  @UseGuards(JwtGuardToken)
+  //@UseGuards(JwtGuardToken)
   @Roles(Role.User, Role.Admin)
   @ApiOperation({ summary: 'post DATA from app Movil' })
   loadFicha(
     @GetUser() user: Usuario,
     @Body(new ValidationPipe()) createExternaldatumDto: CreateExternaldataDto,
   ) {
+    // if (Buffer.byteLength(JSON.stringify(Body)) > 15 * 1024 * 1024) {
+    //   throw new BadRequestException('Payload demasiado grande');
+    // }
+    console.log('llegando a load ficha controller', Body);
     return this.fichaService.loadFicha(createExternaldatumDto, user);
   }
 
@@ -81,17 +85,6 @@ export class FichaController {
   })
   async findAll(@GetUser() user: Usuario) {
     return await this.fichaService.findAll(user);
-  }
-
-  @Get('analysisficha')
-  @Roles(Role.Admin)
-  @ApiOperation({ summary: 'Analyze Ficha stored....' })
-  @ApiResponse({
-    status: HttpStatus.OK,
-    description: 'API is up',
-  })
-  async analysis() {
-    return await this.fichaService.analysis();
   }
 
   // no esta en teams
@@ -150,6 +143,17 @@ export class FichaController {
     return this.fichaService.remove(id);
   }
 
+  @Get('analysisficha')
+  @Roles(Role.Admin)
+  @ApiOperation({ summary: 'Analyze Ficha stored....' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'API is up',
+  })
+  async analysis() {
+    return await this.fichaService.analysis();
+  }
+  
   // @Get('insertdata')
   // @Roles(Role.User, Role.Admin)
   // @ApiOperation({ summary: 'insert' })

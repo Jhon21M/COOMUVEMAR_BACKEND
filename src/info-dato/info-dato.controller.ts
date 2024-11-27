@@ -64,7 +64,7 @@ export class InfoDatoController {
       'id',
       new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE }),
     )
-    id: number,
+    id: string,
   ) {
     return this.infodatoService.findOne(id);
   }
@@ -88,7 +88,7 @@ export class InfoDatoController {
       'id',
       new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE }),
     )
-    id: number,
+    id: string,
     @Body() updateInfoDatoDto: UpdateInfoDatoDto,
   ) {
     return this.infodatoService.update(id, updateInfoDatoDto);
@@ -98,11 +98,8 @@ export class InfoDatoController {
   @Roles(Role.Admin)
   @ApiOperation({ summary: 'Delete a informacionDato from DB By ID' })
   remove(
-    @Param(
-      'id',
-      new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE }),
-    )
-    id: number,
+    @Param('id')
+    id: string,
   ) {
     return this.infodatoService.remove(id);
   }

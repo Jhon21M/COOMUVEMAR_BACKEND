@@ -10,6 +10,7 @@ export class DocumentoService {
   constructor(private prisma: PrismaService) {}
 
   async create(dato: EntityDocumento): Promise<EntityDocumento> {
+    console.log('estamos en el servicio de documento');
     try {
       const { ImgCedula, IDFicha } = dato;
       const fichaproducto = await this.prisma.ficha.findUnique({
@@ -40,13 +41,21 @@ export class DocumentoService {
         fichaproducto.finca.nombre + fichaproducto.finca.comunidad;
 
       const url = await saveImg(ImgCedula, finca_nombre, productor_nombre);
+
       const newdocumento = await this.prisma.documento.create({
         data: {
+          id: dato.id,
           declaracion: dato.declaracion,
           ImgCedula: url.filePath,
-          IDFicha: dato.IDFicha,
+          ficha: {
+            connect: {
+              id: dato.IDFicha,
+            },
+          },
         },
       });
+
+      console.log('imprimiendo documento creado', newdocumento);
 
       return newdocumento;
     } catch (error) {
@@ -59,21 +68,21 @@ export class DocumentoService {
     return await this.prisma.documento.findMany();
   }
 
-  findOne(id: number) {
+  findOne(id: string) {
     return this.prisma.documento.findUnique({
       where: {
-        id: typeof id === 'number' ? id : Number.parseInt(id),
+        id: id,
       },
     });
   }
 
   async update(
-    id: number,
+    id: string,
     documento: EntityUpdateDocumento,
   ): Promise<EntityUpdateDocumento> {
     return await this.prisma.documento.update({
       where: {
-        id: typeof id === 'number' ? id : Number.parseInt(id),
+        id: id,
       },
       data: {
         ...documento,
@@ -81,10 +90,10 @@ export class DocumentoService {
     });
   }
 
-  remove(id: number) {
+  remove(id: string) {
     return this.prisma.documento.delete({
       where: {
-        id: typeof id === 'number' ? id : Number.parseInt(id),
+        id: id,
       },
       select: {
         id: true,

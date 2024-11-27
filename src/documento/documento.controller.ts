@@ -65,7 +65,7 @@ export class DocumentoController {
       'id',
       new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE }),
     )
-    id: number,
+    id: string,
   ) {
     return this.documentoService.findOne(id);
   }
@@ -78,7 +78,7 @@ export class DocumentoController {
       'id',
       new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE }),
     )
-    id: number,
+    id: string,
     @Body() updateDocumentoDto: UpdateDocumentoDto,
   ) {
     return this.documentoService.update(id, updateDocumentoDto);
@@ -92,7 +92,7 @@ export class DocumentoController {
       'id',
       new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE }),
     )
-    id: number,
+    id: string,
   ) {
     return this.documentoService.remove(id);
   }

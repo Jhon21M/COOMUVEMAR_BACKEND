@@ -17,6 +17,7 @@ model Productor {
   numeroCedula         String?              @db.VarChar(30)
   numeroTelefono       String?
   fechaIngresoPrograma DateTime             @default(now())
+  createAt             DateTime             @default(now())
   estado               Int
   Finca                Finca[]
   Inspectorproductor   InspectorProductor[]
@@ -85,12 +86,23 @@ model Ficha {
   Documento       Documento[]
   Desicion        Desicion[]
   InformacionDato InformacionDato[]
+  NoConformidad   NoConformidad?
 
   @@map("fichas")
 }
 
+model NoConformidad {
+  id                    Int            @id @default(autoincrement())
+  cantidadnoConformidad Int
+  descripcion           String?
+  IDSeccionFicha        Int
+  seccionesFicha        SeccionesFicha @relation(fields: [IDSeccionFicha], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  IDFicha               String         @unique
+  ficha                 Ficha          @relation(fields: [IDFicha], references: [id], onDelete: Cascade, onUpdate: Cascade)
+}
+
 model Documento {
-  id          Int     @id @default(autoincrement())
+  id          String  @id
   declaracion String?
   ImgCedula   String?
 
@@ -107,10 +119,11 @@ model Desicion {
 }
 
 model SeccionesFicha {
-  id          Int     @id @default(autoincrement())
-  nombre      String
-  descripcion String?
-  Dato        Dato[]
+  id            Int             @id @default(autoincrement())
+  nombre        String
+  descripcion   String?
+  Dato          Dato[]
+  NoConformidad NoConformidad[]
 
   @@map("SeccionesFichas")
 }
@@ -129,15 +142,15 @@ model Dato {
 }
 
 model InformacionDato {
-  id          Int     @id @default(autoincrement())
-  informacion String
+  id          String  @id
+  informacion String?
   descripcion String?
 
   dato   Dato @relation(fields: [IDDato], references: [id], onDelete: Cascade, onUpdate: Cascade)
   IDDato Int
 
   ficha   Ficha  @relation(fields: [IDFicha], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  IDFicha String @unique
+  IDFicha String
 
   @@map("informacionDatos")
 }

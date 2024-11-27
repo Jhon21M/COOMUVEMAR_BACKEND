@@ -12,18 +12,11 @@ export class FichaWithID extends CreateFichaDto {
   id: string;
 }
 
-export class InformacionDatoWithID extends CreateInfoDatoDto {
-  @ApiProperty()
-  @IsNumber()
-  @IsNotEmpty()
-  id: number;
-}
-
 export class DocumentoWithID extends CreateDocumentoDto {
   @ApiProperty()
   @IsNumber()
   @IsNotEmpty()
-  id: number;
+  id: string;
 }
 
 export class CreateExternaldataDto {
@@ -32,10 +25,11 @@ export class CreateExternaldataDto {
   ficha: Ficha[];
 
   @IsNotEmpty()
-  @ApiProperty({ type: () => InformacionDatoWithID, isArray: true })
+  @ApiProperty({ type: () => CreateInfoDatoDto, isArray: true })
   InformacionDato: InformacionDato[];
 
-  @IsNotEmpty()
+  @IsOptional()
+  //@IsNotEmpty()
   @ApiProperty({ type: () => DocumentoWithID, isArray: true })
   documento: Documento[];
 }

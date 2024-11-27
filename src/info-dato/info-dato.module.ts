@@ -4,6 +4,6 @@ import { InfoDatoController } from './info-dato.controller';
 
 @Module({
   controllers: [InfoDatoController],
-  providers: [InfoDatoService]
+  providers: [InfoDatoService],
 })
 export class InfoDatoModule {}
