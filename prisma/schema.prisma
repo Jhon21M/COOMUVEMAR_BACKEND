@@ -93,7 +93,7 @@ model Ficha {
 
 model NoConformidad {
   id                    Int            @id @default(autoincrement())
-  cantidadnoConformidad Int
+  cantidadNoConformidad Int
   descripcion           String?
   IDSeccionFicha        Int
   seccionesFicha        SeccionesFicha @relation(fields: [IDSeccionFicha], references: [id], onDelete: Cascade, onUpdate: Cascade)
