@@ -41,7 +41,6 @@ jobs:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
       - run: npx prisma generate
 
-    steps:
       - name: Deploy NodeJS app
         uses: appleboy/ssh-action@v0.1.2
         with:
