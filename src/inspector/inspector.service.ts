@@ -47,7 +47,7 @@ export class InspectorService {
       const filePath = `src/common/file/perfil-foto/${nombre}.${tipoImagen}`;
       writeFileSync(filePath, buffer);
 
-      const photoUrl = await this.google.uploadFile(filePath);
+      //const photoUrl = await this.google.uploadFile(filePath);
       console.log('6');
 
       return this.prisma.trabajador.create({
@@ -55,7 +55,7 @@ export class InspectorService {
           nombre: inspector.nombre,
           apellido: inspector.apellido,
           numeroTelefono: inspector.numeroTelefono,
-          urlImg: photoUrl,
+          urlImg: filePath,
         },
       });
     } else {

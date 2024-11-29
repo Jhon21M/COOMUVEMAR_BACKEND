@@ -9,6 +9,11 @@ import {
 import { IsBufferString } from 'src/common/Dto/dto.Buffer';
 
 export class CreateDocumentoDto {
+  @IsNotEmpty()
+  @IsString()
+  @ApiProperty({ required: true })
+  id: string;
+
   @IsOptional()
   @ApiProperty()
   @IsString()

@@ -2,6 +2,10 @@ import { ApiProperty } from '@nestjs/swagger';
 import { InfoDatoInterface } from 'src/info-dato/interfaces';
 
 export class EntityInfoDato implements InfoDatoInterface {
+
+  @ApiProperty({ required: true, nullable: false })
+  id: string;
+
   @ApiProperty({ required: false, nullable: true })
   informacion: string;
 

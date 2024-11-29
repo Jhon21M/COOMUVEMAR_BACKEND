@@ -3,6 +3,11 @@ import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class CreateInfoDatoDto {
   @IsNotEmpty()
+  @IsString()
+  @ApiProperty()
+  id: string;
+
+  @IsNotEmpty()
   @ApiProperty()
   @IsString()
   informacion: string;
@@ -18,7 +23,7 @@ export class CreateInfoDatoDto {
   IDDato: number;
 
   @IsNotEmpty()
-  @IsNumber()
+  @IsString()
   @ApiProperty()
   IDFicha: string;
 }
