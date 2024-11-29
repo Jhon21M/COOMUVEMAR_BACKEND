@@ -71,6 +71,17 @@ export class InspectorService {
   }
 
   async createTP(asignacion: CreateTrabajadorProductorDto) {
+    const find_asingnacion = await this.prisma.inspectorProductor.findFirst({
+      where: {
+        IDProductor: asignacion.IDProductor,
+      },
+    });
+    if (find_asingnacion) {
+      throw new ConflictException(
+        'El productor ya tiene un inspector asignado',
+      );
+    }
+
     const inspector = await this.prisma.trabajador.findFirst({
       where: {
         id: asignacion.IDTrabajador,
@@ -93,16 +104,6 @@ export class InspectorService {
       );
     }
 
-    const find_asingnacion = await this.prisma.inspectorProductor.findFirst({
-      where: {
-        IDProductor: asignacion.IDProductor,
-      },
-    });
-    if (find_asingnacion) {
-      throw new ConflictException(
-        'El productor ya tiene un inspector asignado',
-      );
-    }
     return this.prisma.inspectorProductor.create({
       data: {
         IDProductor: asignacion.IDProductor,
