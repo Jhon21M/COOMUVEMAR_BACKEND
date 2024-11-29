@@ -4,6 +4,7 @@ import { DocumentoController } from './documento.controller';
 
 @Module({
   controllers: [DocumentoController],
-  providers: [DocumentoService]
+  providers: [DocumentoService],
+  exports: [DocumentoService],
 })
 export class DocumentoModule {}

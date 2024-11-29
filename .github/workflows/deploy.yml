@@ -1,0 +1,24 @@
+name: Deploy
+on:
+  release:
+    types:
+      - released
+  push:
+    branches:
+      - main
+concurrency: deployment
+jobs:
+  deploy:
+    name: deploy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '18'
+      - run: npm install
+      - run: npm run build
+      - run: npx prisma migrate deploy
+      - run: npx prisma generate
+    

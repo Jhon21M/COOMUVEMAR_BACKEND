@@ -60,7 +60,7 @@ export class InspectorController {
 
   @Post('asignacionproductor')
   @Roles(Role.Admin)
-  @ApiOperation({ summary: 'Create a new InspectorProductor' })
+  @ApiOperation({ summary: 'Crea una asignacion a un Inspector' })
   createTP(
     @Body(new ValidationPipe())
     createTPDto: CreateTrabajadorProductorDto,
@@ -69,9 +69,11 @@ export class InspectorController {
   }
 
   /**App WEB */
-  @Get('getproductor/:id')
+  @Get('inspectorasign/:id')
   @Roles(Role.Admin)
-  @ApiOperation({ summary: 'Get an InspectorProductor by ID' })
+  @ApiOperation({
+    summary: 'Get las asignaciones que tiene un Inspector by ID',
+  })
   getTPAdmin(
     @Param(
       'id',
@@ -82,16 +84,20 @@ export class InspectorController {
     return this.inspectorService.getTPAdmin(id);
   }
 
-  @Get('getallproductor')
+  @Get('getallproductorinspector')
   @Roles(Role.Admin)
-  @ApiOperation({ summary: 'Get the All InspectorProductor' })
+  @ApiOperation({
+    summary: 'Get todas las asignaciones existentes en InspectorProductor',
+  })
   getAllTPAdmin() {
     return this.inspectorService.getAllTPAdmin();
   }
 
-  @Delete('asignacionproductor')
+  @Delete('asignacion')
   @Roles(Role.Admin)
-  @ApiOperation({ summary: 'Delete an ProductorInspector by ID' })
+  @ApiOperation({
+    summary: 'eliminar las asignacion by ID de InspectorProductor',
+  })
   removeProductorInsector(
     @Body()
     numeros: number[],
@@ -100,9 +106,16 @@ export class InspectorController {
     return this.inspectorService.removeProductorInsector(numeros);
   }
 
+  @Get('inspector')
+  @Roles(Role.Admin)
+  @ApiOperation({ summary: 'Get all only Inspectores data' })
+  findAllInspector() {
+    return this.inspectorService.findAllInspector();
+  }
+
   @Get()
   @Roles(Role.Admin)
-  @ApiOperation({ summary: 'Get all Trabajador data' })
+  @ApiOperation({ summary: 'Get all Trabajadores data' })
   findAll() {
     return this.inspectorService.findAll();
   }

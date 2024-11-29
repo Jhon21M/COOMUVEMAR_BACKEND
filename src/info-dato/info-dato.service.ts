@@ -11,7 +11,19 @@ export class InfoDatoService {
     try {
       const newInforDato = await this.prisma.informacionDato.create({
         data: {
-          ...dato,
+          id: dato.id,
+          informacion: dato.informacion,
+          descripcion: dato.descripcion,
+          dato: {
+            connect: {
+              id: dato.IDDato,
+            },
+          },
+          ficha: {
+            connect: {
+              id: dato.IDFicha,
+            },
+          },
         },
       });
 
@@ -26,10 +38,10 @@ export class InfoDatoService {
     return await this.prisma.informacionDato.findMany();
   }
 
-  findOne(id: number) {
+  findOne(id: string) {
     return this.prisma.informacionDato.findUnique({
       where: {
-        id: typeof id === 'number' ? id : Number.parseInt(id),
+        id: id,
       },
     });
   }
@@ -43,12 +55,12 @@ export class InfoDatoService {
   }
 
   async update(
-    id: number,
+    id: string,
     informacion: EntityUpdateInfoDato,
   ): Promise<EntityUpdateInfoDato> {
     return await this.prisma.informacionDato.update({
       where: {
-        id: typeof id === 'number' ? id : Number.parseInt(id),
+        id: id,
       },
       data: {
         ...informacion,
@@ -56,10 +68,10 @@ export class InfoDatoService {
     });
   }
 
-  remove(id: number) {
+  remove(id: string) {
     return this.prisma.informacionDato.delete({
       where: {
-        id: typeof id === 'number' ? id : Number.parseInt(id),
+        id: id,
       },
     });
   }

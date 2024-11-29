@@ -1,5 +1,84 @@
--- CreateEnum
-CREATE TYPE "Role" AS ENUM ('USER', 'ADMIN');
+/*
+  Warnings:
+
+  - You are about to drop the `dato` table. If the table is not empty, all the data it contains will be lost.
+  - You are about to drop the `desicion` table. If the table is not empty, all the data it contains will be lost.
+  - You are about to drop the `documento` table. If the table is not empty, all the data it contains will be lost.
+  - You are about to drop the `ficha` table. If the table is not empty, all the data it contains will be lost.
+  - You are about to drop the `finca` table. If the table is not empty, all the data it contains will be lost.
+  - You are about to drop the `informacionDato` table. If the table is not empty, all the data it contains will be lost.
+  - You are about to drop the `inspectorProductor` table. If the table is not empty, all the data it contains will be lost.
+  - You are about to drop the `productor` table. If the table is not empty, all the data it contains will be lost.
+  - You are about to drop the `seccionesFicha` table. If the table is not empty, all the data it contains will be lost.
+  - You are about to drop the `trabajador` table. If the table is not empty, all the data it contains will be lost.
+  - You are about to drop the `usuario` table. If the table is not empty, all the data it contains will be lost.
+
+*/
+-- DropForeignKey
+ALTER TABLE "dato" DROP CONSTRAINT "dato_IDSeccionesFicha_fkey";
+
+-- DropForeignKey
+ALTER TABLE "desicion" DROP CONSTRAINT "desicion_IDFicha_fkey";
+
+-- DropForeignKey
+ALTER TABLE "documento" DROP CONSTRAINT "documento_IDFicha_fkey";
+
+-- DropForeignKey
+ALTER TABLE "ficha" DROP CONSTRAINT "ficha_IDFinca_fkey";
+
+-- DropForeignKey
+ALTER TABLE "ficha" DROP CONSTRAINT "ficha_IDTrabajador_fkey";
+
+-- DropForeignKey
+ALTER TABLE "finca" DROP CONSTRAINT "finca_IDProductor_fkey";
+
+-- DropForeignKey
+ALTER TABLE "informacionDato" DROP CONSTRAINT "informacionDato_IDDato_fkey";
+
+-- DropForeignKey
+ALTER TABLE "informacionDato" DROP CONSTRAINT "informacionDato_IDFicha_fkey";
+
+-- DropForeignKey
+ALTER TABLE "inspectorProductor" DROP CONSTRAINT "inspectorProductor_IDProductor_fkey";
+
+-- DropForeignKey
+ALTER TABLE "inspectorProductor" DROP CONSTRAINT "inspectorProductor_IDTrabajador_fkey";
+
+-- DropForeignKey
+ALTER TABLE "usuario" DROP CONSTRAINT "usuario_IDTrabajador_fkey";
+
+-- DropTable
+DROP TABLE "dato";
+
+-- DropTable
+DROP TABLE "desicion";
+
+-- DropTable
+DROP TABLE "documento";
+
+-- DropTable
+DROP TABLE "ficha";
+
+-- DropTable
+DROP TABLE "finca";
+
+-- DropTable
+DROP TABLE "informacionDato";
+
+-- DropTable
+DROP TABLE "inspectorProductor";
+
+-- DropTable
+DROP TABLE "productor";
+
+-- DropTable
+DROP TABLE "seccionesFicha";
+
+-- DropTable
+DROP TABLE "trabajador";
+
+-- DropTable
+DROP TABLE "usuario";
 
 -- CreateTable
 CREATE TABLE "productores" (
@@ -9,7 +88,7 @@ CREATE TABLE "productores" (
     "numeroCedula" VARCHAR(30),
     "numeroTelefono" TEXT,
     "fechaIngresoPrograma" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "estadoProgramaC" TEXT NOT NULL,
+    "estado" INTEGER NOT NULL,
 
     CONSTRAINT "productores_pkey" PRIMARY KEY ("id")
 );
@@ -55,7 +134,7 @@ CREATE TABLE "trabajadores" (
 
 -- CreateTable
 CREATE TABLE "fichas" (
-    "id" UUID NOT NULL,
+    "id" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "localizacion" JSONB NOT NULL,
@@ -69,10 +148,9 @@ CREATE TABLE "fichas" (
 -- CreateTable
 CREATE TABLE "Documento" (
     "id" SERIAL NOT NULL,
-    "declaracion" TEXT NOT NULL,
-    "huella" BYTEA NOT NULL,
-    "DOCDictamenFinal" TEXT NOT NULL,
-    "IDFicha" UUID NOT NULL,
+    "declaracion" TEXT,
+    "ImgCedula" TEXT,
+    "IDFicha" TEXT NOT NULL,
 
     CONSTRAINT "Documento_pkey" PRIMARY KEY ("id")
 );
@@ -82,7 +160,7 @@ CREATE TABLE "Desicion" (
     "id" SERIAL NOT NULL,
     "desicion" TEXT NOT NULL,
     "descripcion" TEXT NOT NULL,
-    "IDFicha" UUID NOT NULL,
+    "IDFicha" TEXT NOT NULL,
 
     CONSTRAINT "Desicion_pkey" PRIMARY KEY ("id")
 );
@@ -112,7 +190,7 @@ CREATE TABLE "informacionDatos" (
     "informacion" TEXT NOT NULL,
     "descripcion" TEXT,
     "IDDato" INTEGER NOT NULL,
-    "IDFicha" UUID NOT NULL,
+    "IDFicha" TEXT NOT NULL,
 
     CONSTRAINT "informacionDatos_pkey" PRIMARY KEY ("id")
 );

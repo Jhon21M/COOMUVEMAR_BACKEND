@@ -1,30 +1,211 @@
-import { Injectable } from '@nestjs/common';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 import { EntityFicha, EntityUpdateFicha } from './entities';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { FichaInterfaceReturn } from './interfaces';
-import { Usuario } from '@prisma/client';
+import { Documento, Ficha, InformacionDato, Usuario } from '@prisma/client';
+import { CreateExternaldataDto } from './dto/load_ficha_dto';
+import { DocumentoService } from 'src/documento/documento.service';
+import { connect } from 'http2';
 
 @Injectable()
 export class FichaService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private readonly documentoService: DocumentoService,
+  ) {}
+  async cleanDB() {
+    try {
+      //const clean = await this.prisma.cleanDB();
+      const seed = await this.prisma.seedDB();
 
-  async create(ficha: EntityFicha): Promise<EntityFicha> {
-    const newFicha = await this.prisma.ficha.create({
-      data: {
-        id: ficha.id,
-        createdAt: ficha?.createdAT,
-        localizacion: ficha.localizacion,
-        analizada: ficha.analizada,
-        trabajador: {
-          connect: { id: ficha.IDTrabajador },
-        },
-        finca: {
-          connect: { id: ficha.IDFinca },
-        },
-      },
-    });
+      return seed;
+    } catch (error) {
+      return error;
+    }
+  }
 
-    return newFicha;
+  async loadFicha(
+    externalData: CreateExternaldataDto,
+    user: Usuario,
+  ): Promise<{
+    ficha: Ficha[];
+    documento: Documento[];
+    InformacionDato: InformacionDato[];
+  }> {
+    const fichas = externalData.ficha;
+    const informacionDatos = externalData.InformacionDato;
+    const documentos = externalData.documento;
+    const fichasReturn = [];
+
+    console.log('Imprimiendo el tamaño de documento', documentos.length);
+    console.log('Imprimiendo el tamaño de ficha', fichas.length);
+
+    try {
+      let contador = 1;
+      for (const f of fichas) {
+        console.log('Ficha:', f, 'Contador:', contador);
+        contador++;
+        const fichaCreada = await this.create(f, user);
+        fichasReturn.push(fichaCreada);
+      }
+    } catch (error) {
+      console.error('Error al crear la ficha:', error.message);
+      throw error;
+    }
+
+    const documentosReturn = [];
+
+    try {
+      let contador = 1;
+      for (const doc of documentos) {
+        console.log('documento:', doc);
+        console.log('Contador:', contador);
+        const IDdocumento = doc.id.toString() + `-UI${user.id}`;
+        doc.id = IDdocumento;
+        console.log('IDinfoDato a guardarse:', doc);
+        contador++;
+        const documento = await this.documentoService.create(doc);
+        documentosReturn.push(documento);
+      }
+    } catch (error) {
+      console.error('Error al crear la Documento:', error.message);
+      throw error;
+    }
+    // try {
+    //   const documento = await this.documentoService.create(documentos[0]);
+    //   documentosReturn.push(documento);
+    // } catch (error) {
+    //   console.error('Error al crear la Documento:', error.message);
+    //   throw error;
+    // }
+    // }
+
+    const informacionDatosReturn = [];
+    if (informacionDatos.length > 1) {
+      let contador = 1;
+      try {
+        for (const info of informacionDatos) {
+          //console.log('InformacionDato:', info);
+          //console.log('Contador:', contador);
+          const IDinfoDato = info.id.toString() + `-UI${user.id}`;
+          //console.log('IDinfoDato a guardarse:', IDinfoDato);
+          const infoDato = await this.prisma.informacionDato.create({
+            data: {
+              id: IDinfoDato,
+              informacion: info.informacion,
+              dato: {
+                connect: { id: info.IDDato },
+              },
+              ficha: {
+                connect: { id: info.IDFicha },
+              },
+            },
+          });
+          informacionDatosReturn.push(infoDato);
+          contador++;
+          //console.log('InformacionDato:', infoDato);
+        }
+      } catch (error) {
+        console.error('Error al crear la InfoDato:', error.message);
+        throw error;
+      }
+    } else {
+      try {
+        const infoDato = await this.prisma.informacionDato.create({
+          data: {
+            ...informacionDatos[0],
+          },
+        });
+        informacionDatosReturn.push(infoDato);
+      } catch (error) {
+        console.error('Error al crear la infoDato:', error.message);
+        throw error;
+      }
+    }
+
+    return {
+      ficha: fichasReturn,
+      documento: documentosReturn,
+      InformacionDato: informacionDatosReturn,
+    };
+  }
+
+  async create(ficha: EntityFicha, user: Usuario): Promise<EntityFicha> {
+    if (user.role === 'ADMIN') {
+      const fichareturn = await this.prisma.ficha.create({
+        data: {
+          id: ficha.id,
+          createdAt: ficha?.createdAT,
+          localizacion: ficha.localizacion,
+          analizada: ficha.analizada,
+          trabajador: {
+            connect: { id: ficha.IDTrabajador },
+          },
+          finca: {
+            connect: { id: ficha.IDFinca },
+          },
+        },
+      });
+      return fichareturn;
+    } else {
+      const finca = await this.prisma.finca.findFirst({
+        where: {
+          id: ficha.IDFinca,
+        },
+      });
+      if (!finca) {
+        throw new ForbiddenException('Finca no encontrada');
+      }
+
+      const productor = await this.prisma.productor.findFirst({
+        where: {
+          Finca: {
+            some: {
+              id: ficha.IDFinca,
+            },
+          },
+        },
+      });
+
+      const comproAsig = await this.prisma.inspectorProductor.findFirst({
+        where: {
+          IDProductor: productor.id,
+          IDTrabajador: ficha.IDTrabajador,
+        },
+      });
+
+      if (!comproAsig) {
+        throw new ForbiddenException(
+          'El inspector no esta asignado a este productor',
+        );
+      }
+
+      const newFicha = await this.prisma.ficha.create({
+        data: {
+          id: ficha.id,
+          createdAt: ficha?.createdAT,
+          localizacion: ficha.localizacion,
+          analizada: ficha.analizada,
+          trabajador: {
+            connect: { id: ficha.IDTrabajador },
+          },
+          finca: {
+            connect: { id: ficha.IDFinca },
+          },
+        },
+      });
+
+      await this.prisma.inspectorProductor.update({
+        where: {
+          id: comproAsig.id,
+        },
+        data: {
+          estadoInspeccion: 'realizada',
+        },
+      });
+
+      return newFicha;
+    }
   }
 
   async findAll(user: Usuario): Promise<FichaInterfaceReturn[]> {
@@ -59,7 +240,7 @@ export class FichaService {
           productor:
             ficha.finca.productor.nombre + ficha.finca.productor.apellido,
           localizacion: ficha.localizacion,
-          analizada: true,
+          analizada: ficha.analizada,
         };
 
         returndata.push(returndataItem);
@@ -100,7 +281,7 @@ export class FichaService {
           productor:
             ficha.finca.productor.nombre + ficha.finca.productor.apellido,
           localizacion: ficha.localizacion,
-          analizada: true,
+          analizada: ficha.analizada,
         };
 
         returndata.push(returndataItem);
@@ -139,7 +320,7 @@ export class FichaService {
       areaDesarrollo: fichaData.finca.areaCacaoDesarrollo,
       areaProduccion: fichaData.finca.areaCacaoProduccion,
       ingresoCertificacion: fichaData.finca.productor.fechaIngresoPrograma,
-      estadoCertificacion: fichaData.finca.productor.estadoProgramaC,
+      estadoCertificacion: fichaData.finca.productor.estado,
       inspector: fichaData.trabajador.nombre + fichaData.trabajador.apellido,
     };
   }
@@ -215,6 +396,15 @@ export class FichaService {
   }
 
   remove(id: string) {
+    const ficha = this.prisma.ficha.findUnique({
+      where: {
+        id: id,
+      },
+    });
+
+    if (!ficha) {
+      throw new ForbiddenException('Ficha no encontrada');
+    }
     return this.prisma.ficha.delete({
       where: {
         id: id,
@@ -223,90 +413,207 @@ export class FichaService {
   }
 
   async analysis() {
-    let puntajeRegAdminis = 0;
-    const RegAdministrativo = await this.prisma.seccionesFicha.findMany({
-      include: {
-        Dato: {
-          include: {
-            InformacionDato: true,
+    const resgistroAdmin = [];
+    const InformacionParcelas = [];
+    const ManejoPlagas_Enfermedades = [];
+    const ControlPlagas_Enfermedades = [];
+    const AplicaciónFertilizantes_Edáficos_Foliares = [];
+    const ConservaciónSuelos_Agua_Medio_Ambiente = [];
+    const RiesgosContaminación_Finca = [];
+    const CosechaCosecha_cacao = [];
+    const TransporteCosecha = [];
+    const ManejoResiduos = [];
+    const ResponsabilidadSocial = [];
+    const seccionFichaWithRespuestas = {};
+    let counter = 0;
+
+    const seccionesFicha = await this.prisma.seccionesFicha.findMany();
+
+    for (const seccion of seccionesFicha) {
+      const respuestas = await this.prisma.informacionDato.findMany({
+        where: {
+          dato: {
+            seccionesFicha: {
+              id: seccion.id,
+            },
+          },
+        },
+      });
+
+      for (const info of respuestas) {
+        if (info.informacion == 'NO') {
+          counter++;
+        }
+      }
+
+      await this.prisma.noConformidad.create({
+        data: {
+          cantidadNoConformidad: counter,
+          seccionesFicha: {
+            connect: {
+              id: seccion.id,
+            },
+          },
+          ficha: {
+            connect: {
+              id: respuestas[0].IDFicha,
+            },
+          },
+        },
+      });
+    }
+
+    const respuestasRegAdmin = await this.prisma.informacionDato.findMany({
+      where: {
+        dato: {
+          seccionesFicha: {
+            nombre: 'Registro Administrativo',
           },
         },
       },
     });
 
-    // Recorremos cada sección
-    RegAdministrativo.forEach((seccion) => {
-      console.log('Desde seccion', seccion);
-      // Recorremos cada dato en la sección
-      seccion.Dato.forEach((dato) => {
-        console.log('Desde dato', dato);
-        // Recorremos cada InformacionDato en el dato
-        dato.InformacionDato.forEach((info) => {
-          if (info.informacion === 'si') {
-            puntajeRegAdminis += 2;
-          }
-        });
+    for (const seccion of seccionesFicha) {
+      const respuestasRegAdmin = await this.prisma.informacionDato.findMany({
+        where: {
+          dato: {
+            seccionesFicha: {
+              nombre: 'Información de las parcelas',
+            },
+          },
+        },
       });
-    });
+      InformacionParcelas.push(respuestasRegAdmin);
+    }
 
-    console.log('Puntaje Reg Adminis:', puntajeRegAdminis);
+    for (const seccion of seccionesFicha) {
+      const respuestasRegAdmin = await this.prisma.informacionDato.findMany({
+        where: {
+          dato: {
+            seccionesFicha: {
+              nombre: 'Manejo de plagas y enfermedades',
+            },
+          },
+        },
+      });
+      ManejoPlagas_Enfermedades.push(respuestasRegAdmin);
+    }
 
-    const inforParcela = await this.prisma.seccionesFicha.findMany({
-      where: {
-        nombre: 'Información de las Parcelas',
-      },
-    });
+    for (const seccion of seccionesFicha) {
+      const respuestasRegAdmin = await this.prisma.informacionDato.findMany({
+        where: {
+          dato: {
+            seccionesFicha: {
+              nombre: 'Control de plagas y enfermedades',
+            },
+          },
+        },
+      });
+      ControlPlagas_Enfermedades.push(respuestasRegAdmin);
+    }
 
-    const RegEpidemiologico = await this.prisma.seccionesFicha.findMany({
-      where: {
-        nombre: 'Registro Epidemiologico',
-      },
-    });
+    for (const seccion of seccionesFicha) {
+      const respuestasRegAdmin = await this.prisma.informacionDato.findMany({
+        where: {
+          dato: {
+            seccionesFicha: {
+              nombre: 'Aplicación de fertiliantes edaficos y foleares',
+            },
+          },
+        },
+      });
+      AplicaciónFertilizantes_Edáficos_Foliares.push(respuestasRegAdmin);
+    }
+
+    for (const seccion of seccionesFicha) {
+      const respuestasRegAdmin = await this.prisma.informacionDato.findMany({
+        where: {
+          dato: {
+            seccionesFicha: {
+              nombre: 'Conservación de suelo, agua y medio ambiente',
+            },
+          },
+        },
+      });
+      ConservaciónSuelos_Agua_Medio_Ambiente.push(respuestasRegAdmin);
+    }
+
+    for (const seccion of seccionesFicha) {
+      const respuestasRegAdmin = await this.prisma.informacionDato.findMany({
+        where: {
+          dato: {
+            seccionesFicha: {
+              nombre: 'Riesgos de contaminación en la finca',
+            },
+          },
+        },
+      });
+      RiesgosContaminación_Finca.push(respuestasRegAdmin);
+    }
+
+    for (const seccion of seccionesFicha) {
+      const respuestasRegAdmin = await this.prisma.informacionDato.findMany({
+        where: {
+          dato: {
+            seccionesFicha: {
+              nombre: 'Cosecha y pos cosecha del cacao',
+            },
+          },
+        },
+      });
+      CosechaCosecha_cacao.push(respuestasRegAdmin);
+    }
+
+    for (const seccion of seccionesFicha) {
+      const respuestasRegAdmin = await this.prisma.informacionDato.findMany({
+        where: {
+          dato: {
+            seccionesFicha: {
+              nombre: 'Transporte de la cosecha',
+            },
+          },
+        },
+      });
+      TransporteCosecha.push(respuestasRegAdmin);
+    }
+
+    for (const seccion of seccionesFicha) {
+      const respuestasRegAdmin = await this.prisma.informacionDato.findMany({
+        where: {
+          dato: {
+            seccionesFicha: {
+              nombre: 'Manejo de residuos',
+            },
+          },
+        },
+      });
+      ManejoResiduos.push(respuestasRegAdmin);
+    }
+
+    for (const seccion of seccionesFicha) {
+      const respuestasRegAdmin = await this.prisma.informacionDato.findMany({
+        where: {
+          dato: {
+            seccionesFicha: {
+              nombre: 'Responsabilidad social',
+            },
+          },
+        },
+      });
+      ResponsabilidadSocial.push(respuestasRegAdmin);
+    }
+
+    for (const seccion of seccionesFicha) {
+      const respuestasRegAdmin = await this.prisma.informacionDato.findMany({
+        where: {
+          dato: {
+            seccionesFicha: {
+              nombre: 'Capacitación',
+            },
+          },
+        },
+      });
+      capacitación.push(respuestasRegAdmin);
+    }
   }
-
-  // async InsertData() {
-  //     let dato = [
-  //       'El mapa de la Finca esta Actualizado?',
-  //       'Conserva los recibos o facturas de Venta?',
-  //       'El registro de cosecha esta actualizado?',
-  //       'El registro de actividades mensuales esta al día?',
-  //       'Se realizó el cronograma de actividades del ciclo?',
-  //     ];
-  //     for (let datas of dato) {
-  //       const data = await this.prisma.dato.create({
-  //         data: {
-  //           titulo: datas,
-  //           IDSeccionesFicha: 1,
-  //         },
-  //       });
-  //     }
-  //   }
-
-  //     let dato = [
-  //       'Nombre de la Parcela',
-  //       'Área en Mz',
-  //       'Cultivo',
-  //       'Insumos Utilizados',
-  //     ];
-  //     for (let datas of dato) {
-  //       const data = await this.prisma.dato.create({
-  //         data: {
-  //           titulo: datas,
-  //           IDSeccionesFicha: 2,
-  //         },
-  //       });
-  //     }
-
-  //     let InformacionDato = ['Parcela numero 1', '5mz', 'cacao', 'si'];
-
-  //     for (let index = 1; index <= InformacionDato.length; index++) {
-  //       const data = await this.prisma.informacionDato.create({
-  //         data: {
-  //           informacion: InformacionDato[index],
-  //           IDDato: index,
-  //           IDFicha: 4,
-  //         },
-  //       });
-  //     }
-  //   console.log('ooooooooooooooo');
 }

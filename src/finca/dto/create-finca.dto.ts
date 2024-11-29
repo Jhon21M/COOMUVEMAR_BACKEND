@@ -38,6 +38,11 @@ export class CreateFincaDto {
   @ApiProperty({ required: false })
   produccionUltimoSiclo: string;
 
+  @IsString()
+  @IsOptional()
+  @ApiProperty({ required: false })
+  estimadoCosecha: string;
+
   @IsNotEmpty()
   @IsNumber()
   @ApiProperty({ required: true })

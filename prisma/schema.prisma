@@ -17,7 +17,8 @@ model Productor {
   numeroCedula         String?              @db.VarChar(30)
   numeroTelefono       String?
   fechaIngresoPrograma DateTime             @default(now())
-  estadoProgramaC      String
+  createAt             DateTime             @default(now())
+  estado               Int
   Finca                Finca[]
   Inspectorproductor   InspectorProductor[]
 
@@ -70,7 +71,7 @@ model Trabajador {
 }
 
 model Ficha {
-  id      String    @id  @db.Uuid
+  id           String   @id
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
   localizacion Json
@@ -85,32 +86,44 @@ model Ficha {
   Documento       Documento[]
   Desicion        Desicion[]
   InformacionDato InformacionDato[]
+  NoConformidad   NoConformidad?
 
   @@map("fichas")
 }
 
+model NoConformidad {
+  id                    Int            @id @default(autoincrement())
+  cantidadNoConformidad Int
+  descripcion           String?
+  IDSeccionFicha        Int
+  seccionesFicha        SeccionesFicha @relation(fields: [IDSeccionFicha], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  IDFicha               String         @unique
+  ficha                 Ficha          @relation(fields: [IDFicha], references: [id], onDelete: Cascade, onUpdate: Cascade)
+}
+
 model Documento {
-  id               Int    @id @default(autoincrement())
-  declaracion      String?
-  ImgCedula         String?
-  
-  IDFicha String @db.Uuid @unique
-  ficha   Ficha @relation(fields: [IDFicha], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  id          String  @id
+  declaracion String?
+  ImgCedula   String?
+
+  IDFicha String @unique
+  ficha   Ficha  @relation(fields: [IDFicha], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
 
 model Desicion {
   id          Int    @id @default(autoincrement())
   desicion    String
   descripcion String
-  IDFicha String @db.Uuid  @unique
-  ficha   Ficha @relation(fields: [IDFicha], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  IDFicha     String @unique
+  ficha       Ficha  @relation(fields: [IDFicha], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
 
 model SeccionesFicha {
-  id          Int     @id @default(autoincrement())
-  nombre      String
-  descripcion String?
-  Dato        Dato[]
+  id            Int             @id @default(autoincrement())
+  nombre        String
+  descripcion   String?
+  Dato          Dato[]
+  NoConformidad NoConformidad[]
 
   @@map("SeccionesFichas")
 }
@@ -129,15 +142,15 @@ model Dato {
 }
 
 model InformacionDato {
-  id          Int     @id @default(autoincrement())
-  informacion String
+  id          String  @id
+  informacion String?
   descripcion String?
 
   dato   Dato @relation(fields: [IDDato], references: [id], onDelete: Cascade, onUpdate: Cascade)
   IDDato Int
 
-  ficha   Ficha @relation(fields: [IDFicha], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  IDFicha String @db.Uuid @unique
+  ficha   Ficha  @relation(fields: [IDFicha], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  IDFicha String
 
   @@map("informacionDatos")
 }

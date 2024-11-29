@@ -37,7 +37,7 @@ export class UserController {
 
   @Post()
   @Roles(Role.Admin)
-  @ApiOperation({ summary: 'Create a new Productor' })
+  @ApiOperation({ summary: 'Create a new Usuario-credentials' })
   create(
     @Body(new ValidationPipe()) createUserDto: CreateUserDto,
   ): Promise<EntityUser> {
