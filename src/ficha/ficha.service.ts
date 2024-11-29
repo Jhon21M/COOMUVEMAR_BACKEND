@@ -413,18 +413,18 @@ export class FichaService {
   }
 
   async analysis() {
-    const resgistroAdmin = [];
-    const InformacionParcelas = [];
-    const ManejoPlagas_Enfermedades = [];
-    const ControlPlagas_Enfermedades = [];
-    const AplicaciónFertilizantes_Edáficos_Foliares = [];
-    const ConservaciónSuelos_Agua_Medio_Ambiente = [];
-    const RiesgosContaminación_Finca = [];
-    const CosechaCosecha_cacao = [];
-    const TransporteCosecha = [];
-    const ManejoResiduos = [];
-    const ResponsabilidadSocial = [];
-    const seccionFichaWithRespuestas = {};
+    // const resgistroAdmin = [];
+    // const InformacionParcelas = [];
+    // const ManejoPlagas_Enfermedades = [];
+    // const ControlPlagas_Enfermedades = [];
+    // const AplicaciónFertilizantes_Edáficos_Foliares = [];
+    // const ConservaciónSuelos_Agua_Medio_Ambiente = [];
+    // const RiesgosContaminación_Finca = [];
+    // const CosechaCosecha_cacao = [];
+    // const TransporteCosecha = [];
+    // const ManejoResiduos = [];
+    // const ResponsabilidadSocial = [];
+    // const seccionFichaWithRespuestas = {};
     let counter = 0;
 
     const seccionesFicha = await this.prisma.seccionesFicha.findMany();
@@ -461,159 +461,6 @@ export class FichaService {
           },
         },
       });
-    }
-
-    const respuestasRegAdmin = await this.prisma.informacionDato.findMany({
-      where: {
-        dato: {
-          seccionesFicha: {
-            nombre: 'Registro Administrativo',
-          },
-        },
-      },
-    });
-
-    for (const seccion of seccionesFicha) {
-      const respuestasRegAdmin = await this.prisma.informacionDato.findMany({
-        where: {
-          dato: {
-            seccionesFicha: {
-              nombre: 'Información de las parcelas',
-            },
-          },
-        },
-      });
-      InformacionParcelas.push(respuestasRegAdmin);
-    }
-
-    for (const seccion of seccionesFicha) {
-      const respuestasRegAdmin = await this.prisma.informacionDato.findMany({
-        where: {
-          dato: {
-            seccionesFicha: {
-              nombre: 'Manejo de plagas y enfermedades',
-            },
-          },
-        },
-      });
-      ManejoPlagas_Enfermedades.push(respuestasRegAdmin);
-    }
-
-    for (const seccion of seccionesFicha) {
-      const respuestasRegAdmin = await this.prisma.informacionDato.findMany({
-        where: {
-          dato: {
-            seccionesFicha: {
-              nombre: 'Control de plagas y enfermedades',
-            },
-          },
-        },
-      });
-      ControlPlagas_Enfermedades.push(respuestasRegAdmin);
-    }
-
-    for (const seccion of seccionesFicha) {
-      const respuestasRegAdmin = await this.prisma.informacionDato.findMany({
-        where: {
-          dato: {
-            seccionesFicha: {
-              nombre: 'Aplicación de fertiliantes edaficos y foleares',
-            },
-          },
-        },
-      });
-      AplicaciónFertilizantes_Edáficos_Foliares.push(respuestasRegAdmin);
-    }
-
-    for (const seccion of seccionesFicha) {
-      const respuestasRegAdmin = await this.prisma.informacionDato.findMany({
-        where: {
-          dato: {
-            seccionesFicha: {
-              nombre: 'Conservación de suelo, agua y medio ambiente',
-            },
-          },
-        },
-      });
-      ConservaciónSuelos_Agua_Medio_Ambiente.push(respuestasRegAdmin);
-    }
-
-    for (const seccion of seccionesFicha) {
-      const respuestasRegAdmin = await this.prisma.informacionDato.findMany({
-        where: {
-          dato: {
-            seccionesFicha: {
-              nombre: 'Riesgos de contaminación en la finca',
-            },
-          },
-        },
-      });
-      RiesgosContaminación_Finca.push(respuestasRegAdmin);
-    }
-
-    for (const seccion of seccionesFicha) {
-      const respuestasRegAdmin = await this.prisma.informacionDato.findMany({
-        where: {
-          dato: {
-            seccionesFicha: {
-              nombre: 'Cosecha y pos cosecha del cacao',
-            },
-          },
-        },
-      });
-      CosechaCosecha_cacao.push(respuestasRegAdmin);
-    }
-
-    for (const seccion of seccionesFicha) {
-      const respuestasRegAdmin = await this.prisma.informacionDato.findMany({
-        where: {
-          dato: {
-            seccionesFicha: {
-              nombre: 'Transporte de la cosecha',
-            },
-          },
-        },
-      });
-      TransporteCosecha.push(respuestasRegAdmin);
-    }
-
-    for (const seccion of seccionesFicha) {
-      const respuestasRegAdmin = await this.prisma.informacionDato.findMany({
-        where: {
-          dato: {
-            seccionesFicha: {
-              nombre: 'Manejo de residuos',
-            },
-          },
-        },
-      });
-      ManejoResiduos.push(respuestasRegAdmin);
-    }
-
-    for (const seccion of seccionesFicha) {
-      const respuestasRegAdmin = await this.prisma.informacionDato.findMany({
-        where: {
-          dato: {
-            seccionesFicha: {
-              nombre: 'Responsabilidad social',
-            },
-          },
-        },
-      });
-      ResponsabilidadSocial.push(respuestasRegAdmin);
-    }
-
-    for (const seccion of seccionesFicha) {
-      const respuestasRegAdmin = await this.prisma.informacionDato.findMany({
-        where: {
-          dato: {
-            seccionesFicha: {
-              nombre: 'Capacitación',
-            },
-          },
-        },
-      });
-      capacitación.push(respuestasRegAdmin);
     }
   }
 }
