@@ -15,10 +15,10 @@ export class FichaService {
   ) {}
   async cleanDB() {
     try {
-      //const clean = await this.prisma.cleanDB();
+      const clean = await this.prisma.cleanDB();
       const seed = await this.prisma.seedDB();
 
-      return seed;
+      return { clean, seed };
     } catch (error) {
       return error;
     }
@@ -32,6 +32,18 @@ export class FichaService {
     documento: Documento[];
     InformacionDato: InformacionDato[];
   }> {
+    const verifyAsing = await this.prisma.inspectorProductor.findFirst({
+      where: {
+        IDTrabajador: user.IDTrabajador,
+      },
+    });
+
+    if (!verifyAsing) {
+      throw new ForbiddenException(
+        'El inspector no esta asignado a este productor',
+      );
+    }
+
     const fichas = externalData.ficha;
     const informacionDatos = externalData.InformacionDato;
     const documentos = externalData.documento;
@@ -326,6 +338,10 @@ export class FichaService {
   }
 
   async findOne(id: string): Promise<FichaInterfaceReturn> {
+    if (!id) {
+      throw new ForbiddenException('No se proporciono un ID de ficha');
+    }
+
     const fichaData = await this.prisma.ficha.findUnique({
       where: {
         id: id,
@@ -343,6 +359,10 @@ export class FichaService {
         },
       },
     });
+
+    if (!fichaData) {
+      throw new ForbiddenException('Ficha no encontrada o no existe');
+    }
 
     const returndata: FichaInterfaceReturn = {
       id: fichaData.id,
@@ -362,7 +382,7 @@ export class FichaService {
 
   async findOneData(id: string) {
     try {
-      return await this.prisma.ficha.findUnique({
+      const findOneData = await this.prisma.ficha.findUnique({
         where: {
           id: id,
         },
@@ -378,6 +398,10 @@ export class FichaService {
           },
         },
       });
+
+      if (!findOneData) {
+        throw new ForbiddenException('Ficha no encontrada o no existe');
+      }
     } catch (error) {
       console.error('Error en findOneData:', error);
       throw error;
@@ -385,9 +409,19 @@ export class FichaService {
   }
 
   async update(id: string, ficha: EntityUpdateFicha): Promise<EntityFicha> {
-    return await this.prisma.ficha.update({
+    const fichafind = await this.prisma.ficha.findUnique({
       where: {
         id: id,
+      },
+    });
+
+    if (!fichafind) {
+      throw new ForbiddenException('Ficha no encontrada');
+    }
+
+    return await this.prisma.ficha.update({
+      where: {
+        id: fichafind.id,
       },
       data: {
         ...ficha,
@@ -425,7 +459,7 @@ export class FichaService {
     // const ManejoResiduos = [];
     // const ResponsabilidadSocial = [];
     // const seccionFichaWithRespuestas = {};
-    let counter = 0;
+    let NoConformidad_counter = 0;
 
     const seccionesFicha = await this.prisma.seccionesFicha.findMany();
 
@@ -442,13 +476,13 @@ export class FichaService {
 
       for (const info of respuestas) {
         if (info.informacion == 'NO') {
-          counter++;
+          NoConformidad_counter++;
         }
       }
 
       await this.prisma.noConformidad.create({
         data: {
-          cantidadNoConformidad: counter,
+          cantidadNoConformidad: NoConformidad_counter,
           seccionesFicha: {
             connect: {
               id: seccion.id,
