@@ -55,7 +55,7 @@ export class FichaService {
     try {
       let contador = 1;
       for (const f of fichas) {
-        const IDficha = info.id.toString() + `-UI${user.id}`;
+        const IDficha = f.id.toString() + `-UI${user.id}`;
         f.id = IDficha;
         contador++;
         const fichaCreada = await this.create(f, user);
