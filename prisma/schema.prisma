@@ -86,7 +86,7 @@ model Ficha {
   Documento       Documento[]
   Desicion        Desicion[]
   InformacionDato InformacionDato[]
-  NoConformidad   NoConformidad?
+  NoConformidad   NoConformidad[]
 
   @@map("fichas")
 }
@@ -97,7 +97,7 @@ model NoConformidad {
   descripcion           String?
   IDSeccionFicha        Int
   seccionesFicha        SeccionesFicha @relation(fields: [IDSeccionFicha], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  IDFicha               String         @unique
+  IDFicha               String
   ficha                 Ficha          @relation(fields: [IDFicha], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
 
@@ -106,7 +106,7 @@ model Documento {
   declaracion String?
   ImgCedula   String?
 
-  IDFicha String @unique
+  IDFicha String 
   ficha   Ficha  @relation(fields: [IDFicha], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
 
@@ -114,7 +114,7 @@ model Desicion {
   id          Int    @id @default(autoincrement())
   desicion    String
   descripcion String
-  IDFicha     String @unique
+  IDFicha     String 
   ficha       Ficha  @relation(fields: [IDFicha], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
 
