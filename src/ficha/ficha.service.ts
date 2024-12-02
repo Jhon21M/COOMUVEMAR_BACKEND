@@ -382,7 +382,7 @@ export class FichaService {
 
   async findOneData(id: string) {
     try {
-      const findOneData = await this.prisma.ficha.findUnique({
+      const findfichaData = await this.prisma.ficha.findUnique({
         where: {
           id: id,
         },
@@ -399,9 +399,61 @@ export class FichaService {
         },
       });
 
-      if (!findOneData) {
+      if (!findfichaData) {
         throw new ForbiddenException('Ficha no encontrada o no existe');
       }
+
+      return findfichaData;
+    } catch (error) {
+      console.error('Error en findOneData:', error);
+      throw error;
+    }
+  }
+
+  async DataFormated(id: string) {
+    try {
+      const findfichaData = await this.prisma.ficha.findUnique({
+        where: {
+          id: id,
+        },
+      });
+      if (!findfichaData) {
+        throw new ForbiddenException('Ficha no encontrada o no existe');
+      }
+      
+
+      // const fichaData = {
+      //     ficha: findfichaData,
+      //     secciones: {},
+      //   };
+
+
+      // const noConformidades = await this.prisma.noConformidad.findMany({
+      //   where: {
+      //     IDFicha: ficha_analized.id,
+      //   },
+      //   include: {
+      //     seccionesFicha: true,
+      //   },
+      // });
+
+      // if (noConformidades.length < 1) {
+      //   throw new ForbiddenException('La ficha no esta analizada');
+      // }
+      // const fichaData = {
+      //   ficha: ficha_analized,
+      //   secciones: {},
+      // };
+      // for (let noConformidad of noConformidades) {
+      //   fichaData.secciones[noConformidad.seccionesFicha.nombre] =
+      //     noConformidad.cantidadNoConformidad;
+      // }
+
+      if (!findfichaData) {
+        throw new ForbiddenException('Ficha no encontrada o no existe');
+      }
+
+      return findfichaData;
     } catch (error) {
       console.error('Error en findOneData:', error);
       throw error;
@@ -496,5 +548,166 @@ export class FichaService {
         },
       });
     }
+  }
+
+  async analisis(id: string) {
+    let NoConformidad_counter = 0;
+    const fichanalizad = {};
+
+    const ficha_NoConformidad = await this.prisma.noConformidad.findFirst({
+      where: {
+        ficha: {
+          id: id,
+        },
+      },
+    });
+
+    if (ficha_NoConformidad) {
+      throw new ForbiddenException('Ya se realizo el analisis de la ficha');
+    }
+
+    const seccionesFicha = await this.prisma.seccionesFicha.findMany();
+
+    for (const seccion of seccionesFicha) {
+      const respuestas = await this.prisma.informacionDato.findMany({
+        where: {
+          dato: {
+            seccionesFicha: {
+              id: seccion.id,
+            },
+          },
+        },
+      });
+
+      for (const info of respuestas) {
+        if (info.informacion == 'NO') {
+          NoConformidad_counter++;
+        }
+      }
+
+      const noConformidad_created = await this.prisma.noConformidad.create({
+        data: {
+          cantidadNoConformidad: NoConformidad_counter,
+          descripcion: seccion.nombre,
+          seccionesFicha: {
+            connect: {
+              id: seccion.id,
+            },
+          },
+          ficha: {
+            connect: {
+              id: respuestas[0].IDFicha,
+            },
+          },
+        },
+      });
+      await this.prisma.ficha.update({
+        where: {
+          id: id,
+        },
+        data: {
+          analizada: true,
+        },
+      });
+
+      fichanalizad[seccion.nombre] = noConformidad_created;
+    }
+    return Object.values(fichanalizad);
+  }
+
+  async removeAnalisis(id: string) {
+    try {
+      const ficha_NoConformidad = await this.prisma.noConformidad.findFirst({
+        where: {
+          IDFicha: id,
+        },
+      });
+
+      if (!ficha_NoConformidad) {
+        throw new ForbiddenException(
+          'No se ha realizado el analisis de la ficha',
+        );
+      }
+
+      await this.prisma.noConformidad.deleteMany({
+        where: {
+          IDFicha: id,
+        },
+      });
+      return { 'Ficha analizada eliminada': id };
+    } catch (error) {
+      return error;
+    }
+  }
+
+  async noConformidadAll() {
+    const ficha_analized_data = [];
+    const ficha_analized = await this.prisma.ficha.findMany({
+      where: {
+        analizada: true,
+      },
+    });
+    if (ficha_analized.length < 1) {
+      throw new ForbiddenException('No hay ficha analizadas');
+    }
+
+    for (let f of ficha_analized) {
+      const noConformidades = await this.prisma.noConformidad.findMany({
+        where: {
+          IDFicha: f.id,
+        },
+        include: {
+          seccionesFicha: true,
+        },
+      });
+
+      if (noConformidades.length > 0) {
+        const fichaData = {
+          ficha: f,
+          secciones: {},
+        };
+
+        for (let noConformidad_finded of noConformidades) {
+          fichaData.secciones[noConformidad_finded.seccionesFicha.nombre] =
+            noConformidad_finded.cantidadNoConformidad;
+        }
+
+        ficha_analized_data.push(fichaData);
+      }
+    }
+
+    return ficha_analized_data;
+  }
+
+  async noConformidadOne(id: string) {
+    const ficha_analized = await this.prisma.ficha.findUnique({
+      where: {
+        id: id,
+        analizada: true,
+      },
+    });
+
+    const noConformidades = await this.prisma.noConformidad.findMany({
+      where: {
+        IDFicha: ficha_analized.id,
+      },
+      include: {
+        seccionesFicha: true,
+      },
+    });
+
+    if (noConformidades.length < 1) {
+      throw new ForbiddenException('La ficha no esta analizada');
+    }
+    const fichaData = {
+      ficha: ficha_analized,
+      secciones: {},
+    };
+    for (let noConformidad of noConformidades) {
+      fichaData.secciones[noConformidad.seccionesFicha.nombre] =
+        noConformidad.cantidadNoConformidad;
+    }
+
+    return fichaData;
   }
 }

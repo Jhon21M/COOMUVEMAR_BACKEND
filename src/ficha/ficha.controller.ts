@@ -122,6 +122,16 @@ export class FichaController {
     return this.fichaService.findOneData(id);
   }
 
+  @Get('structureformated/:id')
+  @Roles(Role.User, Role.Admin)
+  @ApiOperation({ summary: 'Get One Ficha Data By ID' })
+  DataFormated(
+    @Param('id')
+    id: string,
+  ) {
+    return this.fichaService.DataFormated(id);
+  }
+
   @Patch(':id')
   @Roles(Role.Admin)
   @ApiOperation({ summary: 'update a Ficha by ID' })
@@ -143,25 +153,51 @@ export class FichaController {
     return this.fichaService.remove(id);
   }
 
-  @Get('analysisficha')
+  @Get('analisisficha/:id')
   @Roles(Role.Admin)
-  @ApiOperation({ summary: 'Analyze Ficha stored....' })
+  @ApiOperation({ summary: 'Analize Ficha stored....' })
   @ApiResponse({
     status: HttpStatus.OK,
     description: 'API is up',
   })
-  async analysis() {
-    return await this.fichaService.analysis();
+  async analisis(
+    @Param('id')
+    id: string,
+  ) {
+    return await this.fichaService.analisis(id);
   }
-  
-  // @Get('insertdata')
-  // @Roles(Role.User, Role.Admin)
-  // @ApiOperation({ summary: 'insert' })
-  // @ApiResponse({
-  //   status: HttpStatus.OK,
-  //   description: 'API is up',
-  // })
-  // insertData() {
-  //   return this.fichaService.InsertData();
-  // }
+
+  @Delete('analisisficha/:id')
+  @Roles(Role.Admin)
+  @ApiOperation({ summary: 'Delete ficha analized' })
+  removeAnalisis(
+    @Param('id')
+    id: string,
+  ) {
+    return this.fichaService.removeAnalisis(id);
+  }
+
+  @Get('analisisfichaget/all')
+  @Roles(Role.Admin)
+  @ApiOperation({ summary: 'Get all Ficha analized' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'API is up',
+  })
+  async noConformidadAll() {
+    return await this.fichaService.noConformidadAll();
+  }
+  @Get('analisisfichaget/:id')
+  @Roles(Role.Admin)
+  @ApiOperation({ summary: 'Get ona Ficha analized' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'API is up',
+  })
+  async noConformidadOne(
+    @Param('id')
+    id: string,
+  ) {
+    return await this.fichaService.noConformidadOne(id);
+  }
 }

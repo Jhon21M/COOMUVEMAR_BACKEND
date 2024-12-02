@@ -84,10 +84,7 @@ export class InfoDatoController {
   @Roles(Role.Admin)
   @ApiOperation({ summary: 'update a informacionDato data by ID' })
   update(
-    @Param(
-      'id',
-      new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE }),
-    )
+    @Param('id')
     id: string,
     @Body() updateInfoDatoDto: UpdateInfoDatoDto,
   ) {
