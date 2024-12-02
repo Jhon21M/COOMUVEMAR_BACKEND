@@ -122,6 +122,16 @@ export class FichaController {
     return this.fichaService.findOneData(id);
   }
 
+  @Get('structureformated/:id')
+  @Roles(Role.User, Role.Admin)
+  @ApiOperation({ summary: 'Get One Ficha Data By ID' })
+  DataFormated(
+    @Param('id')
+    id: string,
+  ) {
+    return this.fichaService.DataFormated(id);
+  }
+
   @Patch(':id')
   @Roles(Role.Admin)
   @ApiOperation({ summary: 'update a Ficha by ID' })

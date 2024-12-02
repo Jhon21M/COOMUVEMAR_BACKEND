@@ -382,7 +382,7 @@ export class FichaService {
 
   async findOneData(id: string) {
     try {
-      const findOneData = await this.prisma.ficha.findUnique({
+      const findfichaData = await this.prisma.ficha.findUnique({
         where: {
           id: id,
         },
@@ -399,9 +399,61 @@ export class FichaService {
         },
       });
 
-      if (!findOneData) {
+      if (!findfichaData) {
         throw new ForbiddenException('Ficha no encontrada o no existe');
       }
+
+      return findfichaData;
+    } catch (error) {
+      console.error('Error en findOneData:', error);
+      throw error;
+    }
+  }
+
+  async DataFormated(id: string) {
+    try {
+      const findfichaData = await this.prisma.ficha.findUnique({
+        where: {
+          id: id,
+        },
+      });
+      if (!findfichaData) {
+        throw new ForbiddenException('Ficha no encontrada o no existe');
+      }
+      
+
+      // const fichaData = {
+      //     ficha: findfichaData,
+      //     secciones: {},
+      //   };
+
+
+      // const noConformidades = await this.prisma.noConformidad.findMany({
+      //   where: {
+      //     IDFicha: ficha_analized.id,
+      //   },
+      //   include: {
+      //     seccionesFicha: true,
+      //   },
+      // });
+
+      // if (noConformidades.length < 1) {
+      //   throw new ForbiddenException('La ficha no esta analizada');
+      // }
+      // const fichaData = {
+      //   ficha: ficha_analized,
+      //   secciones: {},
+      // };
+      // for (let noConformidad of noConformidades) {
+      //   fichaData.secciones[noConformidad.seccionesFicha.nombre] =
+      //     noConformidad.cantidadNoConformidad;
+      // }
+
+      if (!findfichaData) {
+        throw new ForbiddenException('Ficha no encontrada o no existe');
+      }
+
+      return findfichaData;
     } catch (error) {
       console.error('Error en findOneData:', error);
       throw error;
