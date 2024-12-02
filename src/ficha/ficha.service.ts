@@ -55,7 +55,8 @@ export class FichaService {
     try {
       let contador = 1;
       for (const f of fichas) {
-        console.log('Ficha:', f, 'Contador:', contador);
+        const IDficha = f.id.toString() + `-UI${user.id}`;
+        f.id = IDficha;
         contador++;
         const fichaCreada = await this.create(f, user);
         fichasReturn.push(fichaCreada);
@@ -70,11 +71,8 @@ export class FichaService {
     try {
       let contador = 1;
       for (const doc of documentos) {
-        console.log('documento:', doc);
-        console.log('Contador:', contador);
         const IDdocumento = doc.id.toString() + `-UI${user.id}`;
         doc.id = IDdocumento;
-        console.log('IDinfoDato a guardarse:', doc);
         contador++;
         const documento = await this.documentoService.create(doc);
         documentosReturn.push(documento);
@@ -97,10 +95,7 @@ export class FichaService {
       let contador = 1;
       try {
         for (const info of informacionDatos) {
-          //console.log('InformacionDato:', info);
-          //console.log('Contador:', contador);
           const IDinfoDato = info.id.toString() + `-UI${user.id}`;
-          //console.log('IDinfoDato a guardarse:', IDinfoDato);
           const infoDato = await this.prisma.informacionDato.create({
             data: {
               id: IDinfoDato,
@@ -115,7 +110,6 @@ export class FichaService {
           });
           informacionDatosReturn.push(infoDato);
           contador++;
-          //console.log('InformacionDato:', infoDato);
         }
       } catch (error) {
         console.error('Error al crear la InfoDato:', error.message);
