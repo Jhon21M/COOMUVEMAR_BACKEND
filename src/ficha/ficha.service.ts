@@ -49,15 +49,25 @@ export class FichaService {
     const documentos = externalData.documento;
     const fichasReturn = [];
 
+    externalData.ficha.map((ficha) => {
+      ficha.id = 'F' + ficha.id.toString() + `-UI${user.id}`;
+    });
+
+    externalData.documento.map((documento) => {
+      documento.id = 'D' + documento.id.toString() + `-UI${user.id}`;
+      documento.IDFicha = 'F' + documento.IDFicha.toString() + `-UI${user.id}`;
+    });
+
+    externalData.InformacionDato.map((info) => {
+      info.IDFicha = 'F' + info.IDFicha.toString() + `-UI${user.id}`;
+      info.id = 'I' + info.id.toString() + `-UI${user.id}`;
+    });
+
     console.log('Imprimiendo el tamaño de documento', documentos.length);
     console.log('Imprimiendo el tamaño de ficha', fichas.length);
 
     try {
-      let contador = 1;
       for (const f of fichas) {
-        const IDficha = f.id.toString() + `-UI${user.id}`;
-        f.id = IDficha;
-        contador++;
         const fichaCreada = await this.create(f, user);
         fichasReturn.push(fichaCreada);
       }
@@ -71,8 +81,6 @@ export class FichaService {
     try {
       let contador = 1;
       for (const doc of documentos) {
-        const IDdocumento = doc.id.toString() + `-UI${user.id}`;
-        doc.id = IDdocumento;
         contador++;
         const documento = await this.documentoService.create(doc);
         documentosReturn.push(documento);
@@ -95,10 +103,9 @@ export class FichaService {
       let contador = 1;
       try {
         for (const info of informacionDatos) {
-          const IDinfoDato = info.id.toString() + `-UI${user.id}`;
           const infoDato = await this.prisma.informacionDato.create({
             data: {
-              id: IDinfoDato,
+              id: info.id,
               informacion: info.informacion,
               dato: {
                 connect: { id: info.IDDato },
@@ -414,13 +421,11 @@ export class FichaService {
       if (!findfichaData) {
         throw new ForbiddenException('Ficha no encontrada o no existe');
       }
-      
 
       // const fichaData = {
       //     ficha: findfichaData,
       //     secciones: {},
       //   };
-
 
       // const noConformidades = await this.prisma.noConformidad.findMany({
       //   where: {
