@@ -107,6 +107,7 @@ export class FichaService {
             data: {
               id: info.id,
               informacion: info.informacion,
+              descripcion: info.descripcion,
               dato: {
                 connect: { id: info.IDDato },
               },
