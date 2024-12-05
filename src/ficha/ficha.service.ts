@@ -50,17 +50,17 @@ export class FichaService {
     const fichasReturn = [];
 
     externalData.ficha.map((ficha) => {
-      ficha.id = 'F' + ficha.id.toString() + `-UI${user.id}`;
+      ficha.id = 'F-' + ficha.id.toString() + `-UI${user.id}`;
     });
 
     externalData.documento.map((documento) => {
-      documento.id = 'D' + documento.id.toString() + `-UI${user.id}`;
-      documento.IDFicha = 'F' + documento.IDFicha.toString() + `-UI${user.id}`;
+      documento.id = 'D-' + documento.id.toString() + `-UI${user.id}`;
+      documento.IDFicha = 'F-' + documento.IDFicha.toString() + `-UI${user.id}`;
     });
 
     externalData.InformacionDato.map((info) => {
-      info.IDFicha = 'F' + info.IDFicha.toString() + `-UI${user.id}`;
-      info.id = 'I' + info.id.toString() + `-UI${user.id}`;
+      info.IDFicha = 'F-' + info.IDFicha.toString() + `-UI${user.id}`;
+      info.id = 'I-' + info.id.toString() + `-UI${user.id}`;
     });
 
     console.log('Imprimiendo el tamaño de documento', documentos.length);
