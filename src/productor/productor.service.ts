@@ -6,14 +6,22 @@ import { EntityUpdateProductor, EntityProductor } from './entities';
 export class ProductorService {
   constructor(private prisma: PrismaService) {}
   async create(productor: EntityProductor): Promise<EntityProductor> {
-    console.log('Creando productor:', productor);
-    const newProductor = await this.prisma.productor.create({
-      data: {
-        ...productor,
-      },
-    });
+    try {
+      console.log('Creando productor:', productor);
+      const newProductor = await this.prisma.productor.create({
+        data: {
+          ...productor,
+        },
+      });
 
-    return newProductor;
+      return newProductor;
+    } catch (error) {
+      console.log(error);
+      throw new ForbiddenException({
+        message: 'Error al crear Productor',
+        error: error.message,
+      });
+    }
   }
 
   findAll() {

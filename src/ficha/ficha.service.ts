@@ -48,6 +48,8 @@ export class FichaService {
     const informacionDatos = externalData.InformacionDato;
     const documentos = externalData.documento;
     const fichasReturn = [];
+    const documentosReturn = [];
+    const informacionDatosReturn = [];
 
     externalData.ficha.map((ficha) => {
       ficha.id = 'F-' + ficha.id.toString() + `-UI${user.id}`;
@@ -63,9 +65,6 @@ export class FichaService {
       info.id = 'I-' + info.id.toString() + `-UI${user.id}`;
     });
 
-    console.log('Imprimiendo el tamaño de documento', documentos.length);
-    console.log('Imprimiendo el tamaño de ficha', fichas.length);
-
     try {
       for (const f of fichas) {
         const fichaCreada = await this.create(f, user);
@@ -75,8 +74,6 @@ export class FichaService {
       console.error('Error al crear la ficha:', error.message);
       throw error;
     }
-
-    const documentosReturn = [];
 
     try {
       let contador = 1;
@@ -89,52 +86,29 @@ export class FichaService {
       console.error('Error al crear la Documento:', error.message);
       throw error;
     }
-    // try {
-    //   const documento = await this.documentoService.create(documentos[0]);
-    //   documentosReturn.push(documento);
-    // } catch (error) {
-    //   console.error('Error al crear la Documento:', error.message);
-    //   throw error;
-    // }
-    // }
 
-    const informacionDatosReturn = [];
-    if (informacionDatos.length > 1) {
+    try {
       let contador = 1;
-      try {
-        for (const info of informacionDatos) {
-          const infoDato = await this.prisma.informacionDato.create({
-            data: {
-              id: info.id,
-              informacion: info.informacion,
-              descripcion: info.descripcion,
-              dato: {
-                connect: { id: info.IDDato },
-              },
-              ficha: {
-                connect: { id: info.IDFicha },
-              },
-            },
-          });
-          informacionDatosReturn.push(infoDato);
-          contador++;
-        }
-      } catch (error) {
-        console.error('Error al crear la InfoDato:', error.message);
-        throw error;
-      }
-    } else {
-      try {
+      for (const info of informacionDatos) {
         const infoDato = await this.prisma.informacionDato.create({
           data: {
-            ...informacionDatos[0],
+            id: info.id,
+            informacion: info.informacion,
+            descripcion: info.descripcion,
+            dato: {
+              connect: { id: info.IDDato },
+            },
+            ficha: {
+              connect: { id: info.IDFicha },
+            },
           },
         });
         informacionDatosReturn.push(infoDato);
-      } catch (error) {
-        console.error('Error al crear la infoDato:', error.message);
-        throw error;
+        contador++;
       }
+    } catch (error) {
+      console.error('Error al crear la InfoDato:', error.message);
+      throw error;
     }
 
     return {
@@ -482,20 +456,24 @@ export class FichaService {
   }
 
   remove(id: string) {
-    const ficha = this.prisma.ficha.findUnique({
-      where: {
-        id: id,
-      },
-    });
+    try {
+      const ficha = this.prisma.ficha.findUnique({
+        where: {
+          id: id,
+        },
+      });
 
-    if (!ficha) {
-      throw new ForbiddenException('Ficha no encontrada');
+      if (!ficha) {
+        throw new ForbiddenException('Ficha no encontrada');
+      }
+      return this.prisma.ficha.delete({
+        where: {
+          id: id,
+        },
+      });
+    } catch (error) {
+      throw new ForbiddenException('No se encontro la ficha');
     }
-    return this.prisma.ficha.delete({
-      where: {
-        id: id,
-      },
-    });
   }
 
   async analysis() {
@@ -568,12 +546,13 @@ export class FichaService {
 
     const seccionesFicha = await this.prisma.seccionesFicha.findMany();
 
+    // Analisis de Registros Administrativos
     for (const seccion of seccionesFicha) {
       const respuestas = await this.prisma.informacionDato.findMany({
         where: {
           dato: {
             seccionesFicha: {
-              id: seccion.id,
+              nombre: 'Registros Administrativos',
             },
           },
         },

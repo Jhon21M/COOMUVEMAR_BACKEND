@@ -4,5 +4,5 @@ export interface ProductorInterface {
   numeroCedula: string;
   numeroTelefono: string;
   fechaIngresoPrograma: Date | null;
-  estado: number;
+  estado: string;
 }

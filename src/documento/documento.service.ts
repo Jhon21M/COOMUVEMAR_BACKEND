@@ -34,12 +34,12 @@ export class DocumentoService {
       });
 
       const productor_nombre =
-        fichaproducto.finca.productor.nombre +
-        fichaproducto.finca.productor.apellido;
+        fichaproducto.finca.productor.nombre.replace(/\s+/g, '') +
+        '_' +
+        fichaproducto.finca.productor.apellido.replace(/\s+/g, '') +
+        `.${fichaproducto.id}`;
 
-      const finca_nombre =
-        fichaproducto.finca.nombre + fichaproducto.finca.comunidad;
-
+      const finca_nombre = fichaproducto.finca.nombre.replace(/\s+/g, '') + '_';
       const url = await saveImg(ImgCedula, finca_nombre, productor_nombre);
 
       const newdocumento = await this.prisma.documento.create({
