@@ -21,7 +21,7 @@ export class EntityProductor implements ProductorInterface {
 
   @Transform(({ value }) => value.toNumber()) // ejemplo del uso de tansform, para mostrar datos hacia el usuario
   @ApiProperty({ type: number })
-  estado: number;
+  estado: string;
 
   constructor(partial: Partial<EntityProductor>) {
     Object.assign(this, partial);
