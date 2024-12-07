@@ -148,62 +148,50 @@ export class PrismaService extends PrismaClient {
     // INSERTANDO SECCIONES FICHA
     const seccionesFicha = [
       {
-        id: 1,
         nombre: 'Registros administrativos',
         descripcion: '',
       },
       {
-        id: 2,
         nombre: 'Información de las parcelas',
         descripcion: '',
       },
       {
-        id: 3,
         nombre: 'Manejo de plagas y enfermedades',
         descripcion: '',
       },
       {
-        id: 4,
         nombre: 'Control de plagas y enfermedades',
         descripcion: '',
       },
       {
-        id: 5,
         nombre: 'Aplicación de fertiliantes edaficos y foleares',
         descripcion: '',
       },
       {
-        id: 6,
         nombre: 'Conservación de suelo, agua y medio ambiente',
         descripcion: '',
       },
       {
-        id: 7,
         nombre: 'Riesgos de contaminación en la finca',
         descripcion: '',
       },
       {
-        id: 8,
         nombre: 'Cosecha y pos cosecha del cacao',
         descripcion: '',
       },
       {
-        id: 9,
         nombre: 'Transporte de la cosecha',
         descripcion: '',
       },
       {
-        id: 10,
         nombre: 'Manejo de residuos',
         descripcion: '',
       },
       {
-        id: 11,
         nombre: 'Responsabilidad social',
         descripcion: '',
       },
       {
-        id: 12,
         nombre: 'Capacitación',
         descripcion: '',
       },
@@ -213,31 +201,26 @@ export class PrismaService extends PrismaClient {
     const datos = [
       // Registro administrativo
       {
-        id: 1,
         titulo: '¿El mapa de la finca está actualizado?',
         descripcion: '',
         IDSeccionesFicha: 1,
       },
       {
-        id: 2,
         titulo: '¿Conserva los recibos o facturas de venta?',
         descripcion: '',
         IDSeccionesFicha: 1,
       },
       {
-        id: 3,
         titulo: '¿El registro de cosecha está actualizado?',
         descripcion: '',
         IDSeccionesFicha: 1,
       },
       {
-        id: 4,
         titulo: '¿El registro de actividades mensuales está al día?',
         descripcion: '',
         IDSeccionesFicha: 1,
       },
       {
-        id: 5,
         titulo: '¿Se realizó el cronograma de actividades del ciclo?',
         descripcion: '',
         IDSeccionesFicha: 1,
@@ -245,15 +228,13 @@ export class PrismaService extends PrismaClient {
 
       // Información de las parcelas
       {
-        id: 6,
         titulo: 'Nombre de la parcela',
         descripcion: '',
         IDSeccionesFicha: 2,
       },
-      { id: 7, titulo: 'Área en Mz', descripcion: '', IDSeccionesFicha: 2 },
-      { id: 8, titulo: 'Cultivo', descripcion: '', IDSeccionesFicha: 2 },
+      { titulo: 'Área en Mz', descripcion: '', IDSeccionesFicha: 2 },
+      { titulo: 'Cultivo', descripcion: '', IDSeccionesFicha: 2 },
       {
-        id: 9,
         titulo: 'Insumos utilizados',
         descripcion: '',
         IDSeccionesFicha: 2,
@@ -261,55 +242,46 @@ export class PrismaService extends PrismaClient {
 
       // Manejo de plagas y enfermedades
       {
-        id: 10,
         titulo: 'Taltuzas',
         descripcion: 'Dato de la sección Manejo de plagas y Enfermedades',
         IDSeccionesFicha: 3,
       },
       {
-        id: 11,
         titulo: 'Pulgones',
         descripcion: 'Dato de la sección Manejo de plagas y Enfermedades',
         IDSeccionesFicha: 3,
       },
       {
-        id: 12,
         titulo: 'Hormigas',
         descripcion: 'Dato de la sección Manejo de plagas y Enfermedades',
         IDSeccionesFicha: 3,
       },
       {
-        id: 13,
         titulo: 'Ardillas',
         descripcion: 'Dato de la sección Manejo de plagas y Enfermedades',
         IDSeccionesFicha: 3,
       },
       {
-        id: 14,
         titulo: 'Monilia',
         descripcion: 'Dato de la sección Manejo de plagas y Enfermedades',
         IDSeccionesFicha: 3,
       },
       {
-        id: 15,
         titulo: 'Mazorca negra',
         descripcion: 'Dato de la sección Manejo de plagas y Enfermedades',
         IDSeccionesFicha: 3,
       },
       {
-        id: 16,
         titulo: 'Muerte súbita',
         descripcion: 'Dato de la sección Manejo de plagas y Enfermedades',
         IDSeccionesFicha: 3,
       },
       {
-        id: 17,
         titulo: 'Mal de machete',
         descripcion: 'Dato de la sección Manejo de plagas y Enfermedades',
         IDSeccionesFicha: 3,
       },
       {
-        id: 18,
         titulo: 'Otro',
         descripcion: 'Dato de la sección Manejo de plagas y Enfermedades',
         IDSeccionesFicha: 3,
@@ -317,28 +289,24 @@ export class PrismaService extends PrismaClient {
 
       // Control de plagas y enfermedades
       {
-        id: 19,
         titulo: 'Producto Aplicado',
         descripcion: '',
         IDSeccionesFicha: 4,
       },
-      { id: 20, titulo: 'Origen', descripcion: '', IDSeccionesFicha: 4 },
+      { titulo: 'Origen', descripcion: '', IDSeccionesFicha: 4 },
       {
-        id: 21,
         titulo: 'Producto Utilizado',
         descripcion: '',
         IDSeccionesFicha: 4,
       },
-      { id: 22, titulo: 'Cantidad/Mz', descripcion: '', IDSeccionesFicha: 4 },
-      { id: 23, titulo: 'Veces /año', descripcion: '', IDSeccionesFicha: 4 },
+      { titulo: 'Cantidad/Mz', descripcion: '', IDSeccionesFicha: 4 },
+      { titulo: 'Veces /año', descripcion: '', IDSeccionesFicha: 4 },
       {
-        id: 24,
         titulo: 'En que Cultivo lo utilizo',
         descripcion: '',
         IDSeccionesFicha: 4,
       },
       {
-        id: 25,
         titulo: 'Para que Plaga o Enfermedad',
         descripcion: '',
         IDSeccionesFicha: 4,
@@ -346,32 +314,27 @@ export class PrismaService extends PrismaClient {
 
       // Aplicación de fertilizantes edáficos y foliares
       {
-        id: 26,
         titulo: 'Nombre del abono',
         descripcion: '',
         IDSeccionesFicha: 5,
       },
       {
-        id: 27,
         titulo: 'Cantidad aplicada',
         descripcion: '',
         IDSeccionesFicha: 5,
       },
-      { id: 28, titulo: 'Origen abono', descripcion: '', IDSeccionesFicha: 5 },
+      { titulo: 'Origen abono', descripcion: '', IDSeccionesFicha: 5 },
       {
-        id: 29,
         titulo: 'Mes en que aplico',
         descripcion: '',
         IDSeccionesFicha: 5,
       },
       {
-        id: 30,
         titulo: '¿A qué cultivo?',
         descripcion: '',
         IDSeccionesFicha: 5,
       },
       {
-        id: 31,
         titulo:
           '¿Tiene fertilizantes orgánicos almacenados actualmente en la finca?',
         descripcion: '',
@@ -380,61 +343,51 @@ export class PrismaService extends PrismaClient {
 
       // Conservación de suelo, agua y medio ambiente
       {
-        id: 32,
         titulo: 'Barreras vivas',
         descripcion: '',
         IDSeccionesFicha: 6,
       },
       {
-        id: 33,
         titulo: 'Barreras muertas',
         descripcion: '',
         IDSeccionesFicha: 6,
       },
       {
-        id: 34,
         titulo: 'Siembra de cultivos en curvas a nivel',
         descripcion: '',
         IDSeccionesFicha: 6,
       },
       {
-        id: 35,
         titulo: 'Cortinas rompe viento',
         descripcion: '',
         IDSeccionesFicha: 6,
       },
       {
-        id: 36,
         titulo: 'Drenaje de cultivos',
         descripcion: '',
         IDSeccionesFicha: 6,
       },
       {
-        id: 37,
         titulo: 'Coberturas vivas',
         descripcion: '',
         IDSeccionesFicha: 6,
       },
       {
-        id: 38,
         titulo: 'Zonas de no aplicación',
         descripcion: '',
         IDSeccionesFicha: 6,
       },
       {
-        id: 39,
         titulo: 'Construcción de terrazas',
         descripcion: '',
         IDSeccionesFicha: 6,
       },
       {
-        id: 40,
         titulo: '¿Se protegen las fuentes de agua?',
         descripcion: '',
         IDSeccionesFicha: 6,
       },
       {
-        id: 41,
         titulo: '¿Se observan problemas de erosión de suelo?',
         descripcion: '',
         IDSeccionesFicha: 6,
@@ -442,51 +395,43 @@ export class PrismaService extends PrismaClient {
 
       // Riesgos de contaminación en la finca
       {
-        id: 42,
         titulo: 'Colinda con lotes convencionales',
         descripcion: '',
         IDSeccionesFicha: 7,
       },
       {
-        id: 43,
         titulo: '¿Tiene zonas de amortiguamiento?',
         descripcion: '',
         IDSeccionesFicha: 7,
       },
       {
-        id: 44,
         titulo: 'Produce otros cultivos con químicos en la finca?',
         descripcion: '',
         IDSeccionesFicha: 7,
       },
       {
-        id: 45,
         titulo: '¿Tiene equipos para aplicación de agroquímicos?',
         descripcion: '',
         IDSeccionesFicha: 7,
       },
       {
-        id: 46,
         titulo: '¿Almacena productos no permitidos en la finca?',
         descripcion: '',
         IDSeccionesFicha: 7,
       },
       {
-        id: 47,
         titulo:
           '¿Usa aparatos de aplicación destinados solo para la producción orgánica?',
         descripcion: '',
         IDSeccionesFicha: 7,
       },
       {
-        id: 48,
         titulo:
           '¿Cuenta con zonas de amortiguamiento en la parcela certificada?',
         descripcion: '',
         IDSeccionesFicha: 7,
       },
       {
-        id: 49,
         titulo: '¿Existe otro riesgo de contaminación?',
         descripcion: '',
         IDSeccionesFicha: 7,
@@ -494,34 +439,29 @@ export class PrismaService extends PrismaClient {
 
       // Cosecha y pos cosecha del cacao
       {
-        id: 50,
         titulo: 'Frecuencia de corte',
         descripcion: '',
         IDSeccionesFicha: 8,
       },
       {
-        id: 51,
         titulo: 'Herramientas usadas',
         descripcion: '',
         IDSeccionesFicha: 8,
       },
       {
-        id: 52,
         titulo: 'Material usado para envase',
         descripcion: '',
         IDSeccionesFicha: 8,
       },
       {
-        id: 53,
         titulo: 'Precio de compra',
         descripcion: '',
         IDSeccionesFicha: 8,
       },
-      { id: 54, titulo: 'Mano de obra', descripcion: '', IDSeccionesFicha: 8 },
+      { titulo: 'Mano de obra', descripcion: '', IDSeccionesFicha: 8 },
 
       // Transporte de la cosecha
       {
-        id: 55,
         titulo: '¿Contrata transporte?',
         descripcion: '',
         IDSeccionesFicha: 9,
@@ -529,82 +469,70 @@ export class PrismaService extends PrismaClient {
 
       // Manejo de residuos
       {
-        id: 56,
         titulo: 'Cáscara de cacao',
         descripcion: '',
         IDSeccionesFicha: 10,
       },
       {
-        id: 57,
         titulo: 'Rastrojo de poda',
         descripcion: '',
         IDSeccionesFicha: 10,
       },
       {
-        id: 58,
         titulo: 'Baba de cacao',
         descripcion: '',
         IDSeccionesFicha: 10,
       },
       {
-        id: 59,
         titulo: 'Residuos de viveros',
         descripcion: '',
         IDSeccionesFicha: 10,
       },
       {
-        id: 60,
         titulo: 'Residuos de plaguicidas',
         descripcion: '',
         IDSeccionesFicha: 10,
       },
       {
-        id: 61,
         titulo: 'Mazorcas Enfermas',
         descripcion: '',
         IDSeccionesFicha: 10,
       },
       {
-        id: 62,
         titulo: 'Sacos y bolsas cosecha',
         descripcion: '',
         IDSeccionesFicha: 10,
       },
-      { id: 63, titulo: 'Otro', descripcion: '', IDSeccionesFicha: 10 },
+      { titulo: 'Otro', descripcion: '', IDSeccionesFicha: 10 },
+
       // Responsabilidad social
       {
-        id: 64,
         titulo: '¿Cuántos empleados fijos trabajan en la propiedad?',
         descripcion: '',
         IDSeccionesFicha: 11,
       },
       {
-        id: 65,
         titulo: '¿Cuántos empleados temporales trabajan en la propiedad?',
         descripcion: '',
         IDSeccionesFicha: 11,
       },
       {
-        id: 66,
         titulo: '¿Cuál es el salario para los trabajadores fijos?',
         descripcion: '',
         IDSeccionesFicha: 11,
       },
       {
-        id: 67,
         titulo: '¿Cuál es el salario para los trabajadores temporales?',
         descripcion: '',
         IDSeccionesFicha: 11,
       },
       {
-        id: 68,
         titulo:
           '¿La educación escolar no se perjudica, aunque los niños estén apoyando las actividades de campo?',
         descripcion: '',
         IDSeccionesFicha: 11,
       },
       {
-        id: 69,
         titulo: '¿Se garantiza la seguridad en el trabajo?',
         descripcion: '',
         IDSeccionesFicha: 11,
@@ -612,13 +540,11 @@ export class PrismaService extends PrismaClient {
 
       // Capacitación
       {
-        id: 70,
         titulo: 'Conoce el reglamento interno',
         descripcion: '',
         IDSeccionesFicha: 12,
       },
       {
-        id: 71,
         titulo: 'Ha recibido capacitaciones',
         descripcion: '',
         IDSeccionesFicha: 12,
