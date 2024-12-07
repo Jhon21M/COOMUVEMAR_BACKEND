@@ -60,56 +60,50 @@ export class PrismaService extends PrismaClient {
     // INSERTANDO PRODUCTORES
     const productores = [
       {
-        id: 1,
         nombre: 'Carlos Alberto',
         apellido: 'Ramírez López',
         numeroCedula: '6102207991013E',
         numeroTelefono: '89262853',
         fechaIngresoPrograma: '2016-02-01T00:00:00.000Z',
-        estado: 2, // T2
+        estado: '2', // T2
       },
       {
-        id: 2,
         nombre: 'María Fernanda',
         apellido: 'Gutiérrez Sánchez',
         numeroCedula: '6102207891003E',
         numeroTelefono: '89262853',
         fechaIngresoPrograma: '2016-08-01T00:00:00.000Z',
-        estado: 3, // T3
+        estado: '3', // T3
       },
       {
-        id: 3,
         nombre: 'Juan Pablo',
         apellido: 'Martínez Rodríguez',
         numeroCedula: '6102207981003E',
         numeroTelefono: '89262853',
         fechaIngresoPrograma: '2016-10-01T00:00:00.000Z',
-        estado: 4, // Organico
+        estado: '4', // Organico
       },
       {
-        id: 4,
         nombre: 'Ana Sofía',
         apellido: 'Gómez Herrera',
         numeroCedula: '6102207891003E',
         numeroTelefono: '89262853',
         fechaIngresoPrograma: '2016-05-01T00:00:00.000Z',
-        estado: 3, // T3
+        estado: '3', // T3
       },
       {
-        id: 5,
         nombre: 'Luis Enrique',
         apellido: 'Pérez Morales',
         numeroCedula: '6102207891003E',
         numeroTelefono: '89262853',
         fechaIngresoPrograma: '2016-11-01T00:00:00.000Z',
-        estado: 1, // T1
+        estado: '1', // T1
       },
     ];
 
     // INSERTANDO FINCAS
     const fincas = [
       {
-        id: 1,
         nombre: 'La Esperanza',
         comunidad: 'limon 2',
         areaCacaoProduccion: 'ks41',
@@ -118,7 +112,6 @@ export class PrismaService extends PrismaClient {
         IDProductor: 1,
       },
       {
-        id: 2,
         nombre: 'Monte Alegre',
         comunidad: 'limon 2',
         areaCacaoProduccion: 'ks41',
@@ -127,7 +120,6 @@ export class PrismaService extends PrismaClient {
         IDProductor: 1,
       },
       {
-        id: 3,
         nombre: 'Los Cerezos',
         comunidad: 'limon 2',
         areaCacaoProduccion: 'ks41',
@@ -136,7 +128,6 @@ export class PrismaService extends PrismaClient {
         IDProductor: 2,
       },
       {
-        id: 4,
         nombre: 'Santa Lucía',
         comunidad: 'limon 2',
         areaCacaoProduccion: 'ks41',
@@ -145,7 +136,6 @@ export class PrismaService extends PrismaClient {
         IDProductor: 3,
       },
       {
-        id: 5,
         nombre: 'La bendición',
         comunidad: 'limon 2',
         areaCacaoProduccion: 'ks41',
@@ -159,7 +149,7 @@ export class PrismaService extends PrismaClient {
     const seccionesFicha = [
       {
         id: 1,
-        nombre: 'Registro administrativo',
+        nombre: 'Registros administrativos',
         descripcion: '',
       },
       {

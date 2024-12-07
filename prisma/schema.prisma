@@ -18,7 +18,7 @@ model Productor {
   numeroTelefono       String?
   fechaIngresoPrograma DateTime             @default(now())
   createAt             DateTime             @default(now())
-  estado               Int
+  estado               String
   Finca                Finca[]
   Inspectorproductor   InspectorProductor[]
 
