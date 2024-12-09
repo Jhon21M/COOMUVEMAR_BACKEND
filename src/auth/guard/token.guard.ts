@@ -23,7 +23,7 @@ export class JwtGuardToken implements CanActivate {
       const payload = this.jwtService.verify(token); // Lanza un error si está vencido
       request.user = payload; // Opcional: agrega el payload al objeto request
     } catch (err) {
-      if (err.name === 'TokenExpiredError') {
+      if ((err as Error).name === 'TokenExpiredError') {
         throw new UnauthorizedException('Token has expired');
       }
       throw new UnauthorizedException('Invalid token');

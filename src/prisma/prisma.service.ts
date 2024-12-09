@@ -164,7 +164,7 @@ export class PrismaService extends PrismaClient {
         descripcion: '',
       },
       {
-        nombre: 'Aplicación de fertiliantes edaficos y foleares',
+        nombre: 'Aplicación de fertilizantes edaficos y foleares',
         descripcion: '',
       },
       {
@@ -551,6 +551,389 @@ export class PrismaService extends PrismaClient {
       },
     ];
 
+    // INSERTANDO Insumos
+    const insumos = [
+      {
+        producto_aplicado: 'Compost',
+        tipo: 'Fertilizante Orgánico',
+        descripcion:
+          'Materia orgánica fermentada utilizada para mejorar la fertilidad del suelo.',
+        permitido: true,
+      },
+      {
+        producto_aplicado: 'Estiércol bien compostado',
+        tipo: 'Fertilizante Orgánico',
+        descripcion:
+          'Residuo animal procesado y estabilizado, rico en nutrientes.',
+        permitido: true,
+      },
+      {
+        producto_aplicado: 'Humus de lombriz',
+        tipo: 'Fertilizante Orgánico',
+        descripcion:
+          'Producto derivado de la lombricultura rico en nutrientes.',
+        permitido: true,
+      },
+      {
+        producto_aplicado: 'Guano de isla',
+        tipo: 'Fertilizante Orgánico',
+        descripcion:
+          'Excrementos de aves marinas usados como fertilizante natural.',
+        permitido: true,
+      },
+      {
+        producto_aplicado: 'Abonos verdes',
+        tipo: 'Fertilizante Orgánico',
+        descripcion:
+          'Cultivos sembrados y enterrados para mejorar la fertilidad del suelo.',
+        permitido: true,
+      },
+      {
+        producto_aplicado: 'Biofertilizantes líquidos',
+        tipo: 'Fertilizante Orgánico',
+        descripcion:
+          'Soluciones orgánicas como bocashi líquido para enriquecer el suelo.',
+        permitido: true,
+      },
+      {
+        producto_aplicado: 'Extracto de neem',
+        tipo: 'Plaguicida Natural',
+        descripcion:
+          'Extracto vegetal utilizado para el control de insectos chupadores.',
+        permitido: true,
+      },
+      {
+        producto_aplicado: 'Jabón potásico',
+        tipo: 'Plaguicida Natural',
+        descripcion: 'Solución jabonosa para eliminar plagas de cuerpo blando.',
+        permitido: true,
+      },
+      {
+        producto_aplicado: 'Aceite mineral',
+        tipo: 'Plaguicida Natural',
+        descripcion:
+          'Producto utilizado de manera específica para plagas en cultivos.',
+        permitido: true,
+      },
+      {
+        producto_aplicado: 'Bacillus thuringiensis (BT)',
+        tipo: 'Plaguicida Natural',
+        descripcion: 'Bacteria natural para el control de plagas lepidópteras.',
+        permitido: true,
+      },
+      {
+        producto_aplicado: 'Fungicida de azufre elemental',
+        tipo: 'Plaguicida Natural',
+        descripcion:
+          'Azufre usado como fungicida para controlar enfermedades en plantas.',
+        permitido: true,
+      },
+      {
+        producto_aplicado: 'Trichoderma',
+        tipo: 'Plaguicida Natural',
+        descripcion:
+          'Hongo benéfico utilizado para controlar enfermedades del suelo.',
+        permitido: true,
+      },
+      {
+        producto_aplicado: 'Cal agrícola',
+        tipo: 'Acondicionador del Suelo',
+        descripcion: 'Carbonato de calcio para corregir la acidez del suelo.',
+        permitido: true,
+      },
+      {
+        producto_aplicado: 'Roca fosfórica',
+        tipo: 'Acondicionador del Suelo',
+        descripcion: 'Fuente natural de fósforo para el suelo.',
+        permitido: true,
+      },
+      {
+        producto_aplicado: 'Sulfato de potasio natural',
+        tipo: 'Acondicionador del Suelo',
+        descripcion:
+          'Potasa natural usada para mejorar los niveles de potasio en el suelo.',
+        permitido: true,
+      },
+      {
+        producto_aplicado: 'Cenizas vegetales',
+        tipo: 'Acondicionador del Suelo',
+        descripcion:
+          'Residuos de madera o plantas usados como enmienda para el suelo.',
+        permitido: true,
+      },
+      {
+        producto_aplicado: 'Mariquitas',
+        tipo: 'Controlador Biológico',
+        descripcion: 'Insecto benéfico que controla plagas como los pulgones.',
+        permitido: true,
+      },
+      {
+        producto_aplicado: 'Crisopas',
+        tipo: 'Controlador Biológico',
+        descripcion:
+          'Depredadoras naturales que eliminan plagas como trips o ácaros.',
+        permitido: true,
+      },
+      {
+        producto_aplicado: 'Beauveria bassiana',
+        tipo: 'Controlador Biológico',
+        descripcion:
+          'Hongo benéfico utilizado para controlar plagas de insectos.',
+        permitido: true,
+      },
+      {
+        producto_aplicado: 'Caldo sulfocálcico',
+        tipo: 'Otros Insumos',
+        descripcion: 'Preparación casera para controlar hongos y ácaros.',
+        permitido: true,
+      },
+      {
+        producto_aplicado: 'Caldo bordelés',
+        tipo: 'Otros Insumos',
+        descripcion: 'Mezcla de sulfato de cobre y cal para controlar hongos.',
+        permitido: true,
+      },
+      {
+        producto_aplicado: 'Caldo de ceniza',
+        tipo: 'Otros Insumos',
+        descripcion: 'Solución de ceniza para combatir plagas y enfermedades.',
+        permitido: true,
+      },
+      {
+        producto_aplicado: 'Biochar',
+        tipo: 'Otros Insumos',
+        descripcion:
+          'Carbón vegetal usado para mejorar la estructura del suelo.',
+        permitido: true,
+      },
+      {
+        producto_aplicado: 'Extractos de algas',
+        tipo: 'Otros Insumos',
+        descripcion: 'Suplementos líquidos ricos en minerales y fitohormonas.',
+        permitido: true,
+      },
+    ];
+
+    // INSERTANDO Control de Plagas
+    const ControlPlagas = [
+      {
+        producto_aplicado: 'Trampas mecánicas',
+        tipo: 'Control Mecánico',
+        descripcion: 'Trampas para capturar plagas como ardillas y taltuzas.',
+        permitido: true,
+      },
+      {
+        producto_aplicado: 'Aullamiento con perros',
+        tipo: 'Control Biológico',
+        descripcion:
+          'Uso de perros para espantar roedores y ardillas en las parcelas.',
+        permitido: true,
+      },
+      {
+        producto_aplicado: 'Extracto de neem',
+        tipo: 'Insecticida Natural',
+        descripcion: 'Insecticida natural para controlar pulgones y hormigas.',
+        permitido: true,
+      },
+      {
+        producto_aplicado: 'Bacillus thuringiensis (BT)',
+        tipo: 'Control Biológico',
+        descripcion:
+          'Bacteria utilizada para controlar plagas como taltuzas y gusanos.',
+        permitido: true,
+      },
+      {
+        producto_aplicado: 'Trichoderma',
+        tipo: 'Control Biológico',
+        descripcion:
+          'Hongo benéfico usado contra Monilia y enfermedades fúngicas.',
+        permitido: true,
+      },
+      {
+        producto_aplicado: 'Caldo sulfocálcico',
+        tipo: 'Fungicida Natural',
+        descripcion: 'Preparado natural para tratar Monilia y Mazorca negra.',
+        permitido: true,
+      },
+      {
+        producto_aplicado: 'Caldo bordelés',
+        tipo: 'Fungicida Natural',
+        descripcion: 'Mezcla usada para controlar hongos como Monilia.',
+        permitido: true,
+      },
+      {
+        producto_aplicado: 'Aceite mineral',
+        tipo: 'Insecticida Natural',
+        descripcion: 'Control de plagas específicas como pulgones y hormigas.',
+        permitido: true,
+      },
+      {
+        producto_aplicado: 'Crisopas',
+        tipo: 'Control Biológico',
+        descripcion: 'Insectos depredadores naturales para controlar pulgones.',
+        permitido: true,
+      },
+      {
+        producto_aplicado: 'Podas sanitarias',
+        tipo: 'Control Cultural',
+        descripcion:
+          'Eliminación de ramas o frutos infectados por Monilia o Mazorca negra.',
+        permitido: true,
+      },
+      {
+        producto_aplicado: 'Caldo de ceniza',
+        tipo: 'Fungicida Natural',
+        descripcion: 'Tratamiento natural para enfermedades como Monilia.',
+        permitido: true,
+      },
+      {
+        producto_aplicado: 'Hongos benéficos',
+        tipo: 'Control Biológico',
+        descripcion:
+          'Control de hongos patógenos en el suelo, como el Mal de machete.',
+        permitido: true,
+      },
+      {
+        producto_aplicado: 'Biochar',
+        tipo: 'Mejorador del Suelo',
+        descripcion: 'Mejora la salud del suelo para prevenir enfermedades.',
+        permitido: true,
+      },
+      {
+        producto_aplicado: 'Cultivos de cobertura',
+        tipo: 'Control Cultural',
+        descripcion:
+          'Previenen el desarrollo de plagas al reducir el espacio para su proliferación.',
+        permitido: true,
+      },
+      {
+        producto_aplicado: 'Control manual de taltuzas',
+        tipo: 'Control Mecánico',
+        descripcion: 'Eliminación manual de taltuzas y madrigueras.',
+        permitido: true,
+      },
+      {
+        producto_aplicado: 'Extracto de ajo',
+        tipo: 'Insecticida Natural',
+        descripcion: 'Repelente natural para hormigas y otras plagas.',
+        permitido: true,
+      },
+      {
+        producto_aplicado: 'Mariquitas',
+        tipo: 'Control Biológico',
+        descripcion: 'Control biológico de pulgones en las plantas.',
+        permitido: true,
+      },
+      {
+        producto_aplicado: 'Rotación de cultivos',
+        tipo: 'Control Cultural',
+        descripcion:
+          'Práctica para reducir la acumulación de patógenos en el suelo.',
+        permitido: true,
+      },
+      {
+        producto_aplicado: 'Eliminación de mazorcas enfermas',
+        tipo: 'Control Sanitario',
+        descripcion:
+          'Práctica para reducir la propagación de Monilia y otras enfermedades.',
+        permitido: true,
+      },
+    ];
+
+    // Fertilizantes edáficos y foliares
+    const fertilizantes = [
+      {
+        producto_aplicado: 'Compost',
+        tipo: 'Fertilizante Orgánico',
+        descripcion:
+          'Materia orgánica descompuesta utilizada para mejorar el suelo.',
+        permitido: true,
+      },
+      {
+        producto_aplicado: 'Estiércol bien compostado',
+        tipo: 'Fertilizante Orgánico',
+        descripcion: 'Abono derivado de estiércol tratado adecuadamente.',
+        permitido: true,
+      },
+      {
+        producto_aplicado: 'Humus de lombriz',
+        tipo: 'Fertilizante Orgánico',
+        descripcion: 'Producto derivado del compostaje con lombrices.',
+        permitido: true,
+      },
+      {
+        producto_aplicado: 'Guano de isla',
+        tipo: 'Fertilizante Orgánico',
+        descripcion:
+          'Fertilizante rico en nitrógeno derivado de excrementos de aves marinas.',
+        permitido: true,
+      },
+      {
+        producto_aplicado: 'Abonos verdes',
+        tipo: 'Fertilizante Orgánico',
+        descripcion:
+          'Plantas sembradas y descompuestas directamente en el suelo.',
+        permitido: true,
+      },
+      {
+        producto_aplicado: 'Bocashi líquido',
+        tipo: 'Biofertilizante Líquido',
+        descripcion:
+          'Biofertilizante líquido fermentado con microorganismos benéficos.',
+        permitido: true,
+      },
+      {
+        producto_aplicado: 'Cal agrícola',
+        tipo: 'Acondicionador del Suelo',
+        descripcion: 'Producto para ajustar el pH del suelo de forma orgánica.',
+        permitido: true,
+      },
+      {
+        producto_aplicado: 'Roca fosfórica',
+        tipo: 'Acondicionador del Suelo',
+        descripcion: 'Fuente natural de fósforo para suelos.',
+        permitido: true,
+      },
+      {
+        producto_aplicado: 'Sulfato de potasio natural',
+        tipo: 'Acondicionador del Suelo',
+        descripcion: 'Fuente natural de potasio para cultivos.',
+        permitido: true,
+      },
+      {
+        producto_aplicado: 'Biochar',
+        tipo: 'Acondicionador del Suelo',
+        descripcion:
+          'Carbón vegetal que mejora la retención de agua y nutrientes.',
+        permitido: true,
+      },
+      {
+        producto_aplicado: 'Extractos de algas',
+        tipo: 'Fertilizante Foliar',
+        descripcion: 'Bioestimulante derivado de algas marinas.',
+        permitido: true,
+      },
+      {
+        producto_aplicado: 'Cenizas vegetales',
+        tipo: 'Fertilizante Orgánico',
+        descripcion: 'Fuente de potasio y micronutrientes.',
+        permitido: true,
+      },
+      {
+        producto_aplicado: 'Microorganismos eficientes (EM)',
+        tipo: 'Biofertilizante',
+        descripcion: 'Mezcla de microorganismos que mejora la salud del suelo.',
+        permitido: true,
+      },
+      {
+        producto_aplicado: 'Caldo de ceniza',
+        tipo: 'Biofertilizante',
+        descripcion:
+          'Solución rica en nutrientes minerales para uso foliar o edáfico.',
+        permitido: true,
+      },
+    ];
+
     try {
       await this.productor.createMany({
         data: productores,
@@ -567,6 +950,19 @@ export class PrismaService extends PrismaClient {
       await this.dato.createMany({
         data: datos,
       });
+
+      await this.productosUtilizados.createMany({
+        data: insumos,
+      });
+
+      await this.productosUtilizados.createMany({
+        data: ControlPlagas,
+      });
+
+      await this.productosUtilizados.createMany({
+        data: fertilizantes,
+      });
+
       console.log('Database seeded successfully');
       return {
         message: 'Database seeded successfully',
@@ -574,7 +970,7 @@ export class PrismaService extends PrismaClient {
     } catch (error) {
       console.error('Error seeding database:', error);
       return {
-        error: error.message,
+        error: error,
         message: 'Error seeding database',
       };
     }
