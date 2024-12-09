@@ -1,99 +1,117 @@
 {
-    "Desecho": {
-      "buenManejo": [
-        "Clasificación adecuada",
-        "Reciclaje",
-        "Disposición en puntos autorizados"
-      ],
-      "malManejo": [
-        "Desecho al aire libre",
-        "Quema en campo abierto"
-      ]
-    },
-    "Cáscara de cacao": {
-      "buenManejo": [
-        "Compostaje",
-        "Cobertura del suelo",
-        "Incorporación al suelo como materia orgánica"
-      ],
-      "malManejo": [
-        "Quema en el campo",
-        "Acumulación sin tratar"
-      ]
-    },
-    "Rastrojo de Poda": {
-      "buenManejo": [
-        "Compostaje",
-        "Uso como cobertura vegetal",
-        "Chipeo e incorporación al suelo"
-      ],
-      "malManejo": [
-        "Quema al aire libre",
-        "Abandono en el campo"
-      ]
-    },
-    "Baba de cacao": {
-      "buenManejo": [
-        "Elaboración de bioinsumos",
-        "Uso como fertilizante líquido",
-        "Fermentación controlada"
-      ],
-      "malManejo": [
-        "Vertido en fuentes de agua",
-        "Desecho sin tratamiento"
-      ]
-    },
-    "Residuos de viveros": {
-      "buenManejo": [
-        "Compostaje",
-        "Reciclaje de plásticos",
-        "Elaboración de sustratos orgánicos"
-      ],
-      "malManejo": [
-        "Desecho en áreas comunes",
-        "Quema de residuos plásticos"
-      ]
-    },
-    "Residuos de injertación": {
-      "buenManejo": [
-        "Compostaje",
-        "Eliminación en fosas específicas"
-      ],
-      "malManejo": [
-        "Acumulación sin tratar",
-        "Desecho en áreas no autorizadas"
-      ]
-    },
-    "Mazorcas enfermas": {
-      "buenManejo": [
-        "Enterramiento profundo (50 cm mínimo)",
-        "Compostaje con control de patógenos",
-        "Quema controlada (si lo permite la certificadora)"
-      ],
-      "malManejo": [
-        "Acumulación sin tratar",
-        "Abandono en el campo"
-      ]
-    },
-    "Sacos y/o bolsas cosecha": {
-      "buenManejo": [
-        "Lavado y reutilización",
-        "Reciclaje adecuado",
-        "Uso exclusivo para actividades agrícolas"
-      ],
-      "malManejo": [
-        "Desecho en el campo",
-        "Uso inapropiado para otras actividades"
-      ]
-    },
-    "Otros": {
-      "buenManejo": [
-        "Gestión según el tipo de residuo",
-        "Consulta con la certificadora"
-      ],
-      "malManejo": [
-        "Cualquier práctica que incumpla normas de certificación orgánica"
-      ]
-    }
+  "Desecho": {
+    "buenManejo": [
+      "Clasificación adecuada",
+      "Reciclaje",
+      "Disposición en puntos autorizados"
+    ],
+    "malManejo": [
+      "Desecho al aire libre",
+      "Quema en campo abierto"
+    ]
+  },
+  "Cáscara de cacao": {
+    "buenManejo": [
+      "Compostaje",
+      "Cobertura del suelo",
+      "Incorporación al suelo como materia orgánica"
+    ],
+    "malManejo": [
+      "Quema en el campo",
+      "Acumulación sin tratar"
+    ]
+  },
+  "Rastrojo de Poda": {
+    "buenManejo": [
+      "Compostaje",
+      "Uso como cobertura vegetal",
+      "Chipeo e incorporación al suelo"
+    ],
+    "malManejo": [
+      "Quema al aire libre",
+      "Abandono en el campo",
+      "Acumulación sin tratar",
+      "Vertido en fuentes de agua",
+      "Incineración"
+    ]
+  },
+  "Baba de cacao": {
+    "buenManejo": [
+      "Elaboración de bioinsumos",
+      "Uso como fertilizante líquido",
+      "Fermentación controlada"
+    ],
+    "malManejo": [
+      "Vertido en fuentes de agua",
+      "Desecho sin tratamiento"
+    ]
+  },
+  "Residuos de viveros": {
+    "buenManejo": [
+      "Compostaje",
+      "Reciclaje de plásticos",
+      "Elaboración de sustratos orgánicos"
+    ],
+    "malManejo": [
+      "Desecho en áreas comunes",
+      "Quema de residuos plásticos"
+    ]
+  },
+  "Residuos de injertación": {
+    "buenManejo": [
+      "Compostaje",
+      "Eliminación en fosas específicas"
+    ],
+    "malManejo": [
+      "Acumulación sin tratar",
+      "Desecho en áreas no autorizadas"
+    ]
+  },
+  "Residuos de plaguicidas": {
+    "buenManejo": [
+      "Recolección y almacenamiento seguro en contenedores adecuados",
+      "Entrega a programas de recolección autorizados",
+      "Disposición final en lugares autorizados",
+      "Cumplimiento de normativas locales para manejo de residuos peligrosos"
+    ],
+    "malManejo": [
+      "Incorporación al compostaje",
+      "Desecho en fuentes de agua",
+      "Quema al aire libre",
+      "Abandono en áreas abiertas",
+      "Reutilización inapropiada de envases vacíos"
+    ]
+  },
+  "Mazorcas enfermas": {
+    "buenManejo": [
+      "Enterramiento profundo (50 cm mínimo)",
+      "Compostaje con control de patógenos",
+      "Quema controlada (si lo permite la certificadora)",
+      "Incineraciones controladas"
+    ],
+    "malManejo": [
+      "Acumulación sin tratar",
+      "Abandono en el campo"
+    ]
+  },
+  "Sacos y/o bolsas cosecha": {
+    "buenManejo": [
+      "Lavado y reutilización",
+      "Reciclaje adecuado",
+      "Uso exclusivo para actividades agrícolas"
+    ],
+    "malManejo": [
+      "Desecho en el campo",
+      "Uso inapropiado para otras actividades"
+    ]
+  },
+  "Otros": {
+    "buenManejo": [
+      "Gestión según el tipo de residuo",
+      "Consulta con la certificadora"
+    ],
+    "malManejo": [
+      "Cualquier práctica que incumpla normas de certificación orgánica"
+    ]
   }
-  
+}

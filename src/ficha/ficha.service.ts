@@ -13,10 +13,8 @@ import { DocumentoService } from 'src/documento/documento.service';
 import * as reglasResiduos from 'src/common/data/rulesManejo_residuos.json';
 import * as fs from 'fs';
 import * as path from 'path';
-
-import { connect } from 'http2';
 import { CreateInsumoDto } from './dto/create_insumos_dto/create-insumo.dto';
-import { re } from 'mathjs';
+import Fuse from 'fuse.js';
 
 @Injectable()
 export class FichaService {
@@ -43,10 +41,6 @@ export class FichaService {
     documento: Documento[];
     InformacionDato: InformacionDato[];
   }> {
-    fs.writeFileSync(
-      path.join(__dirname, 'src/common/data/externalData.json'),
-      JSON.stringify(externalData, null, 2),
-    );
     const verifyAsing = await this.prisma.inspectorProductor.findFirst({
       where: {
         IDTrabajador: user.IDTrabajador,
@@ -69,6 +63,15 @@ export class FichaService {
     externalData.ficha.map((ficha) => {
       ficha.id = 'F-' + ficha.id.toString() + `-UI${user.id}`;
     });
+
+    for (let f of fichas) {
+      const verifyFicha = await this.prisma.ficha.findFirst({
+        where: { id: f.id },
+      });
+      if (verifyFicha) {
+        throw new ForbiddenException('La ficha ya existe');
+      }
+    }
 
     externalData.documento.map((documento) => {
       documento.id = 'D-' + documento.id.toString() + `-UI${user.id}`;
@@ -963,7 +966,17 @@ export class FichaService {
           IDFicha: id,
         },
       });
-      return { 'Ficha analizada eliminada': id };
+
+      await this.prisma.ficha.update({
+        where: {
+          id: id,
+        },
+        data: {
+          analizada: false,
+        },
+      });
+
+      return { 'Analisis de Ficha eliminada': id };
     } catch (error) {
       return error;
     }
@@ -1031,6 +1044,10 @@ export class FichaService {
       },
     });
 
+    if (!ficha_analized) {
+      throw new ForbiddenException('La ficha no esta analizada');
+    }
+
     const noConformidades = await this.prisma.noConformidad.findMany({
       where: {
         IDFicha: ficha_analized.id,
@@ -1071,6 +1088,7 @@ export class FichaService {
   }
 
   async validateProductoAplicado(entryInsumo: string, tipo: string) {
+    console.log('desde producto_aplicado', entryInsumo, tipo);
     const insumos = await this.prisma.productosUtilizados.findMany({
       where: {
         tipo: tipo,
@@ -1093,14 +1111,73 @@ export class FichaService {
     }
   }
 
-  async validarResiduos(tipoResiduo: string, manejoRealizado: string) {
-    const reglas = reglasResiduos[tipoResiduo];
+  // async validarResiduos(tipoResiduo: string, manejoRealizado: string) {
+  //   console.log('desde Manejo de residuos', tipoResiduo, manejoRealizado);
 
-    if (!reglas) {
+  //   const reglasResiduosLowerCase = Object.keys(reglasResiduos).reduce(
+  //     (acc, key) => {
+  //       acc[key.toLowerCase()] = reglasResiduos[key];
+  //       return acc;
+  //     },
+  //     {},
+  //   );
+
+  //   const reglas = reglasResiduosLowerCase[tipoResiduo.toLowerCase()];
+
+  //   if (!reglas) {
+  //     throw new NotFoundException(
+  //       `Tipo de residuo ${tipoResiduo} no encontrado.`,
+  //     );
+  //   }
+
+  //   const manejoRealizadoLower = manejoRealizado.toLowerCase();
+
+  //   // Búsqueda de coincidencias parciales
+  //   const esBuenManejo = reglas.buenManejo.some((rule) =>
+  //     manejoRealizadoLower.includes(rule.toLowerCase()),
+  //   );
+  //   const esMalManejo = reglas.malManejo.some((rule) =>
+  //     manejoRealizadoLower.includes(rule.toLowerCase()),
+  //   );
+
+  //   if (esBuenManejo) {
+  //     return {
+  //       esBuenManejo: true,
+  //       mensaje: 'El manejo del residuo es adecuado.',
+  //     };
+  //   }
+
+  //   if (esMalManejo) {
+  //     return {
+  //       esBuenManejo: false,
+  //       mensaje: `Mal manejo detectado: ${manejoRealizado}`,
+  //     };
+  //   }
+
+  //   return {
+  //     esBuenManejo: false,
+  //     mensaje: 'No se pudo determinar si el manejo es adecuado.',
+  //   };
+  // }
+
+  async validarResiduos(tipoResiduo: string, manejoRealizado: string) {
+    console.log('desde Manejo de residuos', tipoResiduo, manejoRealizado);
+
+    const fuse = new Fuse(Object.keys(reglasResiduos), {
+      includeScore: true,
+      threshold: 0.3, // Ajusta este valor según sea necesario
+    });
+
+    const result = fuse.search(tipoResiduo);
+
+    if (result.length === 0) {
       throw new NotFoundException(
-        `Tipo de residuo "${tipoResiduo}" no encontrado.`,
+        `Tipo de residuo ${tipoResiduo} no encontrado.`,
       );
     }
+
+    const bestMatch = result[0].item;
+    const reglas = reglasResiduos[bestMatch];
 
     const manejoRealizadoLower = manejoRealizado.toLowerCase();
 
@@ -1131,6 +1208,7 @@ export class FichaService {
       mensaje: 'No se pudo determinar si el manejo es adecuado.',
     };
   }
+
   async actualizarReglas(
     tipoResiduo: string,
     nuevoBuenManejo?: string[],
