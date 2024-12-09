@@ -1,11 +1,22 @@
-import { ForbiddenException, Injectable } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  MethodNotAllowedException,
+  NotFoundException,
+} from '@nestjs/common';
 import { EntityFicha, EntityUpdateFicha } from './entities';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { FichaInterfaceReturn } from './interfaces';
 import { Documento, Ficha, InformacionDato, Usuario } from '@prisma/client';
 import { CreateExternaldataDto } from './dto/load_ficha_dto';
 import { DocumentoService } from 'src/documento/documento.service';
+import * as reglasResiduos from 'src/common/data/rulesManejo_residuos.json';
+import * as fs from 'fs';
+import * as path from 'path';
+
 import { connect } from 'http2';
+import { CreateInsumoDto } from './dto/create_insumos_dto/create-insumo.dto';
+import { re } from 'mathjs';
 
 @Injectable()
 export class FichaService {
@@ -32,6 +43,10 @@ export class FichaService {
     documento: Documento[];
     InformacionDato: InformacionDato[];
   }> {
+    fs.writeFileSync(
+      path.join(__dirname, 'src/common/data/externalData.json'),
+      JSON.stringify(externalData, null, 2),
+    );
     const verifyAsing = await this.prisma.inspectorProductor.findFirst({
       where: {
         IDTrabajador: user.IDTrabajador,
@@ -71,7 +86,7 @@ export class FichaService {
         fichasReturn.push(fichaCreada);
       }
     } catch (error) {
-      console.error('Error al crear la ficha:', error.message);
+      console.error('Error al crear la ficha:', (error as any).message);
       throw error;
     }
 
@@ -83,7 +98,7 @@ export class FichaService {
         documentosReturn.push(documento);
       }
     } catch (error) {
-      console.error('Error al crear la Documento:', error.message);
+      console.error('Error al crear la Documento:', (error as any).message);
       throw error;
     }
 
@@ -107,7 +122,7 @@ export class FichaService {
         contador++;
       }
     } catch (error) {
-      console.error('Error al crear la InfoDato:', error.message);
+      console.error('Error al crear la InfoDato:', (error as any).message);
       throw error;
     }
 
@@ -476,61 +491,17 @@ export class FichaService {
     }
   }
 
-  async analysis() {
-    // const resgistroAdmin = [];
-    // const InformacionParcelas = [];
-    // const ManejoPlagas_Enfermedades = [];
-    // const ControlPlagas_Enfermedades = [];
-    // const AplicaciónFertilizantes_Edáficos_Foliares = [];
-    // const ConservaciónSuelos_Agua_Medio_Ambiente = [];
-    // const RiesgosContaminación_Finca = [];
-    // const CosechaCosecha_cacao = [];
-    // const TransporteCosecha = [];
-    // const ManejoResiduos = [];
-    // const ResponsabilidadSocial = [];
-    // const seccionFichaWithRespuestas = {};
-    let NoConformidad_counter = 0;
-
-    const seccionesFicha = await this.prisma.seccionesFicha.findMany();
-
-    for (const seccion of seccionesFicha) {
-      const respuestas = await this.prisma.informacionDato.findMany({
-        where: {
-          dato: {
-            seccionesFicha: {
-              id: seccion.id,
-            },
-          },
-        },
-      });
-
-      for (const info of respuestas) {
-        if (info.informacion == 'NO') {
-          NoConformidad_counter++;
-        }
-      }
-
-      await this.prisma.noConformidad.create({
-        data: {
-          cantidadNoConformidad: NoConformidad_counter,
-          seccionesFicha: {
-            connect: {
-              id: seccion.id,
-            },
-          },
-          ficha: {
-            connect: {
-              id: respuestas[0].IDFicha,
-            },
-          },
-        },
-      });
-    }
-  }
-
   async analisis(id: string) {
-    let NoConformidad_counter = 0;
     const fichanalizad = {};
+    let noConformidad_RA_created;
+    let noConformidad_IP_created;
+    let noConformidad_CPE_created;
+    let noConformidad_AFEF_created;
+    let noConformidad_CSAMA_created;
+    let noConformidad_RCF_created;
+    let noConformidad_MR_created;
+    let noConformidad_RS_created;
+    let noConformidad_C_created;
 
     const ficha_NoConformidad = await this.prisma.noConformidad.findFirst({
       where: {
@@ -544,54 +515,433 @@ export class FichaService {
       throw new ForbiddenException('Ya se realizo el analisis de la ficha');
     }
 
-    const seccionesFicha = await this.prisma.seccionesFicha.findMany();
-
     // Analisis de Registros Administrativos
-    for (const seccion of seccionesFicha) {
-      const respuestas = await this.prisma.informacionDato.findMany({
-        where: {
-          dato: {
-            seccionesFicha: {
-              nombre: 'Registros Administrativos',
-            },
+    const respuestas_R_A = await this.prisma.informacionDato.findMany({
+      where: {
+        IDFicha: id,
+        dato: {
+          seccionesFicha: {
+            nombre: 'Registros administrativos',
           },
         },
-      });
+      },
+    });
 
-      for (const info of respuestas) {
-        if (info.informacion == 'NO') {
-          NoConformidad_counter++;
-        }
+    for (const respuestas of respuestas_R_A) {
+      if (respuestas.informacion == 'NO') {
+        noConformidad_RA_created = await this.prisma.noConformidad.create({
+          data: {
+            // cantidadNoConformidad: NoConformidad_R_A_counter,
+            // descripcion: '',
+            dato: {
+              connect: {
+                id: respuestas.IDDato,
+              },
+            },
+            ficha: {
+              connect: {
+                id: id,
+              },
+            },
+          },
+        });
       }
+    }
 
-      const noConformidad_created = await this.prisma.noConformidad.create({
-        data: {
-          cantidadNoConformidad: NoConformidad_counter,
-          descripcion: seccion.nombre,
+    // informacion Parcelas
+    const respuestas_I_P = await this.prisma.informacionDato.findMany({
+      where: {
+        dato: {
           seccionesFicha: {
+            nombre: 'Información de las parcelas',
+          },
+        },
+      },
+      include: {
+        dato: true,
+      },
+    });
+
+    // Filtrar los elementos donde dato.nombre sea 'Insumos'
+    const Insumos = respuestas_I_P.filter(
+      (informacion) => informacion.dato.titulo === 'Insumos utilizados',
+    );
+
+    for (let valueToValidate of Insumos) {
+      const returnOfValidation = await this.validateProductoAplicado(
+        valueToValidate.informacion,
+        'Insumo',
+      );
+
+      if (!returnOfValidation.valid) {
+        noConformidad_IP_created = await this.prisma.noConformidad.create({
+          data: {
+            // cantidadNoConformidad: NoConformidad_I_P_counter,
+            // descripcion: '',
+            dato: {
+              connect: {
+                id: valueToValidate.IDDato,
+              },
+            },
+            ficha: {
+              connect: {
+                id: id,
+              },
+            },
+          },
+        });
+      }
+    }
+
+    // Manejo de plagas y enfermedades
+    const respuestas_M_P_E = await this.prisma.informacionDato.findMany({
+      where: {
+        dato: {
+          seccionesFicha: {
+            nombre: 'Manejo de plagas y enfermedades',
+          },
+        },
+      },
+      include: {
+        dato: true,
+      },
+    });
+
+    // Control de Plagas y Enfermedades
+    const respuestas_C_P_E = await this.prisma.informacionDato.findMany({
+      where: {
+        dato: {
+          seccionesFicha: {
+            nombre: 'Control de plagas y enfermedades',
+          },
+        },
+      },
+      include: {
+        dato: true,
+      },
+    });
+
+    const producto_aplicado = respuestas_C_P_E.filter(
+      (informacion) => informacion.dato.titulo === 'Producto Aplicado',
+    );
+
+    for (let valueToValidate of producto_aplicado) {
+      const returnOfValidation = await this.validateProductoAplicado(
+        valueToValidate.informacion,
+        'Metodo',
+      );
+      if (!returnOfValidation.valid) {
+        noConformidad_CPE_created = await this.prisma.noConformidad.create({
+          data: {
+            // cantidadNoConformidad: NoConformidad_I_P_counter,
+            // descripcion: '',
+            dato: {
+              connect: {
+                id: valueToValidate.IDDato,
+              },
+            },
+            ficha: {
+              connect: {
+                id: id,
+              },
+            },
+          },
+        });
+      }
+    }
+
+    // Aplicación de fertiliantes edaficos y foleares
+    const respuestas_A_FE_F = await this.prisma.informacionDato.findMany({
+      where: {
+        dato: {
+          seccionesFicha: {
+            nombre: 'Aplicación de fertilizantes edaficos y foleares',
+          },
+        },
+      },
+      include: {
+        dato: true,
+      },
+    });
+
+    const nombre_abono = respuestas_A_FE_F.filter(
+      (informacion) => informacion.dato.titulo === 'Nombre del abono',
+    );
+
+    for (let valueToValidate of nombre_abono) {
+      const returnOfValidation = await this.validateProductoAplicado(
+        valueToValidate.informacion,
+        'Insumo',
+      );
+      if (!returnOfValidation.valid) {
+        noConformidad_AFEF_created = await this.prisma.noConformidad.create({
+          data: {
+            // cantidadNoConformidad: NoConformidad_I_P_counter,
+            // descripcion: '',
+            dato: {
+              connect: {
+                id: valueToValidate.IDDato,
+              },
+            },
+            ficha: {
+              connect: {
+                id: id,
+              },
+            },
+          },
+        });
+      }
+    }
+
+    //Conservación de suelo, agua y medio ambiente
+    const respuestas_C_S_A_M_A = await this.prisma.informacionDato.findMany({
+      where: {
+        dato: {
+          seccionesFicha: {
+            nombre: 'Conservación de suelo, agua y medio ambiente',
+          },
+        },
+      },
+      include: {
+        dato: true,
+      },
+    });
+
+    for (const respuestas of respuestas_C_S_A_M_A) {
+      if (respuestas.informacion == 'NO') {
+        noConformidad_CSAMA_created = await this.prisma.noConformidad.create({
+          data: {
+            // cantidadNoConformidad: NoConformidad_R_A_counter,
+            // descripcion: '',
+            dato: {
+              connect: {
+                id: respuestas.IDDato,
+              },
+            },
+            ficha: {
+              connect: {
+                id: id,
+              },
+            },
+          },
+        });
+      }
+    }
+
+    // Riesgos de contaminación en la finca
+    const respuestas_R_C_F = await this.prisma.informacionDato.findMany({
+      where: {
+        dato: {
+          seccionesFicha: {
+            nombre: 'Riesgos de contaminación en la finca',
+          },
+        },
+      },
+      include: {
+        dato: true,
+      },
+    });
+
+    for (const respuestas of respuestas_R_C_F) {
+      if (respuestas.informacion == 'NO') {
+        noConformidad_RCF_created = await this.prisma.noConformidad.create({
+          data: {
+            // cantidadNoConformidad: NoConformidad_R_A_counter,
+            // descripcion: '',
+            dato: {
+              connect: {
+                id: respuestas.IDDato,
+              },
+            },
+            ficha: {
+              connect: {
+                id: id,
+              },
+            },
+          },
+        });
+      }
+    }
+
+    // Cosecha y pos cosecha del cacao
+    const respuestas_C_P_C = await this.prisma.informacionDato.findMany({
+      where: {
+        dato: {
+          seccionesFicha: {
+            nombre: 'Cosecha y pos cosecha del cacao',
+          },
+        },
+      },
+      include: {
+        dato: true,
+      },
+    });
+
+    // Manejo de residuos
+    const respuestas_M_R = await this.prisma.informacionDato.findMany({
+      where: {
+        dato: {
+          seccionesFicha: {
+            nombre: 'Manejo de residuos',
+          },
+        },
+      },
+      include: {
+        dato: {
+          include: {
+            seccionesFicha: true,
+          },
+        },
+      },
+    });
+
+    const manejo_residuos = respuestas_M_R.filter(
+      (informacion) =>
+        informacion.dato.seccionesFicha.nombre === 'Manejo de residuos',
+    );
+
+    for (let valueToValidate of manejo_residuos) {
+      const returnOfValidation = await this.validarResiduos(
+        valueToValidate.dato.titulo,
+        valueToValidate.informacion,
+      );
+      if (!returnOfValidation.esBuenManejo) {
+        noConformidad_MR_created = await this.prisma.noConformidad.create({
+          data: {
+            // cantidadNoConformidad: NoConformidad_I_P_counter,
+            // descripcion: '',
+            dato: {
+              connect: {
+                id: valueToValidate.IDDato,
+              },
+            },
+            ficha: {
+              connect: {
+                id: id,
+              },
+            },
+          },
+        });
+      }
+    }
+
+    // Responsabilidad social
+    const respuestas_R_S = await this.prisma.informacionDato.findMany({
+      where: {
+        dato: {
+          seccionesFicha: {
+            nombre: 'Responsabilidad social',
+          },
+        },
+      },
+      include: {
+        dato: true,
+      },
+    });
+
+    const respuestas_R_S_seccion = respuestas_R_S.filter(
+      (informacion) =>
+        informacion.dato.titulo ===
+          '¿La educación escolar no se perjudica, aunque los niños estén apoyando las actividades de campo?' ||
+        informacion.dato.titulo === '¿Se garantiza la seguridad en el trabajo?',
+    );
+    const res1 = respuestas_R_S_seccion[0].informacion;
+    const res2 = respuestas_R_S_seccion[1].informacion;
+
+    if (res1 == 'Si' && res2 == 'NO') {
+      noConformidad_RS_created = await this.prisma.noConformidad.create({
+        data: {
+          dato: {
             connect: {
-              id: seccion.id,
+              id: respuestas_R_S_seccion[0].IDDato,
             },
           },
           ficha: {
             connect: {
-              id: respuestas[0].IDFicha,
+              id: id,
             },
           },
         },
       });
-      await this.prisma.ficha.update({
-        where: {
-          id: id,
-        },
+      noConformidad_RS_created = await this.prisma.noConformidad.create({
         data: {
-          analizada: true,
+          dato: {
+            connect: {
+              id: respuestas_R_S_seccion[1].IDDato,
+            },
+          },
+          ficha: {
+            connect: {
+              id: id,
+            },
+          },
         },
       });
-
-      fichanalizad[seccion.nombre] = noConformidad_created;
     }
-    return Object.values(fichanalizad);
+
+    // Capacitación
+    const respuestas_C = await this.prisma.informacionDato.findMany({
+      where: {
+        dato: {
+          seccionesFicha: {
+            nombre: 'Capacitación',
+          },
+        },
+      },
+      include: {
+        dato: true,
+      },
+    });
+
+    for (const respuestas of respuestas_C) {
+      if (respuestas.informacion == 'NO') {
+        noConformidad_C_created = await this.prisma.noConformidad.create({
+          data: {
+            // cantidadNoConformidad: NoConformidad_R_A_counter,
+            // descripcion: '',
+            dato: {
+              connect: {
+                id: respuestas.IDDato,
+              },
+            },
+            ficha: {
+              connect: {
+                id: id,
+              },
+            },
+          },
+        });
+      }
+    }
+
+    // --------------------------
+    await this.prisma.ficha.update({
+      where: {
+        id: id,
+      },
+      data: {
+        analizada: true,
+      },
+    });
+
+    // Retorno de la información
+    // fichanalizad['Registros adminitrativos'] = noConformidad_RA_created;
+    // fichanalizad['Información de parcelas'] = noConformidad_IP_created;
+    // fichanalizad['Manejo de plagas y enfermedades'] = noConformidad_CPE_created;
+    // fichanalizad['Control de plagas y enfermedades'] =
+    //   noConformidad_CPE_created;
+    // fichanalizad['Aplicación de fertilizantes edaficos y foleares'] =
+    //   noConformidad_AFEF_created;
+    // fichanalizad['Conservación de suelo, agua y medio ambiente'] =
+    //   noConformidad_CSAMA_created;
+    // fichanalizad['Riesgos de contaminación en la finca'] =
+    //   noConformidad_RCF_created;
+    // fichanalizad['Cosecha y pos cosecha del cacao'] = noConformidad_C_created;
+    // fichanalizad['Manejo de residuos'] = noConformidad_MR_created;
+    // fichanalizad['Responsabilidad social'] = noConformidad_RS_created;
+    // fichanalizad['Capacitación'] = noConformidad_C_created;
+    //return Object.values(fichanalizad);
+    return { 'Ficha Analizada Correctamente': fichanalizad };
   }
 
   async removeAnalisis(id: string) {
@@ -626,6 +976,7 @@ export class FichaService {
         analizada: true,
       },
     });
+
     if (ficha_analized.length < 1) {
       throw new ForbiddenException('No hay ficha analizadas');
     }
@@ -636,7 +987,17 @@ export class FichaService {
           IDFicha: f.id,
         },
         include: {
-          seccionesFicha: true,
+          dato: {
+            include: {
+              seccionesFicha: true,
+            },
+          },
+        },
+      });
+
+      const informacionDato = await this.prisma.informacionDato.findMany({
+        where: {
+          IDFicha: f.id,
         },
       });
 
@@ -647,8 +1008,12 @@ export class FichaService {
         };
 
         for (let noConformidad_finded of noConformidades) {
-          fichaData.secciones[noConformidad_finded.seccionesFicha.nombre] =
-            noConformidad_finded.cantidadNoConformidad;
+          fichaData.secciones[noConformidad_finded.dato.seccionesFicha.nombre] =
+            {
+              [noConformidad_finded.dato.titulo]: informacionDato.find(
+                (info) => info.IDDato === noConformidad_finded.dato.id,
+              ).informacion,
+            };
         }
 
         ficha_analized_data.push(fichaData);
@@ -671,22 +1036,138 @@ export class FichaService {
         IDFicha: ficha_analized.id,
       },
       include: {
-        seccionesFicha: true,
+        ficha: true,
+        dato: {
+          include: {
+            seccionesFicha: true,
+          },
+        },
       },
     });
 
     if (noConformidades.length < 1) {
       throw new ForbiddenException('La ficha no esta analizada');
     }
+
+    const informacionDato = await this.prisma.informacionDato.findMany({
+      where: {
+        IDFicha: ficha_analized.id,
+      },
+    });
+
     const fichaData = {
       ficha: ficha_analized,
       secciones: {},
     };
     for (let noConformidad of noConformidades) {
-      fichaData.secciones[noConformidad.seccionesFicha.nombre] =
-        noConformidad.cantidadNoConformidad;
+      fichaData.secciones[noConformidad.dato.seccionesFicha.nombre] = {
+        [noConformidad.dato.titulo]: informacionDato.find(
+          (info) => info.IDDato === noConformidad.dato.id,
+        ).informacion,
+      };
     }
 
     return fichaData;
+  }
+
+  async validateProductoAplicado(entryInsumo: string, tipo: string) {
+    const insumos = await this.prisma.productosUtilizados.findMany({
+      where: {
+        tipo: tipo,
+      },
+      select: {
+        producto_aplicado: true,
+      },
+    });
+
+    const nombresInsumos = insumos.map((insumo) => insumo.producto_aplicado);
+    const valid = nombresInsumos.includes(entryInsumo);
+
+    if (valid) {
+      return { valid: true, message: 'El insumo es permitido.' };
+    } else {
+      return {
+        valid: false,
+        message: 'El insumo no está permitido según las normas orgánicas.',
+      };
+    }
+  }
+
+  async validarResiduos(tipoResiduo: string, manejoRealizado: string) {
+    const reglas = reglasResiduos[tipoResiduo];
+
+    if (!reglas) {
+      throw new NotFoundException(
+        `Tipo de residuo "${tipoResiduo}" no encontrado.`,
+      );
+    }
+
+    const manejoRealizadoLower = manejoRealizado.toLowerCase();
+
+    // Búsqueda de coincidencias parciales
+    const esBuenManejo = reglas.buenManejo.some((rule) =>
+      manejoRealizadoLower.includes(rule.toLowerCase()),
+    );
+    const esMalManejo = reglas.malManejo.some((rule) =>
+      manejoRealizadoLower.includes(rule.toLowerCase()),
+    );
+
+    if (esBuenManejo) {
+      return {
+        esBuenManejo: true,
+        mensaje: 'El manejo del residuo es adecuado.',
+      };
+    }
+
+    if (esMalManejo) {
+      return {
+        esBuenManejo: false,
+        mensaje: `Mal manejo detectado: ${manejoRealizado}`,
+      };
+    }
+
+    return {
+      esBuenManejo: false,
+      mensaje: 'No se pudo determinar si el manejo es adecuado.',
+    };
+  }
+  async actualizarReglas(
+    tipoResiduo: string,
+    nuevoBuenManejo?: string[],
+    nuevoMalManejo?: string[],
+  ) {
+    if (!reglasResiduos[tipoResiduo]) {
+      reglasResiduos[tipoResiduo] = { buenManejo: [], malManejo: [] };
+    }
+
+    if (nuevoBuenManejo) {
+      reglasResiduos[tipoResiduo].buenManejo.push(...nuevoBuenManejo);
+    }
+
+    if (nuevoMalManejo) {
+      reglasResiduos[tipoResiduo].malManejo.push(...nuevoMalManejo);
+    }
+
+    // Guardar cambios en el archivo
+    const filePath = path.join(
+      __dirname,
+      '../common/data/rulesManejo_residuos.json',
+    );
+    fs.writeFileSync(filePath, JSON.stringify(reglasResiduos, null, 2));
+  }
+
+  async updateInsumos(insumos_aplicado_permitido: CreateInsumoDto) {
+    try {
+      await this.prisma.productosUtilizados.create({
+        data: {
+          ...insumos_aplicado_permitido,
+        },
+      });
+    } catch (error) {
+      return {
+        message: 'Error al actualizar ProductosAplicados',
+        error: (error as any).message,
+      };
+    }
   }
 }

@@ -19,7 +19,7 @@ export class ProductorService {
       console.log(error);
       throw new ForbiddenException({
         message: 'Error al crear Productor',
-        error: error.message,
+        error: error,
       });
     }
   }

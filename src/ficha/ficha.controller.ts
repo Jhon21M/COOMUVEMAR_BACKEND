@@ -29,6 +29,8 @@ import { FichaInterfaceReturn } from './interfaces';
 import { Usuario } from '@prisma/client';
 import { CreateExternaldataDto } from './dto/load_ficha_dto';
 import { CreateFichaDto, UpdateFichaDto } from './dto/create_ficha_dto';
+import { CreateInsumoDto } from './dto/create_insumos_dto/create-insumo.dto';
+import { CreateManejoResiduoDto } from './dto/create_ReglaResiduo_dto';
 
 @ApiTags('ficha - APi')
 @UseGuards(JwtGuard, RolesGuard)
@@ -155,7 +157,7 @@ export class FichaController {
 
   @Get('analisisficha/:id')
   @Roles(Role.Admin)
-  @ApiOperation({ summary: 'Analize Ficha stored....' })
+  @ApiOperation({ summary: 'Analize one Ficha stored....' })
   @ApiResponse({
     status: HttpStatus.OK,
     description: 'API is up',
@@ -187,6 +189,7 @@ export class FichaController {
   async noConformidadAll() {
     return await this.fichaService.noConformidadAll();
   }
+
   @Get('analisisfichaget/:id')
   @Roles(Role.Admin)
   @ApiOperation({ summary: 'Get ona Ficha analized' })
@@ -199,5 +202,27 @@ export class FichaController {
     id: string,
   ) {
     return await this.fichaService.noConformidadOne(id);
+  }
+
+  @Post('productosaplicados')
+  @Roles(Role.Admin)
+  @ApiOperation({ summary: 'Actualizar productos aplicados' })
+  async updateInsumos(
+    @Body(new ValidationPipe()) createInsumoDto: CreateInsumoDto,
+  ) {
+    return this.fichaService.updateInsumos(createInsumoDto);
+  }
+
+  @Post('manejoresiduos')
+  @Roles(Role.Admin)
+  @ApiOperation({ summary: 'Actualizar manejo Residuo' })
+  async updatemanejoresiduos(
+    @Body(new ValidationPipe()) createInsumoDto: CreateManejoResiduoDto,
+  ) {
+    return this.fichaService.actualizarReglas(
+      createInsumoDto.tipoResiduo,
+      createInsumoDto.nuevoBuenManejo,
+      createInsumoDto.nuevoMalManejo,
+    );
   }
 }

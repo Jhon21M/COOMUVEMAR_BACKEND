@@ -55,6 +55,15 @@ model Finca {
   @@map("fincas")
 }
 
+model ProductosUtilizados {
+  id                Int     @id @default(autoincrement())
+  producto_aplicado String
+  tipo              String?
+  descripcion       String?
+  permitido         Boolean @default(true)
+  certificacion     String? @default("Organico")
+}
+
 model Trabajador {
   id                 Int                  @id @default(autoincrement())
   nombre             String
@@ -92,13 +101,12 @@ model Ficha {
 }
 
 model NoConformidad {
-  id                    Int            @id @default(autoincrement())
-  cantidadNoConformidad Int
+  id                    Int     @id @default(autoincrement())
   descripcion           String?
-  IDSeccionFicha        Int
-  seccionesFicha        SeccionesFicha @relation(fields: [IDSeccionFicha], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  IDDato                Int
+  dato                  Dato    @relation(fields: [IDDato], references: [id], onDelete: Cascade, onUpdate: Cascade)
   IDFicha               String
-  ficha                 Ficha          @relation(fields: [IDFicha], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  ficha                 Ficha   @relation(fields: [IDFicha], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
 
 model Documento {
@@ -106,7 +114,7 @@ model Documento {
   declaracion String?
   ImgCedula   String?
 
-  IDFicha String 
+  IDFicha String
   ficha   Ficha  @relation(fields: [IDFicha], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
 
@@ -114,16 +122,15 @@ model Desicion {
   id          Int    @id @default(autoincrement())
   desicion    String
   descripcion String
-  IDFicha     String 
+  IDFicha     String
   ficha       Ficha  @relation(fields: [IDFicha], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
 
 model SeccionesFicha {
-  id            Int             @id @default(autoincrement())
-  nombre        String
-  descripcion   String?
-  Dato          Dato[]
-  NoConformidad NoConformidad[]
+  id          Int     @id @default(autoincrement())
+  nombre      String
+  descripcion String?
+  Dato        Dato[]
 
   @@map("SeccionesFichas")
 }
@@ -137,6 +144,7 @@ model Dato {
   IDSeccionesFicha Int
 
   InformacionDato InformacionDato[]
+  NoConformidad   NoConformidad[]
 
   @@map("datos")
 }
