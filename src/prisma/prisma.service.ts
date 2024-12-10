@@ -25,8 +25,8 @@ export class PrismaService extends PrismaClient {
         this.informacionDato.deleteMany(),
         this.productor.deleteMany(),
         this.seccionesFicha.deleteMany(),
-        //this.trabajador.deleteMany(),
-        //this.usuario.deleteMany(),
+        this.trabajador.deleteMany(),
+        this.usuario.deleteMany(),
       ]);
 
       await this.$executeRaw`TRUNCATE TABLE "datos" RESTART IDENTITY CASCADE`;
@@ -44,9 +44,9 @@ export class PrismaService extends PrismaClient {
         .$executeRaw`TRUNCATE TABLE "productores" RESTART IDENTITY CASCADE`;
       await this
         .$executeRaw`TRUNCATE TABLE "SeccionesFichas" RESTART IDENTITY CASCADE`;
-      // await this
-      //   .$executeRaw`TRUNCATE TABLE "Trabajador" RESTART IDENTITY CASCADE`;
-      // await this.$executeRaw`TRUNCATE TABLE "Usuario" RESTART IDENTITY CASCADE`;
+      await this
+        .$executeRaw`TRUNCATE TABLE "Trabajador" RESTART IDENTITY CASCADE`;
+      await this.$executeRaw`TRUNCATE TABLE "Usuario" RESTART IDENTITY CASCADE`;
       return {
         message: 'Database cleaned successfully',
       };

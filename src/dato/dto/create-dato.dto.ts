@@ -8,6 +8,11 @@ import {
 } from 'class-validator';
 
 export class CreateDatoDto {
+  @IsOptional()
+  @IsNumber()
+  @ApiProperty({ required: false })
+  id: number;
+  
   @IsNotEmpty()
   @ApiProperty()
   @IsString()
