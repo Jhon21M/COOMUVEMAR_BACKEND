@@ -42,6 +42,17 @@ import { CreateManejoResiduoDto } from './dto/create_ReglaResiduo_dto';
 export class FichaController {
   constructor(private readonly fichaService: FichaService) {}
 
+  @Get('reporteestadistica')
+  @Roles(Role.Admin)
+  @ApiOperation({ summary: 'Get Reporte Estadistica' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'API is up',
+  })
+  async ReporteEstadistica() {
+    return await this.fichaService.ReporteEstadistica();
+  }
+
   @Get('cleanseed')
   @ApiOperation({ summary: 'CleanDB and seedDB' })
   @ApiResponse({
@@ -225,4 +236,6 @@ export class FichaController {
       createInsumoDto.nuevoMalManejo,
     );
   }
+
+
 }

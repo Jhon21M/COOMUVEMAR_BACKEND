@@ -1,7 +1,18 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsOptional, IsString, Length } from 'class-validator';
+import {
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+  Length,
+} from 'class-validator';
 
 export class CreateSeccionFichaDto {
+  @IsOptional()
+  @IsNumber()
+  @ApiProperty({ required: false })
+  id: number;
+
   @IsString()
   @IsNotEmpty()
   @Length(5, 50)
