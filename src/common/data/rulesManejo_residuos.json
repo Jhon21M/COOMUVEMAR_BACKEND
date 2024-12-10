@@ -94,7 +94,7 @@
       "Abandono en el campo"
     ]
   },
-  "Sacos y/o bolsas cosecha": {
+  "Sacos y bolsas cosecha": {
     "buenManejo": [
       "Lavado y reutilización",
       "Reciclaje adecuado",
@@ -105,7 +105,7 @@
       "Uso inapropiado para otras actividades"
     ]
   },
-  "Otros": {
+  "Otro": {
     "buenManejo": [
       "Gestión según el tipo de residuo",
       "Consulta con la certificadora"

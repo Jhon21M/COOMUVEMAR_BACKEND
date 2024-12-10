@@ -10,7 +10,7 @@ export class DocumentoService {
   constructor(private prisma: PrismaService) {}
 
   async create(dato: EntityDocumento): Promise<EntityDocumento> {
-    console.log('estamos en el servicio de documento');
+    console.log('estamos en el servicio de documento', dato);
     try {
       const { ImgCedula, IDFicha } = dato;
       const fichaproducto = await this.prisma.ficha.findUnique({

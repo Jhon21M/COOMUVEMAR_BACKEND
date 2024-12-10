@@ -13,8 +13,7 @@ import { DocumentoService } from 'src/documento/documento.service';
 import * as reglasResiduos from 'src/common/data/rulesManejo_residuos.json';
 import * as fs from 'fs';
 import * as path from 'path';
-import { CreateInsumoDto } from './dto/create_insumos_dto/create-insumo.dto';
-import Fuse from 'fuse.js';
+import { CreateInsumoDto } from './dto/create_insumos_dto';
 
 @Injectable()
 export class FichaService {
@@ -355,7 +354,7 @@ export class FichaService {
     });
 
     if (!fichaData) {
-      throw new ForbiddenException('Ficha no encontrada o no existe');
+      throw new ForbiddenException('Ficha no encontrada o no existe5');
     }
 
     const returndata: FichaInterfaceReturn = {
@@ -394,7 +393,7 @@ export class FichaService {
       });
 
       if (!findfichaData) {
-        throw new ForbiddenException('Ficha no encontrada o no existe');
+        throw new ForbiddenException('Ficha no encontrada o no existe3');
       }
 
       return findfichaData;
@@ -412,7 +411,7 @@ export class FichaService {
         },
       });
       if (!findfichaData) {
-        throw new ForbiddenException('Ficha no encontrada o no existe');
+        throw new ForbiddenException('Ficha no encontrada o no existepp2');
       }
 
       // const fichaData = {
@@ -442,7 +441,7 @@ export class FichaService {
       // }
 
       if (!findfichaData) {
-        throw new ForbiddenException('Ficha no encontrada o no existe');
+        throw new ForbiddenException('Ficha no encontrada o no existepp');
       }
 
       return findfichaData;
@@ -1090,18 +1089,21 @@ export class FichaService {
   async validateProductoAplicado(entryInsumo: string, tipo: string) {
     console.log('desde producto_aplicado', entryInsumo, tipo);
     const insumos = await this.prisma.productosUtilizados.findMany({
-      where: {
-        tipo: tipo,
-      },
       select: {
         producto_aplicado: true,
+        tipo: true,
       },
     });
 
-    const nombresInsumos = insumos.map((insumo) => insumo.producto_aplicado);
-    const valid = nombresInsumos.includes(entryInsumo);
+    const nombresInsumos = insumos.map((insumo) =>
+      insumo.producto_aplicado.toLowerCase(),
+    );
+    const tiposInsumos = insumos.map((insumo) => insumo.tipo.toLowerCase());
 
-    if (valid) {
+    const validNombre = nombresInsumos.includes(entryInsumo.toLowerCase());
+    const validTipo = tiposInsumos.includes(tipo.toLowerCase());
+
+    if (validNombre || validTipo) {
       return { valid: true, message: 'El insumo es permitido.' };
     } else {
       return {
@@ -1111,73 +1113,24 @@ export class FichaService {
     }
   }
 
-  // async validarResiduos(tipoResiduo: string, manejoRealizado: string) {
-  //   console.log('desde Manejo de residuos', tipoResiduo, manejoRealizado);
-
-  //   const reglasResiduosLowerCase = Object.keys(reglasResiduos).reduce(
-  //     (acc, key) => {
-  //       acc[key.toLowerCase()] = reglasResiduos[key];
-  //       return acc;
-  //     },
-  //     {},
-  //   );
-
-  //   const reglas = reglasResiduosLowerCase[tipoResiduo.toLowerCase()];
-
-  //   if (!reglas) {
-  //     throw new NotFoundException(
-  //       `Tipo de residuo ${tipoResiduo} no encontrado.`,
-  //     );
-  //   }
-
-  //   const manejoRealizadoLower = manejoRealizado.toLowerCase();
-
-  //   // Búsqueda de coincidencias parciales
-  //   const esBuenManejo = reglas.buenManejo.some((rule) =>
-  //     manejoRealizadoLower.includes(rule.toLowerCase()),
-  //   );
-  //   const esMalManejo = reglas.malManejo.some((rule) =>
-  //     manejoRealizadoLower.includes(rule.toLowerCase()),
-  //   );
-
-  //   if (esBuenManejo) {
-  //     return {
-  //       esBuenManejo: true,
-  //       mensaje: 'El manejo del residuo es adecuado.',
-  //     };
-  //   }
-
-  //   if (esMalManejo) {
-  //     return {
-  //       esBuenManejo: false,
-  //       mensaje: `Mal manejo detectado: ${manejoRealizado}`,
-  //     };
-  //   }
-
-  //   return {
-  //     esBuenManejo: false,
-  //     mensaje: 'No se pudo determinar si el manejo es adecuado.',
-  //   };
-  // }
-
   async validarResiduos(tipoResiduo: string, manejoRealizado: string) {
     console.log('desde Manejo de residuos', tipoResiduo, manejoRealizado);
 
-    const fuse = new Fuse(Object.keys(reglasResiduos), {
-      includeScore: true,
-      threshold: 0.3, // Ajusta este valor según sea necesario
-    });
+    const reglasResiduosLowerCase = Object.keys(reglasResiduos).reduce(
+      (acc, key) => {
+        acc[key.toLowerCase()] = reglasResiduos[key];
+        return acc;
+      },
+      {},
+    );
 
-    const result = fuse.search(tipoResiduo);
+    const reglas = reglasResiduosLowerCase[tipoResiduo.toLowerCase()];
 
-    if (result.length === 0) {
+    if (!reglas) {
       throw new NotFoundException(
         `Tipo de residuo ${tipoResiduo} no encontrado.`,
       );
     }
-
-    const bestMatch = result[0].item;
-    const reglas = reglasResiduos[bestMatch];
 
     const manejoRealizadoLower = manejoRealizado.toLowerCase();
 
@@ -1208,6 +1161,55 @@ export class FichaService {
       mensaje: 'No se pudo determinar si el manejo es adecuado.',
     };
   }
+
+  // async validarResiduos(tipoResiduo: string, manejoRealizado: string) {
+  //   console.log('desde Manejo de residuos', tipoResiduo, manejoRealizado);
+
+  //   const fuse = new Fuse(Object.keys(reglasResiduos), {
+  //     includeScore: true,
+  //     threshold: 0.3, // Ajusta este valor según sea necesario
+  //   });
+
+  //   const result = fuse.search(tipoResiduo);
+
+  //   if (result.length === 0) {
+  //     throw new NotFoundException(
+  //       `Tipo de residuo ${tipoResiduo} no encontrado.`,
+  //     );
+  //   }
+
+  //   const bestMatch = result[0].item;
+  //   const reglas = reglasResiduos[bestMatch];
+
+  //   const manejoRealizadoLower = manejoRealizado.toLowerCase();
+
+  //   // Búsqueda de coincidencias parciales
+  //   const esBuenManejo = reglas.buenManejo.some((rule) =>
+  //     manejoRealizadoLower.includes(rule.toLowerCase()),
+  //   );
+  //   const esMalManejo = reglas.malManejo.some((rule) =>
+  //     manejoRealizadoLower.includes(rule.toLowerCase()),
+  //   );
+
+  //   if (esBuenManejo) {
+  //     return {
+  //       esBuenManejo: true,
+  //       mensaje: 'El manejo del residuo es adecuado.',
+  //     };
+  //   }
+
+  //   if (esMalManejo) {
+  //     return {
+  //       esBuenManejo: false,
+  //       mensaje: `Mal manejo detectado: ${manejoRealizado}`,
+  //     };
+  //   }
+
+  //   return {
+  //     esBuenManejo: false,
+  //     mensaje: 'No se pudo determinar si el manejo es adecuado.',
+  //   };
+  // }
 
   async actualizarReglas(
     tipoResiduo: string,
@@ -1247,5 +1249,176 @@ export class FichaService {
         error: (error as any).message,
       };
     }
+  }
+
+  async ReporteEstadistica() {
+    const ReporteProductoresAsingados =
+      await this.ReporteProductoresAsingados();
+    const ReporteIngresoProductoresAlPrograma =
+      await this.ReporteIngresoProductoresAlPrograma();
+    const ReporteCumplimientoInspecciones =
+      await this.ReporteCumplimientoInspecciones();
+    const ReporteCumplimientoNormas = await this.ReporteCumplimientoNormas();
+
+    return {
+      ReporteProductoresAsingados,
+      ReporteIngresoProductoresAlPrograma,
+      ReporteCumplimientoInspecciones,
+      ReporteCumplimientoNormas,
+    };
+  }
+
+  async ReporteCumplimientoNormas() {
+    const fichas = await this.prisma.ficha.findMany({
+      where: {
+        analizada: true,
+      },
+      include: {
+        InformacionDato: {
+          include: {
+            dato: {
+              include: {
+                seccionesFicha: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    const seccionAprobada = await this.prisma.seccionesFicha.findMany({
+      where: {
+        nombre: 'Decisión del comite',
+      },
+      include: {
+        Dato: true,
+      },
+    });
+
+    const aprobados = [];
+    const sancionados = [];
+
+    fichas.forEach((ficha) => {
+      ficha.InformacionDato.forEach((informacionDato) => {
+        const dato = informacionDato.dato;
+        if (dato.seccionesFicha.nombre === 'Decisión del comite') {
+          if (dato.titulo === 'Aprobado con sanciones') {
+            aprobados.push(ficha);
+          } else if (dato.titulo === 'Aprobado sin sanciones') {
+            aprobados.push(ficha);
+          } else if (dato.titulo === 'Sancionado') {
+            sancionados.push(ficha);
+          }
+        }
+      });
+    });
+
+    return {
+      aprobados: aprobados.length,
+      sancionados: sancionados.length,
+    };
+  }
+
+  async ReporteProductoresAsingados() {
+    const currentYear = new Date().getFullYear();
+    const report = [];
+
+    for (let month = 0; month < 12; month += 2) {
+      const startDate = new Date(currentYear, month, 1);
+      const endDate = new Date(currentYear, month + 2, 0);
+
+      const productoresAsignados = await this.prisma.inspectorProductor.count({
+        where: {
+          created: {
+            gte: startDate,
+            lte: endDate,
+          },
+        },
+      });
+
+      const productoresNoAsignados = await this.prisma.productor.count({
+        where: {
+          NOT: {
+            Inspectorproductor: {
+              some: {
+                created: {
+                  gte: startDate,
+                  lte: endDate,
+                },
+              },
+            },
+          },
+        },
+      });
+
+      report.push({
+        periodo: `${startDate.toLocaleString('default', {
+          month: 'long',
+        })}-${endDate.toLocaleString('default', { month: 'long' })}`,
+        asignados: productoresAsignados,
+        noAsignados: productoresNoAsignados,
+      });
+    }
+
+    return report;
+  }
+
+  async ReporteIngresoProductoresAlPrograma() {
+    const currentYear = new Date().getFullYear();
+    const startYear = 2019;
+    const report = [];
+
+    for (let year = startYear; year <= currentYear; year++) {
+      const startDate = new Date(year, 0, 1);
+      const endDate = new Date(year, 11, 31, 23, 59, 59);
+
+      const productoresAgregados = await this.prisma.productor.count({
+        where: {
+          fechaIngresoPrograma: {
+            gte: startDate,
+            lte: endDate,
+          },
+        },
+      });
+
+      report.push({
+        year,
+        productoresAgregados,
+      });
+    }
+
+    return report;
+  }
+
+  async ReporteCumplimientoInspecciones() {
+    const currentYear = new Date().getFullYear();
+    const report = [];
+
+    // Cumplimiento de visitas de inspectores a los productores en intervalos de dos meses
+    for (let month = 0; month < 12; month += 2) {
+      const startDate = new Date(currentYear, month, 1);
+      const endDate = new Date(currentYear, month + 2, 0);
+
+      const visitasRealizadas = await this.prisma.inspectorProductor.count({
+        where: {
+          estadoInspeccion: {
+            not: null,
+          },
+          updated: {
+            gte: startDate,
+            lte: endDate,
+          },
+        },
+      });
+
+      report.push({
+        periodo: `${startDate.toLocaleString('default', {
+          month: 'long',
+        })}-${endDate.toLocaleString('default', { month: 'long' })}`,
+        visitasRealizadas,
+      });
+    }
+
+    return report;
   }
 }
